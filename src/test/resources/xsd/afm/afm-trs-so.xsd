@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns="http://www.afm.nl/1.0/afm-trs-so.xsd" xmlns:mstns="http://www.afm.nl/1.0/afm-trs-so.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.afm.nl/1.0/afm-trs-so.xsd" elementFormDefault="qualified" id="So-Afm-Trs">
+	<xs:complexType name="InstrumentIdentificationType">
+		<xs:attribute name="Code" use="required">
+			<xs:annotation>
+				<xs:documentation>Functional field: (Underlying) Instrument Identification</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="CodeType" use="optional">
+			<xs:annotation>
+				<xs:documentation>Functional field: (Underlying) Instrument Security Code Type</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="CC" />
+					<xs:enumeration value="CU" />
+					<xs:enumeration value="SE" />
+					<xs:enumeration value="TM" />
+					<xs:enumeration value="SV" />
+					<xs:enumeration value="TR" />
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="AmountType">
+		<xs:attribute name="Amount" type="xs:decimal" use="required" />
+		<xs:attribute name="Notation" type="xs:string" use="required" />
+	</xs:complexType>
+	<xs:complexType name="FirmType">
+		<xs:attribute name="Code" type="xs:string" use="required" />
+	</xs:complexType>
+	<xs:element name="Report">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="SubmittingFirm">
+					<xs:complexType>
+						<xs:complexContent>
+							<xs:extension base="FirmType" />
+						</xs:complexContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="ReportingFirm">
+					<xs:complexType>
+						<xs:complexContent>
+							<xs:extension base="FirmType">
+								<xs:sequence>
+									<xs:element name="Instrument" maxOccurs="unbounded">
+										<xs:complexType>
+											<xs:complexContent>
+												<xs:extension base="InstrumentIdentificationType">
+													<xs:sequence>
+														<xs:element name="Derivative" minOccurs="0" maxOccurs="1">
+															<xs:annotation>
+																<xs:documentation>Need to be filled if the instrument is a derivative</xs:documentation>
+															</xs:annotation>
+															<xs:complexType>
+																<xs:sequence>
+																	<xs:element name="UnderlyingInstrument">
+																		<xs:complexType>
+																			<xs:complexContent>
+																				<xs:extension base="InstrumentIdentificationType" />
+																			</xs:complexContent>
+																		</xs:complexType>
+																	</xs:element>
+																</xs:sequence>
+																<xs:attribute name="DerivativeType">
+																	<xs:simpleType>
+																		<xs:restriction base="xs:string">
+																			<xs:enumeration value="O" />
+																			<xs:enumeration value="F" />
+																			<xs:enumeration value="D" />
+																			<xs:enumeration value="S" />
+																			<xs:enumeration value="W" />
+																			<xs:enumeration value="X" />
+																		</xs:restriction>
+																	</xs:simpleType>
+																</xs:attribute>
+																<xs:attribute name="PutCallIndicator" use="optional">
+																	<xs:simpleType>
+																		<xs:restriction base="xs:string">
+																			<xs:enumeration value="P" />
+																			<xs:enumeration value="C" />
+																			<xs:enumeration value="X" />
+																		</xs:restriction>
+																	</xs:simpleType>
+																</xs:attribute>
+																<xs:attribute name="StrikePrice" type="xs:decimal" use="optional" />
+																<xs:attribute name="MaturityDate" type="xs:date" use="optional">
+																	<xs:annotation>
+																		<xs:documentation>MaturityDate or ExerciseDate in case of a derivative</xs:documentation>
+																	</xs:annotation>
+																</xs:attribute>
+																<xs:attribute name="PriceMultiplier" type="xs:decimal" />
+															</xs:complexType>
+														</xs:element>
+														<xs:element name="TradeLeg" maxOccurs="unbounded">
+															<xs:complexType>
+																<xs:sequence>
+																	<xs:element name="TradingTime">
+																		<xs:complexType>
+																			<xs:attribute name="TradingTimeUTC" type="xs:time" use="required" />
+																			<xs:attribute name="TimeIdentifier" type="xs:int" use="required" />
+																		</xs:complexType>
+																	</xs:element>
+																	<xs:element name="UnitPrice" type="AmountType" />
+																	<xs:element name="Quantity">
+																		<xs:complexType>
+																			<xs:attribute name="Value" type="xs:decimal" use="required" />
+																			<xs:attribute name="Notation" type="xs:string" />
+																		</xs:complexType>
+																	</xs:element>
+																	<xs:element name="CounterParty">
+																		<xs:complexType>
+																			<xs:complexContent>
+																				<xs:extension base="FirmType">
+																					<xs:attribute name="CodeType" use="required">
+																						<xs:simpleType>
+																							<xs:restriction base="xs:string">
+																								<xs:enumeration value="B" />
+																								<xs:enumeration value="I" />
+																								<xs:enumeration value="M" />
+																							</xs:restriction>
+																						</xs:simpleType>
+																					</xs:attribute>
+																				</xs:extension>
+																			</xs:complexContent>
+																		</xs:complexType>
+																	</xs:element>
+																	<xs:element name="VenueIdentification">
+																		<xs:complexType>
+																			<xs:complexContent>
+																				<xs:extension base="FirmType">
+																					<xs:attribute name="CodeType" use="required">
+																						<xs:simpleType>
+																							<xs:restriction base="xs:string">
+																								<xs:enumeration value="B" />
+																								<xs:enumeration value="M" />
+																							</xs:restriction>
+																						</xs:simpleType>
+																					</xs:attribute>
+																				</xs:extension>
+																			</xs:complexContent>
+																		</xs:complexType>
+																	</xs:element>
+																	<xs:element name="ClientCode" minOccurs="0">
+																		<xs:complexType>
+																			<xs:complexContent>
+																				<xs:extension base="FirmType">
+																					<xs:attribute name="CodeType" use="required">
+																						<xs:simpleType>
+																							<xs:restriction base="xs:string">
+																								<xs:enumeration value="B" />
+																								<xs:enumeration value="I" />
+																							</xs:restriction>
+																						</xs:simpleType>
+																					</xs:attribute>
+																				</xs:extension>
+																			</xs:complexContent>
+																		</xs:complexType>
+																	</xs:element>
+																</xs:sequence>
+																<xs:attribute name="ReferenceNumber" type="xs:string" use="required" />
+																<xs:attribute name="TradingDay" type="xs:date" use="required" />
+																<xs:attribute name="CancellationFlag" type="xs:string" />
+																<xs:attribute name="BuySellIndicator" use="required">
+																	<xs:simpleType>
+																		<xs:restriction base="xs:string">
+																			<xs:enumeration value="S" />
+																			<xs:enumeration value="B" />
+																		</xs:restriction>
+																	</xs:simpleType>
+																</xs:attribute>
+																<xs:attribute name="TradingCapacity" use="required">
+																	<xs:simpleType>
+																		<xs:restriction base="xs:string">
+																			<xs:enumeration value="A" />
+																			<xs:enumeration value="P" />
+																		</xs:restriction>
+																	</xs:simpleType>
+																</xs:attribute>
+															</xs:complexType>
+														</xs:element>
+													</xs:sequence>
+													<xs:attribute name="SecurityType" type="xs:string" use="required">
+														<xs:annotation>
+															<xs:documentation>Functional field: Instrument type, must be filled with CFI code</xs:documentation>
+														</xs:annotation>
+													</xs:attribute>
+													<xs:attribute name="MaturityDate" type="xs:date">
+														<xs:annotation>
+															<xs:documentation>Need to be filled if the instrument is a bond</xs:documentation>
+														</xs:annotation>
+													</xs:attribute>
+												</xs:extension>
+											</xs:complexContent>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+							</xs:extension>
+						</xs:complexContent>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="DateTimeCreated" type="xs:dateTime" use="required" />
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.egem.nl/test" xmlns:X="http://www.egem.nl/test" xmlns:StUF="http://www.egem.nl/StUF/StUF0204" xmlns:BG="http://www.egem.nl/StUF/sector/bg/0204" elementFormDefault="qualified" attributeFormDefault="unqualified" version="0204.02">
+	<import namespace="http://www.egem.nl/StUF/sector/bg/0204" schemaLocation="../stuf.0204/bg0204.xsd"/>
+	<element name="test" type="BG:KadastraleSectie"/>
+	<element name="tests" type="X:testType"/>
+	<complexType name="testType">
+		<sequence minOccurs="200" maxOccurs="200">
+			<!--element name="sample" type="BG:CodeMonumentAanduiding"/-->
+			<element name="sample">
+				<simpleType>
+					<restriction base="nonNegativeInteger">
+						<totalDigits value="2"/>
+						<maxInclusive value="50"/>
+						<minExclusive value="49"/>
+					</restriction>
+				</simpleType>
+			</element>
+		</sequence>
+	</complexType>
+
+</schema>
