@@ -1,7 +1,6 @@
 package org.taHjaj.wo.hamaxagoga.junit;
 
-import org.apache.commons.math.random.RandomGenerator;
-import org.apache.log4j.Logger;
+import org.apache.commons.math3.random.RandomGenerator;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.taHjaj.wo.hamaxagoga.Params;
@@ -10,7 +9,6 @@ import org.taHjaj.wo.hamaxagoga.generator.XMLGenerator;
 import org.taHjaj.wo.hamaxagoga.junit.support.AbstractTestCase;
 
 public class GeneratorTest extends AbstractTestCase {
-	private static final Logger logger = Logger.getLogger( GeneratorTest.class);
 	private Mockery mockery = new Mockery();
 
 	public void testDoubleGenerator() {
@@ -22,7 +20,7 @@ public class GeneratorTest extends AbstractTestCase {
 		mockery.checking(new Expectations() {
 			{
 				one(random).nextDouble();
-				will(returnValue(new Double(0.3)));
+				will(returnValue(0.3));
 			}
 		});
 
@@ -49,7 +47,7 @@ public class GeneratorTest extends AbstractTestCase {
 		mockery.checking(new Expectations() {
 			{
 				one(random).nextDouble();
-				will(returnValue(new Double(0.03)));
+				will(returnValue(0.03));
 			}
 		});
 
@@ -76,7 +74,7 @@ public class GeneratorTest extends AbstractTestCase {
 		mockery.checking(new Expectations() {
 			{
 				one(random).nextDouble();
-				will(returnValue(new Double(0.97)));
+				will(returnValue(0.97));
 			}
 		});
 
@@ -103,7 +101,7 @@ public class GeneratorTest extends AbstractTestCase {
 		mockery.checking(new Expectations() {
 			{
 				one(random).nextDouble();
-				will(returnValue(new Double(0.97)));
+				will(returnValue(0.97));
 			}
 		});
 
@@ -131,7 +129,7 @@ public class GeneratorTest extends AbstractTestCase {
 		mockery.checking(new Expectations() {
 			{
 				one(random).nextDouble();
-				will(returnValue(new Double(0.97)));
+				will(returnValue(0.97));
 			}
 		});
 
@@ -158,7 +156,7 @@ public class GeneratorTest extends AbstractTestCase {
 		mockery.checking(new Expectations() {
 			{
 				one(random).nextDouble();
-				will(returnValue(new Double(0.97)));
+				will(returnValue(0.97));
 			}
 		});
 

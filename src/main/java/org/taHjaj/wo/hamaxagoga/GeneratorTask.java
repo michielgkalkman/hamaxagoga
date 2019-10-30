@@ -25,7 +25,7 @@ import java.util.Random;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
-import org.apache.commons.math.random.RandomGenerator;
+import org.apache.commons.math3.random.RandomGenerator;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 

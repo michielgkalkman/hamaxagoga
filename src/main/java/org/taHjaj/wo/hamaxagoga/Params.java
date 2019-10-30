@@ -26,8 +26,8 @@ import java.util.Random;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
-import org.apache.commons.math.random.RandomAdaptor;
-import org.apache.commons.math.random.RandomGenerator;
+import org.apache.commons.math3.random.RandomAdaptor;
+import org.apache.commons.math3.random.RandomGenerator;
 
 public class Params {
 	private int maxFileSize;

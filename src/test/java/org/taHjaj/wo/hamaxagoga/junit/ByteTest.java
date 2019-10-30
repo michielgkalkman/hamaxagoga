@@ -24,7 +24,6 @@ import org.taHjaj.wo.hamaxagoga.RandomXMLGenerator;
 import org.taHjaj.wo.hamaxagoga.junit.support.AbstractTestCase;
 
 public class ByteTest extends AbstractTestCase {
-	private static final int REPEATS = 50;
 	private static final Logger logger = Logger.getLogger( ByteTest.class);
 
 	public void testByte() {

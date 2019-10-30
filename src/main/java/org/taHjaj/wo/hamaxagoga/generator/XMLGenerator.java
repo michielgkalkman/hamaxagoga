@@ -1,7 +1,7 @@
 package org.taHjaj.wo.hamaxagoga.generator;
 
 /*
- * Copyright 2008 Michiel Kalkman
+ * Copyright 2008 Michiel Kalkmaón
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,6 +19,7 @@ package org.taHjaj.wo.hamaxagoga.generator;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,7 +41,9 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.commons.lang.time.FastDateFormat;
-import org.apache.commons.math.util.MathUtils;
+import org.apache.commons.math3.dfp.DfpField;
+import org.apache.commons.math3.util.MathUtils;
+import org.apache.commons.math3.util.Precision;
 import org.apache.log4j.Logger;
 import org.apache.xerces.impl.xpath.regex.RegexGenerator;
 import org.apache.xerces.impl.xpath.regex.XMLChar;
@@ -1016,8 +1019,7 @@ public class XMLGenerator {
 		}
 
 		final double doubleValue = min + random.nextDouble() * (max - min);
-		final double roundedDoubleValue = MathUtils.round( doubleValue, fractionDigits, BigDecimal.ROUND_HALF_UP);
-
+		final double roundedDoubleValue = Precision.round(doubleValue, fractionDigits, RoundingMode.HALF_UP.ordinal());
 		value = new BigDecimal(Double.toString(roundedDoubleValue)).toPlainString();
 
 		return value;
