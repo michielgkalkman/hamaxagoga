@@ -24,6 +24,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 import org.apache.log4j.Logger;
+import org.apache.xerces.impl.xpath.regex.RangeToken;
+import org.apache.xerces.impl.xpath.regex.RegularExpression;
 import org.apache.xerces.impl.xpath.regex.Token.ClosureToken;
 import org.apache.xerces.impl.xpath.regex.Token.ConcatToken;
 import org.apache.xerces.impl.xpath.regex.Token.ParenToken;
