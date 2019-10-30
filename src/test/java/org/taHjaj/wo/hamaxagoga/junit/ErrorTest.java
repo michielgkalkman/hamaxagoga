@@ -15,10 +15,12 @@ package org.taHjaj.wo.hamaxagoga.junit;
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.net.URL;
 
 import org.apache.log4j.Logger;
+import org.junit.jupiter.api.Test;
 import org.taHjaj.wo.hamaxagoga.Params;
 import org.taHjaj.wo.hamaxagoga.RandomXMLGenerator;
 import org.taHjaj.wo.hamaxagoga.junit.support.AbstractTestCase;
@@ -30,6 +32,7 @@ public class ErrorTest extends AbstractTestCase {
 	/**
 	 * Test what happens if given XSD does not exist.
 	 */
+	@Test
 	public void testError1() {
 		final int count = REPEATS;
 		final String xsdFile = "/xsd/errors/doesnotexist.xml";
@@ -47,6 +50,7 @@ public class ErrorTest extends AbstractTestCase {
 	/**
 	 * Test what happens if given XSD does not have any root elements.
 	 */
+	@Test
 	public void testNoRoots() {
 		final int count = REPEATS;
 		final String xsdFile = "/xsd/errors/no-roots.xsd";
@@ -65,6 +69,7 @@ public class ErrorTest extends AbstractTestCase {
 	/**
 	 * Test what happens if given XSD does not have the requested root element.
 	 */
+	@Test
 	public void testNotRequestedRoots() {
 		final int count = REPEATS;
 		final String xsdFile = "/xsd/errors/not-requested-roots.xsd";
@@ -84,6 +89,7 @@ public class ErrorTest extends AbstractTestCase {
 	/**
 	 * Test what happens if a given file is not an XSD.
 	 */
+	@Test
 	public void testNotAnXSD() {
 		final int count = REPEATS;
 		final String xsdFile = "/xsd/errors/not-an-xsd.xml";

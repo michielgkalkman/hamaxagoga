@@ -20,14 +20,17 @@ import java.net.URL;
 import java.security.SecureRandom;
 
 import org.apache.log4j.Logger;
+import org.junit.jupiter.api.Test;
 import org.taHjaj.wo.hamaxagoga.Params;
 import org.taHjaj.wo.hamaxagoga.RandomXMLGenerator;
 import org.taHjaj.wo.hamaxagoga.junit.support.AbstractTestCase;
 
+import static org.junit.jupiter.api.Assertions.fail;
 public class SimpleTest extends AbstractTestCase {
 	private static final int REPEATS = 5;
 	private static final Logger logger = Logger.getLogger( SimpleTest.class);
 	
+	@Test
 	public void testSimpleMail() {
 		final int count = REPEATS;
 		final String xsdFile = "/xsd/mails.xml";
@@ -44,6 +47,7 @@ public class SimpleTest extends AbstractTestCase {
 		}
 	}
 	
+	@Test
 	public void testSimple3() {
 		final int count = REPEATS;
 		final String xsdFile = "/xsd/shiporder.xml";
@@ -76,6 +80,7 @@ public class SimpleTest extends AbstractTestCase {
 		}
 	}
 	
+	@Test
 	public void testSimple4() {
 		final int count = REPEATS;
 		final String xsdFile = "/xsd/shiporder1.xml";
@@ -91,6 +96,7 @@ public class SimpleTest extends AbstractTestCase {
 			fail( exception.getLocalizedMessage());
 		}
 	}	
+	@Test
 	public void testSimple6() {
 		final int count = REPEATS;
 		final String xsdFile = "/xsd/base64Binary.xsd";
@@ -108,6 +114,7 @@ public class SimpleTest extends AbstractTestCase {
 			fail( exception.getLocalizedMessage());
 		}
 	}
+	@Test
 	public void testSimple7() {
 		final int count = REPEATS;
 		final String xsdFile = "/xsd/base64Hexadecimal.xsd";
@@ -125,6 +132,7 @@ public class SimpleTest extends AbstractTestCase {
 			fail( exception.getLocalizedMessage());
 		}
 	}
+	@Test
 	public void testSimple8() {
 		final int count = REPEATS;
 		final String xsdFile = "/xsd/patterns.xsd";
@@ -142,6 +150,7 @@ public class SimpleTest extends AbstractTestCase {
 			fail( exception.getLocalizedMessage());
 		}
 	}
+	@Test
 	public void testSimple9() {
 		final int count = REPEATS;
 		final String xsdFile = "/xsd/patterns.xsd";

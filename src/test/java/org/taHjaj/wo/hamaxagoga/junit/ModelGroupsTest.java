@@ -19,13 +19,16 @@ package org.taHjaj.wo.hamaxagoga.junit;
 import java.net.URI;
 
 import org.apache.log4j.Logger;
+import org.junit.jupiter.api.Test;
 import org.taHjaj.wo.hamaxagoga.Params;
 import org.taHjaj.wo.hamaxagoga.RandomXMLGenerator;
 import org.taHjaj.wo.hamaxagoga.junit.support.AbstractTestCase;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class ModelGroupsTest extends AbstractTestCase {
 	private static final Logger logger = Logger.getLogger( ModelGroupsTest.class);
 	
+	@Test
 	public void testSimple() {
 		final int count = 10;
 		final String xsdFile = "/xsd/modelGroups.xsd";

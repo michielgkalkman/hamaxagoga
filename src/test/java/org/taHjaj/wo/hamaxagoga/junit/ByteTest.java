@@ -15,10 +15,12 @@ package org.taHjaj.wo.hamaxagoga.junit;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.net.URL;
 
 import org.apache.log4j.Logger;
+import org.junit.jupiter.api.Test;
 import org.taHjaj.wo.hamaxagoga.Params;
 import org.taHjaj.wo.hamaxagoga.RandomXMLGenerator;
 import org.taHjaj.wo.hamaxagoga.junit.support.AbstractTestCase;
@@ -26,6 +28,7 @@ import org.taHjaj.wo.hamaxagoga.junit.support.AbstractTestCase;
 public class ByteTest extends AbstractTestCase {
 	private static final Logger logger = Logger.getLogger( ByteTest.class);
 
+	@Test
 	public void testByte() {
 		final int count = 3;
 		final String xsdFile = "/xsd/simple/byte.xsd";

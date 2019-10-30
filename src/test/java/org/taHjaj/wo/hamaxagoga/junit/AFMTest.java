@@ -22,13 +22,16 @@ package org.taHjaj.wo.hamaxagoga.junit;
  */
 import java.net.URI;
 
+import static org.junit.jupiter.api.Assertions.fail;
 import org.apache.log4j.Logger;
+import org.junit.jupiter.api.Test;
 import org.taHjaj.wo.hamaxagoga.Params;
 import org.taHjaj.wo.hamaxagoga.RandomXMLGenerator;
 import org.taHjaj.wo.hamaxagoga.junit.support.AbstractTestCase;
 public class AFMTest extends AbstractTestCase {
 	private static final Logger logger = Logger.getLogger( AFMTest.class);
 	
+	@Test
 	public void testSimple() {
 		final int count = 10;
 		final String xsdFile = "/xsd/afm/afm-trs-so.xsd";

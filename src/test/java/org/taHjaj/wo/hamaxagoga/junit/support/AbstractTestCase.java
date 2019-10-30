@@ -1,5 +1,7 @@
 package org.taHjaj.wo.hamaxagoga.junit.support;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 /*
  * Copyright 2008 Michiel Kalkman
  *
@@ -26,8 +28,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -35,22 +35,12 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.SystemUtils;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
+import org.junit.jupiter.api.BeforeAll;
 
-public class AbstractTestCase extends TestCase {
+public class AbstractTestCase {
 
-	public AbstractTestCase() {
-		super();
-	}
-
-	public AbstractTestCase(String arg0) {
-
-		super(arg0);
-	}
-
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		// BasicConfigurator.resetConfiguration();
+	@BeforeAll
+	protected static void setUp() throws Exception {
 		BasicConfigurator.configure();
 	}
 
@@ -73,7 +63,7 @@ public class AbstractTestCase extends TestCase {
 				extensions, recursive);
 
 		while (iterator.hasNext()) {
-			final File file = (File) iterator.next();
+			final File file = iterator.next();
 
 			files.add(StringUtils.removeStart(file.getAbsolutePath(), root));
 		}
@@ -95,12 +85,9 @@ public class AbstractTestCase extends TestCase {
 				final File file1 = new File(directory1, file);
 				final File file2 = new File(directory2, file);
 
-				Reader reader1 = null;
-				Reader reader2 = null;
-
-				try {
-					reader1 = new BufferedReader(new FileReader(file1));
-					reader2 = new BufferedReader(new FileReader(file2));
+				try (
+					Reader reader1 = new BufferedReader(new FileReader(file1));
+					Reader reader2 = new BufferedReader(new FileReader(file2))) {
 
 					if (!IOUtils.contentEquals(reader1, reader2)) {
 						logger.error("File " + file1.getAbsolutePath()
@@ -109,6 +96,7 @@ public class AbstractTestCase extends TestCase {
 						fFailure = true;
 					}
 				} catch (final FileNotFoundException fileNotFoundException) {
+					
 					final String message = "Error while comparing file contents for file "
 							+ file;
 					logger.error(message, fileNotFoundException);
@@ -118,9 +106,6 @@ public class AbstractTestCase extends TestCase {
 							+ file;
 					logger.error(message, exception);
 					fail(message);
-				} finally {
-					IOUtils.closeQuietly(reader1);
-					IOUtils.closeQuietly(reader2);
 				}
 			}
 

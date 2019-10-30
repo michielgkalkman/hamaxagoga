@@ -3,14 +3,19 @@ package org.taHjaj.wo.hamaxagoga.junit;
 import org.apache.commons.math3.random.RandomGenerator;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
+import org.junit.jupiter.api.Test;
 import org.taHjaj.wo.hamaxagoga.Params;
 import org.taHjaj.wo.hamaxagoga.generator.Facet;
 import org.taHjaj.wo.hamaxagoga.generator.XMLGenerator;
 import org.taHjaj.wo.hamaxagoga.junit.support.AbstractTestCase;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+
 public class GeneratorTest extends AbstractTestCase {
 	private Mockery mockery = new Mockery();
 
+	@Test
 	public void testDoubleGenerator() {
 		final Params params = new Params();
 
@@ -38,6 +43,7 @@ public class GeneratorTest extends AbstractTestCase {
 		assertEquals( "3006.4", doubleValue);
 	}
 
+	@Test
 	public void testDoubleGenerator2() {
 		final Params params = new Params();
 
@@ -65,6 +71,7 @@ public class GeneratorTest extends AbstractTestCase {
 		assertEquals( "309.6", doubleValue);
 	}
 
+	@Test
 	public void testDoubleGenerator3() {
 		final Params params = new Params();
 
@@ -92,6 +99,7 @@ public class GeneratorTest extends AbstractTestCase {
 		assertEquals( "9698.4", doubleValue);
 	}
 
+	@Test
 	public void testDoubleGenerator4() {
 		final Params params = new Params();
 
@@ -120,6 +128,7 @@ public class GeneratorTest extends AbstractTestCase {
 		assertEquals( "9698.4", doubleValue);
 	}
 
+	@Test
 	public void testDoubleGenerator5() {
 		final Params params = new Params();
 
@@ -147,6 +156,7 @@ public class GeneratorTest extends AbstractTestCase {
 		assertEquals( "5.0", doubleValue);
 	}
 
+	@Test
 	public void testDecimalGenerator() {
 		final Params params = new Params();
 

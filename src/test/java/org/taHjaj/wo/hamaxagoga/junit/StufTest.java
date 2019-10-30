@@ -3,10 +3,12 @@ package org.taHjaj.wo.hamaxagoga.junit;
 import java.net.URI;
 
 import org.apache.log4j.Logger;
+import org.junit.jupiter.api.Test;
 import org.taHjaj.wo.hamaxagoga.Params;
 import org.taHjaj.wo.hamaxagoga.RandomXMLGenerator;
 import org.taHjaj.wo.hamaxagoga.junit.support.AbstractTestCase;
 
+import static org.junit.jupiter.api.Assertions.fail;
 /*
  * Copyright 2008 Michiel Kalkman
  * 
@@ -147,6 +149,7 @@ public class StufTest extends AbstractTestCase {
 //		}
 //	}
 
+	@Test
 	public void testje2() {
 		final int count = 20;
 

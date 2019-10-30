@@ -19,14 +19,17 @@ package org.taHjaj.wo.hamaxagoga.junit;
 import java.net.URL;
 
 import org.apache.log4j.Logger;
+import org.junit.jupiter.api.Test;
 import org.taHjaj.wo.hamaxagoga.Params;
 import org.taHjaj.wo.hamaxagoga.RandomXMLGenerator;
 import org.taHjaj.wo.hamaxagoga.junit.support.AbstractTestCase;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class IntegerTest extends AbstractTestCase {
 	private static final int REPEATS = 50;
 	private static final Logger logger = Logger.getLogger( IntegerTest.class);
 
+	@Test
 	public void xtestInteger3a() {
 		final int count = REPEATS;
 		final String xsdFile = "/xsd/integers.xsd";
@@ -45,6 +48,7 @@ public class IntegerTest extends AbstractTestCase {
 		}
 	}
 
+	@Test
 	public void xtestNonNegativeInteger() {
 		final int count = REPEATS;
 		final String xsdFile = "/xsd/integers.xsd";
@@ -63,6 +67,7 @@ public class IntegerTest extends AbstractTestCase {
 		}
 	}
 
+	@Test
 	public void testTotalDigits() {
 		final int count = 3;
 		final String xsdFile = "/xsd/integers.xsd";

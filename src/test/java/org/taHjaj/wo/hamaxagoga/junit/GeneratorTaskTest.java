@@ -22,13 +22,16 @@ import java.net.URL;
 import org.apache.log4j.Logger;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.junit.jupiter.api.Test;
 import org.taHjaj.wo.hamaxagoga.GeneratorTask;
 import org.taHjaj.wo.hamaxagoga.junit.support.AbstractTestCase;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class GeneratorTaskTest extends AbstractTestCase {
 	private static final Logger logger = Logger
 			.getLogger(GeneratorTaskTest.class);
 
+	@Test
 	public void testSimple() {
 		try {
 			final GeneratorTask generatorTask = new GeneratorTask();
@@ -40,6 +43,7 @@ public class GeneratorTaskTest extends AbstractTestCase {
 		}
 	}
 
+	@Test
 	public void testSimple2() {
 		try {
 			final GeneratorTask generatorTask = new GeneratorTask();
@@ -56,6 +60,7 @@ public class GeneratorTaskTest extends AbstractTestCase {
 		}
 	}
 
+	@Test
 	public void testSimple3() throws URISyntaxException {
 		final GeneratorTask generatorTask = new GeneratorTask();
 
@@ -73,6 +78,7 @@ public class GeneratorTaskTest extends AbstractTestCase {
 		generatorTask.execute();
 	}
 
+	@Test
 	public void testSimple4() throws URISyntaxException {
 		final GeneratorTask generatorTask = new GeneratorTask();
 
@@ -91,6 +97,7 @@ public class GeneratorTaskTest extends AbstractTestCase {
 		generatorTask.execute();
 	}
 
+	@Test
 	public void testSimple5() throws URISyntaxException {
 		final GeneratorTask generatorTask = new GeneratorTask();
 
@@ -110,6 +117,7 @@ public class GeneratorTaskTest extends AbstractTestCase {
 		generatorTask.execute();
 	}
 
+	@Test
 	public void testSimple6() throws URISyntaxException {
 		final GeneratorTask generatorTask = new GeneratorTask();
 
@@ -129,6 +137,7 @@ public class GeneratorTaskTest extends AbstractTestCase {
 		generatorTask.execute();
 	}
 
+	@Test
 	public void testSimple7() throws URISyntaxException {
 		final GeneratorTask generatorTask = new GeneratorTask();
 
@@ -151,6 +160,7 @@ public class GeneratorTaskTest extends AbstractTestCase {
 		generatorTask.execute();
 	}
 
+	@Test
 	public void testSimple8() throws URISyntaxException {
 		final GeneratorTask generatorTask = new GeneratorTask();
 
@@ -173,6 +183,7 @@ public class GeneratorTaskTest extends AbstractTestCase {
 		generatorTask.execute();
 	}
 
+	@Test
 	public void testSimple9() throws URISyntaxException {
 		final GeneratorTask generatorTask = new GeneratorTask();
 
@@ -196,6 +207,7 @@ public class GeneratorTaskTest extends AbstractTestCase {
 		generatorTask.execute();
 	}
 
+	@Test
 	public void testNoValidation() throws URISyntaxException {
 		final GeneratorTask generatorTask = new GeneratorTask();
 
@@ -220,6 +232,7 @@ public class GeneratorTaskTest extends AbstractTestCase {
 		}
 	}
 
+	@Test
 	public void testMultipleXSDs() throws URISyntaxException {
 		final GeneratorTask generatorTask = new GeneratorTask();
 
@@ -244,6 +257,7 @@ public class GeneratorTaskTest extends AbstractTestCase {
 		}
 	}
 
+	@Test
 	public void testLexicalPatterns() throws URISyntaxException {
 		final GeneratorTask generatorTask = new GeneratorTask();
 

@@ -19,14 +19,17 @@ package org.taHjaj.wo.hamaxagoga.junit;
 import java.net.URL;
 
 import org.apache.log4j.Logger;
+import org.junit.jupiter.api.Test;
 import org.taHjaj.wo.hamaxagoga.Params;
 import org.taHjaj.wo.hamaxagoga.RandomXMLGenerator;
 import org.taHjaj.wo.hamaxagoga.junit.support.AbstractTestCase;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class MixedTest extends AbstractTestCase {
 	private static final int REPEATS = 5;
 	private static final Logger logger = Logger.getLogger( MixedTest.class);
 	
+	@Test
 	public void testMixed() {
 		final int count = REPEATS;
 		final String xsdFile = "/xsd/mixed.xsd";

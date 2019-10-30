@@ -19,6 +19,7 @@ package org.taHjaj.wo.hamaxagoga.junit;
  */
 
 import java.io.File;
+import static org.junit.jupiter.api.Assertions.fail;
 import java.io.FileFilter;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -29,6 +30,7 @@ import org.apache.xerces.impl.xs.XSElementDecl;
 import org.apache.xerces.xs.XSConstants;
 import org.apache.xerces.xs.XSModel;
 import org.apache.xerces.xs.XSNamedMap;
+import org.junit.jupiter.api.Test;
 import org.taHjaj.wo.hamaxagoga.HamaxagogaException;
 import org.taHjaj.wo.hamaxagoga.Params;
 import org.taHjaj.wo.hamaxagoga.RandomXMLGenerator;
@@ -40,6 +42,7 @@ public class SimpleXSDsTest extends AbstractTestCase {
 
 	private static final int REPEATS = 5;
 
+	@Test
 	public void testSimpleXSDs() throws URISyntaxException {
 		final FileFilter fileFilter = FileFilterUtils.suffixFileFilter("xsd");
 		final int count = REPEATS;

@@ -16,8 +16,10 @@ package org.taHjaj.wo.hamaxagoga.junit;
  * the License.
  */
 import java.net.URL;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import org.apache.log4j.Logger;
+import org.junit.jupiter.api.Test;
 import org.taHjaj.wo.hamaxagoga.Params;
 import org.taHjaj.wo.hamaxagoga.RandomXMLGenerator;
 import org.taHjaj.wo.hamaxagoga.junit.support.AbstractTestCase;
@@ -29,6 +31,7 @@ public class NamespaceTest extends AbstractTestCase {
 	/**
 	 * Test what happens if a given namespace is to be mapped to a prefix.
 	 */
+	@Test
 	public void testNamespaces() {
 		final int count = REPEATS;
 		final String xsdFile = "/xsd/namespaces/sequence.xsd";
@@ -49,6 +52,7 @@ public class NamespaceTest extends AbstractTestCase {
 	/**
 	 * Test what happens if a given namespace is to be mapped to a prefix.
 	 */
+	@Test
 	public void testNamespaces2() {
 		final int count = REPEATS;
 		final String xsdFile = "/xsd/namespaces/sequence.xsd";
@@ -70,6 +74,7 @@ public class NamespaceTest extends AbstractTestCase {
 	/**
 	 * Test what happens if a given namespace is to be mapped to a prefix.
 	 */
+	@Test
 	public void testNamespaces3() {
 		final int count = REPEATS;
 		final String xsdFile = "/xsd/namespaces/sequence.xsd";
