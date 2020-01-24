@@ -19,15 +19,12 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.net.URL;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 import org.taHjaj.wo.hamaxagoga.Params;
 import org.taHjaj.wo.hamaxagoga.RandomXMLGenerator;
 import org.taHjaj.wo.hamaxagoga.junit.support.AbstractTestCase;
 
 import lombok.extern.log4j.Log4j2;
-import lombok.extern.slf4j.Slf4j;
 
 @Log4j2
 public class ByteTest extends AbstractTestCase {
