@@ -22,9 +22,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.math3.random.RandomGenerator;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;

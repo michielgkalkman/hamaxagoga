@@ -18,7 +18,7 @@ package org.taHjaj.wo.hamaxagoga.support;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.xerces.impl.xs.XSElementDecl;
 import org.apache.xerces.xs.XSComplexTypeDefinition;
 import org.apache.xerces.xs.XSSimpleTypeDefinition;

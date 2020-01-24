@@ -20,9 +20,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.xerces.impl.xpath.regex.Token.ClosureToken;
 import org.apache.xerces.impl.xpath.regex.Token.ConcatToken;
 import org.apache.xerces.impl.xpath.regex.Token.ParenToken;

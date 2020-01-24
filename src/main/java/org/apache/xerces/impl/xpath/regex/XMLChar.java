@@ -18,8 +18,8 @@ package org.apache.xerces.impl.xpath.regex;
 
 import java.util.Random;
 
-import org.apache.commons.lang.CharUtils;
-import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang3.CharUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 
 import lombok.extern.log4j.Log4j2;
 

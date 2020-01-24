@@ -31,8 +31,8 @@ import java.util.Iterator;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.SystemUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.SystemUtils;
 import org.junit.jupiter.api.BeforeAll;
 
 import lombok.extern.log4j.Log4j2;
