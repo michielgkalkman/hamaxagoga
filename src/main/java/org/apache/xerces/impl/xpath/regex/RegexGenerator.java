@@ -23,18 +23,17 @@ import java.util.Random;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
-import org.apache.log4j.Logger;
-import org.apache.xerces.impl.xpath.regex.RangeToken;
-import org.apache.xerces.impl.xpath.regex.RegularExpression;
 import org.apache.xerces.impl.xpath.regex.Token.ClosureToken;
 import org.apache.xerces.impl.xpath.regex.Token.ConcatToken;
 import org.apache.xerces.impl.xpath.regex.Token.ParenToken;
 import org.apache.xerces.impl.xpath.regex.Token.StringToken;
 import org.apache.xerces.impl.xpath.regex.Token.UnionToken;
 
+import lombok.extern.log4j.Log4j2;
+
+@Log4j2
 public class RegexGenerator {
     private static final int MAX_RANGE = 30;
-    private static final Logger logger = Logger.getLogger( RegexGenerator.class);
     private final RegularExpression regularExpression;
     private final Random random;
 
@@ -294,7 +293,7 @@ public class RegexGenerator {
 	default: {
 	    final String logMessage = "Token with type " + token.type
 		    + " not implemented yet.";
-	    logger.debug( logMessage);
+	    log.debug( logMessage);
 	    throw new RuntimeException( logMessage);
 	}
 	}

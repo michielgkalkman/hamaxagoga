@@ -1,5 +1,7 @@
 package org.taHjaj.wo.hamaxagoga.junit;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 /*
  * Copyright 2008 Michiel Kalkman
  * 
@@ -16,17 +18,17 @@ package org.taHjaj.wo.hamaxagoga.junit;
  * the License.
  */
 import java.net.URL;
-import static org.junit.jupiter.api.Assertions.fail;
 
-import org.apache.log4j.Logger;
 import org.junit.jupiter.api.Test;
 import org.taHjaj.wo.hamaxagoga.Params;
 import org.taHjaj.wo.hamaxagoga.RandomXMLGenerator;
 import org.taHjaj.wo.hamaxagoga.junit.support.AbstractTestCase;
 
+import lombok.extern.log4j.Log4j2;
+
+@Log4j2
 public class NamespaceTest extends AbstractTestCase {
 	private static final int REPEATS = 5;
-	private static final Logger logger = Logger.getLogger( NamespaceTest.class);
 
 	/**
 	 * Test what happens if a given namespace is to be mapped to a prefix.
@@ -40,11 +42,11 @@ public class NamespaceTest extends AbstractTestCase {
 		try {
 			params.addXsd( url.toURI());
 			final String tmpOutputDir = getTmpDirPath( "namespaces");
-			logger.debug( "Output files in " + tmpOutputDir);
+			log.debug( "Output files in " + tmpOutputDir);
 			new RandomXMLGenerator().generate(
 					params, tmpOutputDir, count);
 		} catch( final Exception exception) {
-			logger.error( exception.getLocalizedMessage(), exception);
+			log.error( exception.getLocalizedMessage(), exception);
 			fail( exception.getLocalizedMessage());
 		}
 	}
@@ -62,11 +64,11 @@ public class NamespaceTest extends AbstractTestCase {
 			params.addXsd( url.toURI());
 			params.addPredefinedNamespacePrefix( "http://hamaxagoga", "prefix");
 			final String tmpOutputDir = getTmpDirPath( "namespaces2");
-			logger.debug( "Output files in " + tmpOutputDir);
+			log.debug( "Output files in " + tmpOutputDir);
 			new RandomXMLGenerator().generate(
 					params, tmpOutputDir, count);
 		} catch( final Exception exception) {
-			logger.error( exception.getLocalizedMessage(), exception);
+			log.error( exception.getLocalizedMessage(), exception);
 			fail( exception.getLocalizedMessage());
 		}
 	}
@@ -84,11 +86,11 @@ public class NamespaceTest extends AbstractTestCase {
 			params.addXsd( url.toURI());
 			params.addPredefinedNamespacePrefix( "http://hamaxagoga", "");
 			final String tmpOutputDir = getTmpDirPath( "namespaces3");
-			logger.debug( "Output files in " + tmpOutputDir);
+			log.debug( "Output files in " + tmpOutputDir);
 			new RandomXMLGenerator().generate(
 					params, tmpOutputDir, count);
 		} catch( final Exception exception) {
-			logger.error( exception.getLocalizedMessage(), exception);
+			log.error( exception.getLocalizedMessage(), exception);
 			fail( exception.getLocalizedMessage());
 		}
 	}

@@ -19,15 +19,18 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.net.URL;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 import org.taHjaj.wo.hamaxagoga.Params;
 import org.taHjaj.wo.hamaxagoga.RandomXMLGenerator;
 import org.taHjaj.wo.hamaxagoga.junit.support.AbstractTestCase;
 
-public class ByteTest extends AbstractTestCase {
-	private static final Logger logger = Logger.getLogger( ByteTest.class);
+import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
+@Log4j2
+public class ByteTest extends AbstractTestCase {
 	@Test
 	public void testByte() {
 		final int count = 3;
@@ -37,12 +40,12 @@ public class ByteTest extends AbstractTestCase {
 		try {
 			params.addXsd( url.toURI());
 			final String integerTmpOutputDir = getTmpDirPath( "simpleByte");
-			logger.debug( "Output files in " + integerTmpOutputDir);
+			log.debug( "Output files in " + integerTmpOutputDir);
 			new RandomXMLGenerator().generate(
 					params, getTmpDirPath( "simpleByte"), count);
-			logger.debug( "Output files in " + integerTmpOutputDir);
+			log.debug( "Output files in " + integerTmpOutputDir);
 		} catch( final Exception exception) {
-			logger.debug( exception.getLocalizedMessage(), exception);
+			log.debug( exception.getLocalizedMessage(), exception);
 			fail( exception.getLocalizedMessage());
 		}
 	}

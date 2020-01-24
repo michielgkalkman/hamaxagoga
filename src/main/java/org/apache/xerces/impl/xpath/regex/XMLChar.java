@@ -20,11 +20,11 @@ import java.util.Random;
 
 import org.apache.commons.lang.CharUtils;
 import org.apache.commons.lang.RandomStringUtils;
-import org.apache.log4j.Logger;
 
+import lombok.extern.log4j.Log4j2;
+
+@Log4j2
 public class XMLChar {
-	static final Logger log = Logger.getLogger( XMLChar.class);
-
 	private static char[] validXmlChars;
 	private static final int NR_CHARS = 65535;
 	

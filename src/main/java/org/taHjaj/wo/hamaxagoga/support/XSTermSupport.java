@@ -15,7 +15,6 @@ package org.taHjaj.wo.hamaxagoga.support;
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-import org.apache.log4j.Logger;
 import org.apache.xerces.impl.xs.XSElementDecl;
 import org.apache.xerces.xs.XSConstants;
 import org.apache.xerces.xs.XSModelGroup;
@@ -23,8 +22,10 @@ import org.apache.xerces.xs.XSTerm;
 import org.apache.xml.serialize.XMLSerializer;
 import org.taHjaj.wo.hamaxagoga.generator.XMLGenerator;
 
+import lombok.extern.log4j.Log4j2;
+
+@Log4j2
 public class XSTermSupport extends XSSupport {
-    private static final Logger logger = Logger.getLogger( XSTermSupport.class);
     private final XSTerm term;
 
     public XSTermSupport( final XSTerm term) {
@@ -51,11 +52,11 @@ public class XSTermSupport extends XSSupport {
 	    break;
 	}
 	case XSConstants.WILDCARD: {
-	    logger.debug( "WILDCARD.");
+	    log.debug( "WILDCARD.");
 	    break;
 	}
 	default: {
-	    logger.error( "Huhm..");
+	    log.error( "Huhm..");
 	    throw new RuntimeException( "Not implemented yet.");
 	}
 	}

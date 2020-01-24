@@ -19,15 +19,18 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.net.URI;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 import org.taHjaj.wo.hamaxagoga.Params;
 import org.taHjaj.wo.hamaxagoga.RandomXMLGenerator;
 import org.taHjaj.wo.hamaxagoga.junit.support.AbstractTestCase;
 
+import lombok.extern.log4j.Log4j2;
+
+@Log4j2
 public class DiakrietenTest extends AbstractTestCase {
 	private static final int REPEATS = 5;
-	private static final Logger logger = Logger.getLogger( DiakrietenTest.class);
 	
 	@Test
 	public void testSimple() {
@@ -41,14 +44,14 @@ public class DiakrietenTest extends AbstractTestCase {
 			params.addXsd( uri);
 			params.setMaxFileSize( 1000);
 			params.setSeed( 1L);
-			params.setLexicalPattern( "[a-zA-Z0-9À-ÿ]");
+			params.setLexicalPattern( "[a-zA-Z0-9ï¿½-ï¿½]");
 		
 			final String targetDirectory = getTmpDirPath( "hamaxagoga/diakrieten");
-			logger.debug( "Target directory: " + targetDirectory);
+			log.debug( "Target directory: " + targetDirectory);
 			new RandomXMLGenerator().generate(
 					params, targetDirectory, count);
 		} catch( final Exception exception) {
-			logger.error( exception.getLocalizedMessage(), exception);
+			log.error( exception.getLocalizedMessage(), exception);
 			fail( exception.getLocalizedMessage());
 		}
 	}

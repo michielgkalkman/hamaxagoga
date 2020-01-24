@@ -1,5 +1,7 @@
 package org.taHjaj.wo.hamaxagoga.junit;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 /*
  * Copyright 2008 Michiel Kalkman
  *
@@ -19,16 +21,16 @@ package org.taHjaj.wo.hamaxagoga.junit;
 import java.net.URL;
 import java.security.SecureRandom;
 
-import org.apache.log4j.Logger;
 import org.junit.jupiter.api.Test;
 import org.taHjaj.wo.hamaxagoga.Params;
 import org.taHjaj.wo.hamaxagoga.RandomXMLGenerator;
 import org.taHjaj.wo.hamaxagoga.junit.support.AbstractTestCase;
 
-import static org.junit.jupiter.api.Assertions.fail;
+import lombok.extern.log4j.Log4j2;
+
+@Log4j2
 public class SimpleTest extends AbstractTestCase {
 	private static final int REPEATS = 5;
-	private static final Logger logger = Logger.getLogger( SimpleTest.class);
 	
 	@Test
 	public void testSimpleMail() {
@@ -42,7 +44,7 @@ public class SimpleTest extends AbstractTestCase {
 			new RandomXMLGenerator().generate(
 					params, getTmpDirPath( "tmpMails"), count);
 		} catch( final Exception exception) {
-			logger.error( exception.getLocalizedMessage(), exception);
+			log.error( exception.getLocalizedMessage(), exception);
 			fail( exception.getLocalizedMessage());
 		}
 	}
@@ -58,7 +60,7 @@ public class SimpleTest extends AbstractTestCase {
 			new RandomXMLGenerator().generate(
 					params, getTmpDirPath( "tmp3"), count);
 		} catch( final Exception exception) {
-			logger.error( exception.getLocalizedMessage(), exception);
+			log.error( exception.getLocalizedMessage(), exception);
 			fail( exception.getLocalizedMessage());
 		}
 	}
@@ -75,7 +77,7 @@ public class SimpleTest extends AbstractTestCase {
 			new RandomXMLGenerator().generate(
 					params, getTmpDirPath( "tmp3a"), count);
 		} catch( final Exception exception) {
-			logger.error( exception.getLocalizedMessage(), exception);
+			log.error( exception.getLocalizedMessage(), exception);
 			fail( exception.getLocalizedMessage());
 		}
 	}
@@ -92,7 +94,7 @@ public class SimpleTest extends AbstractTestCase {
 			new RandomXMLGenerator().generate(
 					params, getTmpDirPath( "tmp4"), count);
 		} catch( final Exception exception) {
-			logger.error( exception.getLocalizedMessage(), exception);
+			log.error( exception.getLocalizedMessage(), exception);
 			fail( exception.getLocalizedMessage());
 		}
 	}	
@@ -105,12 +107,12 @@ public class SimpleTest extends AbstractTestCase {
 		try {
 			params.addXsd( url.toURI());
 			final String tmpDir = getTmpDirPath( "tmp6");
-			logger.debug( "Output goes to " + tmpDir);
+			log.debug( "Output goes to " + tmpDir);
 			new RandomXMLGenerator().generate(
 					params, tmpDir, count);
-			logger.debug( "Output in " + tmpDir);
+			log.debug( "Output in " + tmpDir);
 		} catch( final Exception exception) {
-			logger.error( exception.getLocalizedMessage(), exception);
+			log.error( exception.getLocalizedMessage(), exception);
 			fail( exception.getLocalizedMessage());
 		}
 	}
@@ -123,12 +125,12 @@ public class SimpleTest extends AbstractTestCase {
 		try {
 			params.addXsd( url.toURI());
 			final String tmpDir = getTmpDirPath( "tmp7");
-			logger.debug( "Output goes to " + tmpDir);
+			log.debug( "Output goes to " + tmpDir);
 			new RandomXMLGenerator().generate(
 					params, tmpDir, count);
-			logger.debug( "Output in " + tmpDir);
+			log.debug( "Output in " + tmpDir);
 		} catch( final Exception exception) {
-			logger.error( exception.getLocalizedMessage(), exception);
+			log.error( exception.getLocalizedMessage(), exception);
 			fail( exception.getLocalizedMessage());
 		}
 	}
@@ -141,12 +143,12 @@ public class SimpleTest extends AbstractTestCase {
 		try {
 			params.addXsd( url.toURI());
 			final String tmpDir = getTmpDirPath( "tmp8");
-			logger.debug( "Output goes to " + tmpDir);
+			log.debug( "Output goes to " + tmpDir);
 			new RandomXMLGenerator().generate(
 					params, tmpDir, count);
-			logger.debug( "Output in " + tmpDir);
+			log.debug( "Output in " + tmpDir);
 		} catch( final Exception exception) {
-			logger.error( exception.getLocalizedMessage(), exception);
+			log.error( exception.getLocalizedMessage(), exception);
 			fail( exception.getLocalizedMessage());
 		}
 	}
@@ -160,12 +162,12 @@ public class SimpleTest extends AbstractTestCase {
 			params.addXsd( url.toURI());
 			params.setRandom( new SecureRandom());
 			final String tmpDir = getTmpDirPath( "tmp8");
-			logger.debug( "Output goes to " + tmpDir);
+			log.debug( "Output goes to " + tmpDir);
 			new RandomXMLGenerator().generate(
 					params, tmpDir, count);
-			logger.debug( "Output in " + tmpDir);
+			log.debug( "Output in " + tmpDir);
 		} catch( final Exception exception) {
-			logger.error( exception.getLocalizedMessage(), exception);
+			log.error( exception.getLocalizedMessage(), exception);
 			fail( exception.getLocalizedMessage());
 		}
 	}

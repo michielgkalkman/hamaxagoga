@@ -1,5 +1,7 @@
 package org.taHjaj.wo.hamaxagoga.junit;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 /*
  * Copyright 2008 Michiel Kalkman
  *
@@ -18,17 +20,17 @@ package org.taHjaj.wo.hamaxagoga.junit;
 
 import java.net.URL;
 
-import org.apache.log4j.Logger;
 import org.junit.jupiter.api.Test;
 import org.taHjaj.wo.hamaxagoga.Params;
 import org.taHjaj.wo.hamaxagoga.RandomXMLGenerator;
 import org.taHjaj.wo.hamaxagoga.junit.support.AbstractTestCase;
-import static org.junit.jupiter.api.Assertions.fail;
 
+import lombok.extern.log4j.Log4j2;
+
+@Log4j2
 public class IntegerTest extends AbstractTestCase {
 	private static final int REPEATS = 50;
-	private static final Logger logger = Logger.getLogger( IntegerTest.class);
-
+	
 	@Test
 	public void xtestInteger3a() {
 		final int count = REPEATS;
@@ -39,12 +41,12 @@ public class IntegerTest extends AbstractTestCase {
 		try {
 			params.addXsd( url.toURI());
 			final String integerTmpOutputDir = getTmpDirPath( "integers");
-			logger.debug( "Output files in " + integerTmpOutputDir);
+			log.debug( "Output files in " + integerTmpOutputDir);
 			new RandomXMLGenerator().generate(
 					params, getTmpDirPath( "integers"), count);
-			logger.debug( "Output files in " + integerTmpOutputDir);
+			log.debug( "Output files in " + integerTmpOutputDir);
 		} catch( final Exception exception) {
-			logger.debug( exception.getLocalizedMessage(), exception);
+			log.debug( exception.getLocalizedMessage(), exception);
 		}
 	}
 
@@ -58,12 +60,12 @@ public class IntegerTest extends AbstractTestCase {
 		try {
 			params.addXsd( url.toURI());
 			final String integerTmpOutputDir = getTmpDirPath( "nonnegativeinteger");
-			logger.debug( "Output files in " + integerTmpOutputDir);
+			log.debug( "Output files in " + integerTmpOutputDir);
 			new RandomXMLGenerator().generate(
 					params, getTmpDirPath( "integers"), count);
-			logger.debug( "Output files in " + integerTmpOutputDir);
+			log.debug( "Output files in " + integerTmpOutputDir);
 		} catch( final Exception exception) {
-			logger.debug( exception.getLocalizedMessage(), exception);
+			log.debug( exception.getLocalizedMessage(), exception);
 		}
 	}
 
@@ -77,12 +79,12 @@ public class IntegerTest extends AbstractTestCase {
 		try {
 			params.addXsd( url.toURI());
 			final String integerTmpOutputDir = getTmpDirPath( "totalDigits");
-			logger.debug( "Output files in " + integerTmpOutputDir);
+			log.debug( "Output files in " + integerTmpOutputDir);
 			new RandomXMLGenerator().generate(
 					params, getTmpDirPath( "totalDigits"), count);
-			logger.debug( "Output files in " + integerTmpOutputDir);
+			log.debug( "Output files in " + integerTmpOutputDir);
 		} catch( final Exception exception) {
-			logger.debug( exception.getLocalizedMessage(), exception);
+			log.debug( exception.getLocalizedMessage(), exception);
 			fail( exception.getLocalizedMessage());
 		}
 	}
@@ -96,12 +98,12 @@ public class IntegerTest extends AbstractTestCase {
 //		try {
 //			params.addXsd( url.toURI());
 //			final String integerTmpOutputDir = getTmpDirPath( "totalDigits1");
-//			logger.debug( "Output files in " + integerTmpOutputDir);
+//			log.debug( "Output files in " + integerTmpOutputDir);
 //			new RandomXMLGenerator().generate(
 //					params, getTmpDirPath( "totalDigits1"), count, true);
-//			logger.debug( "Output files in " + integerTmpOutputDir);
+//			log.debug( "Output files in " + integerTmpOutputDir);
 //		} catch( final Exception exception) {
-//			logger.debug( exception.getLocalizedMessage(), exception);
+//			log.debug( exception.getLocalizedMessage(), exception);
 //			fail( exception.getLocalizedMessage());
 //		}
 //	}

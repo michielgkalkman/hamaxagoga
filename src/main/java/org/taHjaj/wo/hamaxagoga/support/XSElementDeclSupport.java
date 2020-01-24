@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.apache.xerces.impl.xs.XSElementDecl;
 import org.apache.xerces.xs.XSComplexTypeDefinition;
 import org.apache.xerces.xs.XSSimpleTypeDefinition;
@@ -30,10 +29,10 @@ import org.taHjaj.wo.hamaxagoga.generator.XMLGenerator;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-public class XSElementDeclSupport extends XSSupport {
-	private static final Logger logger = Logger
-			.getLogger(XSElementDeclSupport.class);
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
+public class XSElementDeclSupport extends XSSupport {
 	private final XSElementDecl elementDecl;
 
 	private Map<String,String> registeredPrefixes = new HashMap<String,String>(); // prefix --> namespace URI.
@@ -79,7 +78,7 @@ public class XSElementDeclSupport extends XSSupport {
 			final XSSimpleTypeDefinition simpleTypeDefinition = (XSSimpleTypeDefinition) elementDecl
 					.getTypeDefinition();
 
-			logger.debug("SERIALIZE: Start " + localName);
+			log.debug("SERIALIZE: Start " + localName);
 			serializer.startElement(namespaceURI, localName, qName, null);
 
 			final String value;
@@ -88,7 +87,7 @@ public class XSElementDeclSupport extends XSSupport {
 				if (object instanceof String) {
 					value = (String) elementDecl.getActualVC();
 				} else {
-					logger.debug("ActualVC instanceOf "
+					log.debug("ActualVC instanceOf "
 							+ object.getClass().getName());
 					value = object.toString();
 				}
@@ -103,7 +102,7 @@ public class XSElementDeclSupport extends XSSupport {
 
 			break;
 		default: // case XSTypeDefinition.COMPLEX_TYPE:
-			logger.debug("COMPLEX_TYPE");
+			log.debug("COMPLEX_TYPE");
 
 			final Attributes attributes = instanceGenerator
 					.getAttributes(((XSComplexTypeDefinition) typeDefinition)
@@ -117,11 +116,11 @@ public class XSElementDeclSupport extends XSSupport {
 					":"), instanceGenerator.getNamespaceURI2prefix());
 				}
 
-				logger.debug("SERIALIZE: Start " + localName);
+				log.debug("SERIALIZE: Start " + localName);
 				serializer.startElement(namespaceURI, localName, qName,
 						attributes);
 			} else {
-				logger.debug("SERIALIZE: Start " + localName);
+				log.debug("SERIALIZE: Start " + localName);
 				serializer.startElement(namespaceURI, localName, qName, null);
 			}
 
@@ -139,7 +138,7 @@ public class XSElementDeclSupport extends XSSupport {
 			final XMLGenerator instanceGenerator, final String localName)
 			throws SAXException, HamaxagogaException {
 		{
-			logger.debug("SERIALIZE: END " + localName);
+			log.debug("SERIALIZE: END " + localName);
 			serializer.endElement(localName);
 		}
 

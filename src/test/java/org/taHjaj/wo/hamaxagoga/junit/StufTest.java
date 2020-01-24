@@ -1,14 +1,15 @@
 package org.taHjaj.wo.hamaxagoga.junit;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.net.URI;
 
-import org.apache.log4j.Logger;
 import org.junit.jupiter.api.Test;
 import org.taHjaj.wo.hamaxagoga.Params;
 import org.taHjaj.wo.hamaxagoga.RandomXMLGenerator;
 import org.taHjaj.wo.hamaxagoga.junit.support.AbstractTestCase;
 
-import static org.junit.jupiter.api.Assertions.fail;
+import lombok.extern.log4j.Log4j2;
 /*
  * Copyright 2008 Michiel Kalkman
  * 
@@ -28,9 +29,8 @@ import static org.junit.jupiter.api.Assertions.fail;
  *
  * Oasis standards can be found from http://www.oasis-open.org/specs/index.php.
  */
+@Log4j2
 public class StufTest extends AbstractTestCase {
-	private static final Logger logger = Logger.getLogger( StufTest.class);
-	
 //	public void testStuf() {
 //		final int count = 25;
 //
@@ -45,11 +45,11 @@ public class StufTest extends AbstractTestCase {
 //			params.setEncoding( "iso-8859-1");
 //		
 //			final String targetDirectory = getTmpDirPath( "hamaxagoga/stuf0204");
-//			logger.debug( "Target directory: " + targetDirectory);
+//			log.debug( "Target directory: " + targetDirectory);
 //			new RandomXMLGenerator().generate(
 //					params, targetDirectory, count, true);
 //		} catch( final Exception exception) {
-//			logger.error( exception.getLocalizedMessage(), exception);
+//			log.error( exception.getLocalizedMessage(), exception);
 //			fail( exception.getLocalizedMessage());
 //		}
 //	}
@@ -68,11 +68,11 @@ public class StufTest extends AbstractTestCase {
 //			params.setEncoding( "iso-8859-1");
 //		
 //			final String targetDirectory = getTmpDirPath( "hamaxagoga/bg0204/Bg");
-//			logger.debug( "Target directory: " + targetDirectory);
+//			log.debug( "Target directory: " + targetDirectory);
 //			new RandomXMLGenerator().generate(
 //					params, targetDirectory, count);
 //		} catch( final Exception exception) {
-//			logger.error( exception.getLocalizedMessage(), exception);
+//			log.error( exception.getLocalizedMessage(), exception);
 //			fail( exception.getLocalizedMessage());
 //		}
 //	}
@@ -92,11 +92,11 @@ public class StufTest extends AbstractTestCase {
 //			params.setIgnoringValidationErrors( true);
 //		
 //			final String targetDirectory = getTmpDirPath( "hamaxagoga/bg0204/Bg2");
-//			logger.debug( "Target directory: " + targetDirectory);
+//			log.debug( "Target directory: " + targetDirectory);
 //			new RandomXMLGenerator().generate(
 //					params, targetDirectory, count);
 //		} catch( final Exception exception) {
-//			logger.error( exception.getLocalizedMessage(), exception);
+//			log.error( exception.getLocalizedMessage(), exception);
 //			fail( exception.getLocalizedMessage());
 //		}
 //	}
@@ -116,11 +116,11 @@ public class StufTest extends AbstractTestCase {
 //			params.setIgnoringValidationErrors( true);
 //		
 //			final String targetDirectory = getTmpDirPath( "hamaxagoga/bg0204/Bg3");
-//			logger.debug( "Target directory: " + targetDirectory);
+//			log.debug( "Target directory: " + targetDirectory);
 //			new RandomXMLGenerator().generateWithParallelValidation( 
 //					params, targetDirectory, count);
 //		} catch( final Exception exception) {
-//			logger.error( exception.getLocalizedMessage(), exception);
+//			log.error( exception.getLocalizedMessage(), exception);
 //			fail( exception.getLocalizedMessage());
 //		}
 //	}
@@ -140,11 +140,11 @@ public class StufTest extends AbstractTestCase {
 //			params.setRootElementName( "tests");
 //		
 //			final String targetDirectory = getTmpDirPath( "hamaxagoga/bg0204");
-//			logger.debug( "Target directory: " + targetDirectory);
+//			log.debug( "Target directory: " + targetDirectory);
 //			new RandomXMLGenerator().generate(
 //					params, targetDirectory, count);
 //		} catch( final Exception exception) {
-//			logger.error( exception.getLocalizedMessage(), exception);
+//			log.error( exception.getLocalizedMessage(), exception);
 //			fail( exception.getLocalizedMessage());
 //		}
 //	}
@@ -166,11 +166,11 @@ public class StufTest extends AbstractTestCase {
 			params.setIgnoringValidationErrors(true);
 		
 			final String targetDirectory = getTmpDirPath( "hamaxagoga/bg0204/test");
-			logger.debug( "Target directory: " + targetDirectory);
+			log.debug( "Target directory: " + targetDirectory);
 			new RandomXMLGenerator().generate(
 					params, targetDirectory, count);
 		} catch( final Exception exception) {
-			logger.error( exception.getLocalizedMessage(), exception);
+			log.error( exception.getLocalizedMessage(), exception);
 			fail( exception.getLocalizedMessage());
 		}
 	}

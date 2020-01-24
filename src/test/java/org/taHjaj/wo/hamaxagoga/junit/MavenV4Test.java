@@ -1,5 +1,7 @@
 package org.taHjaj.wo.hamaxagoga.junit;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 /*
  * Copyright 2008 Michiel Kalkman
  *
@@ -18,15 +20,15 @@ package org.taHjaj.wo.hamaxagoga.junit;
 
 import java.net.URI;
 
-import org.apache.log4j.Logger;
 import org.junit.jupiter.api.Test;
 import org.taHjaj.wo.hamaxagoga.Params;
 import org.taHjaj.wo.hamaxagoga.RandomXMLGenerator;
 import org.taHjaj.wo.hamaxagoga.junit.support.AbstractTestCase;
-import static org.junit.jupiter.api.Assertions.fail;
 
+import lombok.extern.log4j.Log4j2;
+
+@Log4j2
 public class MavenV4Test extends AbstractTestCase {
-	private static final Logger logger = Logger.getLogger( MavenV4Test.class);
 	
 	@Test
 	public void testSimple() {
@@ -41,14 +43,14 @@ public class MavenV4Test extends AbstractTestCase {
 			params.setSeed( 1L);
 		
 			final String targetDirectory = getTmpDirPath( "hamaxagoga/xmlschema");
-			logger.debug( "Target directory: " + targetDirectory);
+			log.debug( "Target directory: " + targetDirectory);
 			new RandomXMLGenerator().generate(
 					params, targetDirectory, count);
 			
-//			compareDirectories( logger, new File( targetDirectory), new File(
+//			compareDirectories( log, new File( targetDirectory), new File(
 //				this.getClass().getResource( "/expected/MavenV4Test").toURI()));
 		} catch( final Exception exception) {
-			logger.error( exception.getLocalizedMessage(), exception);
+			log.error( exception.getLocalizedMessage(), exception);
 			fail( exception.getLocalizedMessage());
 		}
 	}

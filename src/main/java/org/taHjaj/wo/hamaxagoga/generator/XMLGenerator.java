@@ -1,7 +1,7 @@
 package org.taHjaj.wo.hamaxagoga.generator;
 
 /*
- * Copyright 2008 Michiel Kalkmaón
+ * Copyright 2008 Michiel Kalkmaï¿½n
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -41,10 +41,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.commons.lang.time.FastDateFormat;
-import org.apache.commons.math3.dfp.DfpField;
-import org.apache.commons.math3.util.MathUtils;
 import org.apache.commons.math3.util.Precision;
-import org.apache.log4j.Logger;
 import org.apache.xerces.impl.xpath.regex.RegexGenerator;
 import org.apache.xerces.impl.xpath.regex.XMLChar;
 import org.apache.xerces.impl.xs.XSElementDecl;
@@ -73,9 +70,10 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
-public class XMLGenerator {
-	private static final Logger logger = Logger.getLogger(XMLGenerator.class);
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
+public class XMLGenerator {
 	private int prefixCount = 0;
 
 	private Map<String, String> predefinedNamespacePrefixes;
@@ -169,8 +167,8 @@ public class XMLGenerator {
 		if (!fQuitting && maxFileSize > 0 && byteCount > maxFileSize) {
 			fQuitting = true;
 		}
-		if (logger.isDebugEnabled()) {
-			logger.debug("quitting = " + fQuitting + ",maxfilesize = "
+		if (log.isDebugEnabled()) {
+			log.debug("quitting = " + fQuitting + ",maxfilesize = "
 					+ maxFileSize + ",filelength = " + byteCount + ",filelength = " + getCountingOutputStream().getCount());
 		}
 	}
@@ -229,7 +227,7 @@ public class XMLGenerator {
 			final String errorMsg = "'" + rootElementName
 					+ "' is not a rootelement " + rootElements.toString();
 
-			logger.error(errorMsg);
+			log.error(errorMsg);
 			throw new HamaxagogaException(errorMsg);
 		}
 	}
@@ -256,7 +254,7 @@ public class XMLGenerator {
 		if (xsmodel == null) {
 			final String errorMsg = "Could not generate a schema model from "
 					+ params.getXsds();
-			logger.error(errorMsg);
+			log.error(errorMsg);
 			throw new HamaxagogaException(errorMsg);
 		}
 
@@ -299,7 +297,7 @@ public class XMLGenerator {
 
 	private void toSerializer(final XMLSerializer serializer, final String value)
 			throws SAXException {
-		logger.debug("SERIALIZE: characters");
+		log.debug("SERIALIZE: characters");
 		serializer.characters(value.toCharArray(), 0, value.length());
 	}
 
@@ -587,7 +585,7 @@ public class XMLGenerator {
 					"Not implemented: dayTimeDuration (http://www.w3.org/TR/xmlschema11-2/#dayTimeDuration)");
 		} else {
 
-			logger.debug("Not a primitive datatype: " + name);
+			log.debug("Not a primitive datatype: " + name);
 			final XSTypeDefinition baseType = getBaseType(simpleTypeDefinition);
 
 			value = processPrimitiveDatatype(simpleTypeDefinition, baseType,
@@ -777,7 +775,7 @@ public class XMLGenerator {
 			datatypeFactory = DatatypeFactory.newInstance();
 		} catch (final DatatypeConfigurationException datatypeConfigurationException) {
 			// TODO Auto-generated catch block
-			logger.error(datatypeConfigurationException);
+			log.error(datatypeConfigurationException);
 			throw new HamaxagogaException(datatypeConfigurationException);
 		}
 		// @TODO more options ...

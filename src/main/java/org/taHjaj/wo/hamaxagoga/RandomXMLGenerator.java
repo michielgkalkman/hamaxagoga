@@ -36,17 +36,16 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
 import org.apache.commons.io.output.TeeOutputStream;
-import org.apache.log4j.Logger;
 import org.apache.xerces.xs.XSModel;
 import org.taHjaj.wo.hamaxagoga.generator.XMLGenerator;
 import org.taHjaj.wo.hamaxagoga.generator.XSHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-public class RandomXMLGenerator {
-	private static final Logger logger = Logger
-			.getLogger(RandomXMLGenerator.class);
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
+public class RandomXMLGenerator {
 	public RandomXMLGenerator() {
 		super();
 	}
@@ -107,26 +106,26 @@ public class RandomXMLGenerator {
 
 				fValid = validate(params, file, parseErrorMsgs);
 			} catch (FileNotFoundException e) {
-				logger.error(e);
+				log.error(e);
 				fValid = false;
 			} catch (HamaxagogaException e) {
-				logger.error(e);
+				log.error(e);
 				fValid = false;
 			} catch (SAXException e) {
-				logger.error(e);
+				log.error(e);
 				fValid = false;
 			} catch (IOException e) {
-				logger.error(e);
+				log.error(e);
 				fValid = false;
 			} catch (ParserConfigurationException e) {
-				logger.error(e);
+				log.error(e);
 				fValid = false;
 			} finally {
 				if (outputStream != null) {
 					try {
 						outputStream.close();
 					} catch (IOException e) {
-						logger.error(e);
+						log.error(e);
 					}
 				}
 			}
@@ -141,7 +140,7 @@ public class RandomXMLGenerator {
 			throw new HamaxagogaException(
 					"Exception during XML generation: " + allParseErrorMsgs);
 		} else {
-			logger.error( allParseErrorMsgs);
+			log.error( allParseErrorMsgs);
 		}
 	}
 
@@ -163,14 +162,14 @@ public class RandomXMLGenerator {
 						xsmodel);
 			} catch ( final Throwable throwable) {
 				final String errorMsg = "Error while generating XML document " + targetFile;
-				logger.error( errorMsg, throwable);
+				log.error( errorMsg, throwable);
 				throw new HamaxagogaException( errorMsg, throwable);
 			} finally {
 				if (outputStream != null) {
 					try {
 						outputStream.close();
 					} catch (IOException e) {
-						logger.error(e);
+						log.error(e);
 					}
 				}
 			}
@@ -207,13 +206,13 @@ public class RandomXMLGenerator {
 		try {
 			xsmodel = XMLGenerator.getXsModel(params);
 		} catch ( final ClassNotFoundException classNotFoundException) {
-			logger.error( classNotFoundException);
+			log.error( classNotFoundException);
 			throw new HamaxagogaException( classNotFoundException);
 		} catch ( final InstantiationException instantiationException) {
-			logger.error( instantiationException);
+			log.error( instantiationException);
 			throw new HamaxagogaException( instantiationException);
 		} catch ( final IllegalAccessException illegalAccessException) {
-			logger.error( illegalAccessException);
+			log.error( illegalAccessException);
 			throw new HamaxagogaException( illegalAccessException);
 		}
 		
@@ -245,18 +244,18 @@ public class RandomXMLGenerator {
 							threadCommunicator.fValid = validate(params,
 									pipedInputStream, currentFileParseErrorMsgs);
 						} catch (ParserConfigurationException e) {
-							logger.error(e);
+							log.error(e);
 						} catch (IOException e) {
-							logger.error(e);
+							log.error(e);
 						} catch (SAXException e) {
-							logger.error(e);
+							log.error(e);
 						} finally {
 							if (pipedInputStream != null) {
 								try {
 									pipedInputStream.close();
 								} catch ( final IOException exception) {
 									// TODO Auto-generated catch block
-									logger.error( "Exception while closing pipe", exception);
+									log.error( "Exception while closing pipe", exception);
 								}
 							}
 						}
@@ -273,40 +272,40 @@ public class RandomXMLGenerator {
 
 				fValid = threadCommunicator.fValid;
 			} catch (InterruptedException e) {
-				logger.error(e);
+				log.error(e);
 				fValid = false;
 			} catch (FileNotFoundException e) {
-				logger.error(e);
+				log.error(e);
 				fValid = false;
 			} catch (HamaxagogaException e) {
-				logger.error(e);
+				log.error(e);
 				fValid = false;
 			} catch (SAXException e) {
-				logger.error(e);
+				log.error(e);
 				fValid = false;
 			} catch (IOException e) {
-				logger.error(e);
+				log.error(e);
 				fValid = false;
 			} finally {
 				if (outputStream != null) {
 					try {
 						outputStream.close();
 					} catch (IOException e) {
-						logger.error(e);
+						log.error(e);
 					}
 				}
 				if ( pipedOutputStream != null) {
 					try {
 						pipedOutputStream.close();
 					} catch (IOException e) {
-						logger.error(e);
+						log.error(e);
 					}
 				}
 				if ( teeOutputStream != null) {
 					try {
 						teeOutputStream.close();
 					} catch (IOException e) {
-						logger.error(e);
+						log.error(e);
 					}
 				}
 			}
@@ -327,8 +326,8 @@ public class RandomXMLGenerator {
 	private boolean validate(final Params params, final File file, final StringBuilder errorMsg)
 			throws ParserConfigurationException, IOException, SAXException {
 
-		if( logger.isDebugEnabled()) {
-			logger.debug("Validating " + file.getAbsolutePath());
+		if( log.isDebugEnabled()) {
+			log.debug("Validating " + file.getAbsolutePath());
 		}
 
 		Reader reader = null;
@@ -348,7 +347,7 @@ public class RandomXMLGenerator {
 					reader.close();
 				}
 			} catch ( final IOException exception) {
-				logger.error( "Error while closing reader " + exception);
+				log.error( "Error while closing reader " + exception);
 			}
 		}
 	}
@@ -356,7 +355,7 @@ public class RandomXMLGenerator {
 	private boolean validate(final Params params, final Reader reader, final StringBuilder errorMsg)
 			throws ParserConfigurationException, IOException, SAXException {
 
-		logger.debug("Validating ...");
+		log.debug("Validating ...");
 
 		final StreamSource[] sources = new StreamSource[params.getXsds().size()];
 
@@ -392,7 +391,7 @@ public class RandomXMLGenerator {
 	private boolean validate(final Params params, final InputStream inputStream, final StringBuilder errorMsg)
 			throws ParserConfigurationException, IOException, SAXException {
 
-		logger.debug("Validating ...");
+		log.debug("Validating ...");
 
 		final StreamSource[] sources = new StreamSource[params.getXsds().size()];
 

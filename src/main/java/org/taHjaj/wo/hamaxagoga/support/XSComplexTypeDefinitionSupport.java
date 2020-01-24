@@ -16,16 +16,16 @@ package org.taHjaj.wo.hamaxagoga.support;
  * the License.
  */
 import org.apache.commons.lang.NotImplementedException;
-import org.apache.log4j.Logger;
 import org.apache.xerces.xs.XSComplexTypeDefinition;
 import org.apache.xerces.xs.XSParticle;
 import org.apache.xml.serialize.XMLSerializer;
 import org.taHjaj.wo.hamaxagoga.generator.XMLGenerator;
 import org.xml.sax.SAXException;
 
+import lombok.extern.log4j.Log4j2;
+
+@Log4j2
 public class XSComplexTypeDefinitionSupport extends XSSupport {
-    private static final Logger logger = Logger
-	    .getLogger( XSComplexTypeDefinitionSupport.class);
     private final XSComplexTypeDefinition complexTypeDefinition;
 
     public XSComplexTypeDefinitionSupport(
@@ -39,7 +39,7 @@ public class XSComplexTypeDefinitionSupport extends XSSupport {
 	final short contentType = complexTypeDefinition.getContentType();
 	switch( contentType) {
 	case XSComplexTypeDefinition.CONTENTTYPE_ELEMENT: {
-	    logger.debug( "CONTENTTYPE_ELEMENT");
+	    log.debug( "CONTENTTYPE_ELEMENT");
 
 	    final XSParticle particle = complexTypeDefinition.getParticle();
 
@@ -50,7 +50,7 @@ public class XSComplexTypeDefinitionSupport extends XSSupport {
 	    break;
 	}
 	case XSComplexTypeDefinition.CONTENTTYPE_EMPTY: {
-	    logger.debug( "CONTENTTYPE_EMPTY");
+	    log.debug( "CONTENTTYPE_EMPTY");
 
 	    // We're done.
 	    instanceGenerator.getXmlSchemaObjects().pop();
@@ -58,7 +58,7 @@ public class XSComplexTypeDefinitionSupport extends XSSupport {
 	    break;
 	}
 	case XSComplexTypeDefinition.CONTENTTYPE_MIXED: {
-	    logger.debug( "CONTENTTYPE_MIXED");
+	    log.debug( "CONTENTTYPE_MIXED");
 	    // Mixed type.
 	    // @TODO Create real mixed content
 	    final XSParticle particle = complexTypeDefinition.getParticle();
@@ -70,7 +70,7 @@ public class XSComplexTypeDefinitionSupport extends XSSupport {
 	    break;
 	}
 	case XSComplexTypeDefinition.CONTENTTYPE_SIMPLE: {
-	    logger.debug( "CONTENTTYPE_SIMPLE");
+	    log.debug( "CONTENTTYPE_SIMPLE");
 
 	    instanceGenerator.processSimpleContent( serializer,
 		    complexTypeDefinition);

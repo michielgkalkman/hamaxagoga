@@ -1,5 +1,7 @@
 package org.taHjaj.wo.hamaxagoga.junit;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.commons.math3.random.RandomGenerator;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -8,9 +10,6 @@ import org.taHjaj.wo.hamaxagoga.Params;
 import org.taHjaj.wo.hamaxagoga.generator.Facet;
 import org.taHjaj.wo.hamaxagoga.generator.XMLGenerator;
 import org.taHjaj.wo.hamaxagoga.junit.support.AbstractTestCase;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 
 public class GeneratorTest extends AbstractTestCase {
 	private Mockery mockery = new Mockery();

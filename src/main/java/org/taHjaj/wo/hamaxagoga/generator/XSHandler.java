@@ -19,12 +19,13 @@ package org.taHjaj.wo.hamaxagoga.generator;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import lombok.extern.log4j.Log4j2;
+
+@Log4j2
 public class XSHandler extends DefaultHandler {
-	private static final Logger logger = Logger.getLogger( XSHandler.class);
 	private boolean valid = true;
 	private final int maxErrors;
 	private int nrErrors = 0;
@@ -48,7 +49,7 @@ public class XSHandler extends DefaultHandler {
 			+ ", col:" + parseException.getColumnNumber()
 			+ ":" + parseException.getLocalizedMessage();
 			parseErrors.add( errorMsg);
-			logger.error( errorMsg, parseException);
+			log.error( errorMsg, parseException);
 		}
 		valid = false;
 	}
@@ -61,7 +62,7 @@ public class XSHandler extends DefaultHandler {
 			+ ", col:" + parseException.getColumnNumber()
 			+ ":" + parseException.getLocalizedMessage();
 			parseErrors.add( errorMsg);
-			logger.error( errorMsg, parseException);
+			log.error( errorMsg, parseException);
 		}
 		valid = false;
 	}
@@ -71,7 +72,7 @@ public class XSHandler extends DefaultHandler {
 		final String errorMsg = "line:" + parseException.getLineNumber()
 		+ ", col:" + parseException.getColumnNumber()
 		+ ":" + parseException.getLocalizedMessage();
-		logger.error( errorMsg, parseException);
+		log.error( errorMsg, parseException);
 		valid = false;
 	}
 

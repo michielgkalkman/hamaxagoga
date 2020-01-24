@@ -33,15 +33,15 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.SystemUtils;
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Logger;
 import org.junit.jupiter.api.BeforeAll;
 
+import lombok.extern.log4j.Log4j2;
+
+@Log4j2
 public class AbstractTestCase {
 
 	@BeforeAll
 	protected static void setUp() throws Exception {
-		BasicConfigurator.configure();
 	}
 
 	protected String getTmpDirPath(final String tmpDir) {
@@ -71,7 +71,7 @@ public class AbstractTestCase {
 		return files;
 	}
 
-	protected void compareDirectories(final Logger logger,
+	protected void compareDirectories(
 			final File directory1, final File directory2) {
 		final Collection<String> files1 = listFiles(directory1,
 				new String[] { "xml" }, true);
@@ -90,7 +90,7 @@ public class AbstractTestCase {
 					Reader reader2 = new BufferedReader(new FileReader(file2))) {
 
 					if (!IOUtils.contentEquals(reader1, reader2)) {
-						logger.error("File " + file1.getAbsolutePath()
+						log.error("File " + file1.getAbsolutePath()
 								+ " has another contents as "
 								+ file2.getAbsolutePath());
 						fFailure = true;
@@ -99,12 +99,12 @@ public class AbstractTestCase {
 					
 					final String message = "Error while comparing file contents for file "
 							+ file;
-					logger.error(message, fileNotFoundException);
+					log.error(message, fileNotFoundException);
 					fail(message);
 				} catch (final IOException exception) {
 					final String message = "Error while comparing file contents for file "
 							+ file;
-					logger.error(message, exception);
+					log.error(message, exception);
 					fail(message);
 				}
 			}
@@ -113,15 +113,15 @@ public class AbstractTestCase {
 				fail("Some files had another content than was expected");
 			}
 		} else {
-			logMissingFiles(logger, directory1, directory2, files1, files2);
-			logMissingFiles(logger, directory2, directory1, files2, files1);
+			logMissingFiles(directory1, directory2, files1, files2);
+			logMissingFiles(directory2, directory1, files2, files1);
 
 			fail("Generated files do not match expected files");
 		}
 
 	}
 
-	private void logMissingFiles(final Logger logger, final File directory1,
+	private void logMissingFiles(final File directory1,
 			final File directory2, final Collection<String> files1,
 			final Collection<String> files2) {
 		final Collection<String> missingFiles = CollectionUtils.subtract(
@@ -129,7 +129,7 @@ public class AbstractTestCase {
 
 		for (final String missingFile : missingFiles) {
 			final File file = new File(directory1, missingFile);
-			logger.error("File " + file.getName() + " occurs in "
+			log.error("File " + file.getName() + " occurs in "
 					+ directory1.getAbsolutePath() + " but not in directory "
 					+ directory2.getAbsolutePath());
 		}

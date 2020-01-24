@@ -20,18 +20,18 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Random;
 
-import org.apache.log4j.Logger;
 import org.apache.xerces.impl.xpath.regex.REUtil;
 import org.apache.xerces.impl.xpath.regex.RegexGenerator;
 import org.junit.jupiter.api.Test;
 import org.taHjaj.wo.hamaxagoga.junit.support.AbstractTestCase;
 
-public class RegexTest extends AbstractTestCase {
-	private static final Logger logger = Logger.getLogger(RegexTest.class);
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
+public class RegexTest extends AbstractTestCase {
 	@Test
 	public void testSimple() {
-		doTestRegex("[À-ÿ]");
+		doTestRegex("[ï¿½-ï¿½]");
 		doTestRegex("[\\-+]?[0-9]+");
 		doTestRegex("[0-9]{6}");
 		// From http://www.w3.org/TR/xmlschema11-2/#dt-pattern
@@ -78,7 +78,7 @@ public class RegexTest extends AbstractTestCase {
 	private void doTestRegex(final String regex) {
 		final RegexGenerator regexGenerator = new RegexGenerator(new Random(), regex);
 
-		logger.debug("Generated strings from:" + regex);
+		log.debug("Generated strings from:" + regex);
 
 		for (int i = 0; i < 25; i++) {
 			run(regexGenerator, regex);
@@ -89,11 +89,11 @@ public class RegexTest extends AbstractTestCase {
 		try {
 			final String generatedString = regexGenerator.generateString();
 
-			logger.debug("Generated string:" + generatedString);
+			log.debug("Generated string:" + generatedString);
 
 			assertTrue(REUtil.matches(regexGenerator.getRegex(), generatedString));
 		} catch (Exception e) {
-			logger.error(e.getLocalizedMessage());
+			log.error(e.getLocalizedMessage());
 		}
 	}
 }

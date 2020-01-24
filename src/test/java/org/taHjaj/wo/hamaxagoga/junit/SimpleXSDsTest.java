@@ -1,5 +1,7 @@
 package org.taHjaj.wo.hamaxagoga.junit;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 /*
  * Copyright 2008 Michiel Kalkman
  * 
@@ -19,13 +21,11 @@ package org.taHjaj.wo.hamaxagoga.junit;
  */
 
 import java.io.File;
-import static org.junit.jupiter.api.Assertions.fail;
 import java.io.FileFilter;
 import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.apache.commons.io.filefilter.FileFilterUtils;
-import org.apache.log4j.Logger;
 import org.apache.xerces.impl.xs.XSElementDecl;
 import org.apache.xerces.xs.XSConstants;
 import org.apache.xerces.xs.XSModel;
@@ -37,9 +37,10 @@ import org.taHjaj.wo.hamaxagoga.RandomXMLGenerator;
 import org.taHjaj.wo.hamaxagoga.generator.XMLGenerator;
 import org.taHjaj.wo.hamaxagoga.junit.support.AbstractTestCase;
 
-public class SimpleXSDsTest extends AbstractTestCase {
-	private static final Logger logger = Logger.getLogger(SimpleTest.class);
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
+public class SimpleXSDsTest extends AbstractTestCase {
 	private static final int REPEATS = 5;
 
 	@Test
@@ -80,7 +81,7 @@ public class SimpleXSDsTest extends AbstractTestCase {
 					
 					final File targetDir = new File( tmpDir, rootName);
 					
-					logger.debug(">>> Processing " + xsdFile.getAbsolutePath()
+					log.debug(">>> Processing " + xsdFile.getAbsolutePath()
 							+ " Output to " + targetDir);
 					
 					for (int i = 0; i < REPEATS; i++) {
@@ -88,7 +89,7 @@ public class SimpleXSDsTest extends AbstractTestCase {
 							new RandomXMLGenerator().generate(params, targetDir,
 									count);
 						} catch (final Exception exception) {
-							logger.error(exception.getLocalizedMessage(),
+							log.error(exception.getLocalizedMessage(),
 											exception);
 							fail(exception.getLocalizedMessage());
 						}

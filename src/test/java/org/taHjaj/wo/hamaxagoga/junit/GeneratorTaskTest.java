@@ -1,5 +1,7 @@
 package org.taHjaj.wo.hamaxagoga.junit;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 /*
  * Copyright 2008 Michiel Kalkman
  * 
@@ -19,17 +21,16 @@ import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-import org.apache.log4j.Logger;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.junit.jupiter.api.Test;
 import org.taHjaj.wo.hamaxagoga.GeneratorTask;
 import org.taHjaj.wo.hamaxagoga.junit.support.AbstractTestCase;
-import static org.junit.jupiter.api.Assertions.fail;
 
+import lombok.extern.log4j.Log4j2;
+
+@Log4j2
 public class GeneratorTaskTest extends AbstractTestCase {
-	private static final Logger logger = Logger
-			.getLogger(GeneratorTaskTest.class);
 
 	@Test
 	public void testSimple() {
@@ -71,7 +72,7 @@ public class GeneratorTaskTest extends AbstractTestCase {
 		generatorTask.setXsd(url.toURI().toASCIIString());
 
 		final String tmpDir = getTmpDirPath("generator");
-		logger.debug("Output to " + tmpDir);
+		log.debug("Output to " + tmpDir);
 
 		generatorTask.setDestDir(new File(tmpDir));
 
@@ -89,7 +90,7 @@ public class GeneratorTaskTest extends AbstractTestCase {
 		generatorTask.setXsd(url.toURI().toASCIIString());
 
 		final String tmpDir = getTmpDirPath("generator2");
-		logger.debug("Output to " + tmpDir);
+		log.debug("Output to " + tmpDir);
 
 		generatorTask.setDestDir(new File(tmpDir));
 		generatorTask.setMaxOccurs(10);
@@ -108,7 +109,7 @@ public class GeneratorTaskTest extends AbstractTestCase {
 		generatorTask.setXsd(url.toURI().toASCIIString());
 
 		final String tmpDir = getTmpDirPath("generator3");
-		logger.debug("Output to " + tmpDir);
+		log.debug("Output to " + tmpDir);
 
 		generatorTask.setDestDir(new File(tmpDir));
 		generatorTask.setMaxOccurs(10);
@@ -128,7 +129,7 @@ public class GeneratorTaskTest extends AbstractTestCase {
 		generatorTask.setXsd(url.toURI().toASCIIString());
 
 		final String tmpDir = getTmpDirPath("generator4");
-		logger.debug("Output to " + tmpDir);
+		log.debug("Output to " + tmpDir);
 
 		generatorTask.setDestDir(new File(tmpDir));
 		generatorTask.setMaxOccurs(10);
@@ -148,7 +149,7 @@ public class GeneratorTaskTest extends AbstractTestCase {
 		generatorTask.setXsd(url.toURI().toASCIIString());
 
 		final String tmpDir = getTmpDirPath("generator5");
-		logger.debug("Output to " + tmpDir);
+		log.debug("Output to " + tmpDir);
 
 		generatorTask.setDestDir(new File(tmpDir));
 		generatorTask.setMaxOccurs(10);
@@ -171,7 +172,7 @@ public class GeneratorTaskTest extends AbstractTestCase {
 		generatorTask.setXsd(url.toURI().toASCIIString());
 
 		final String tmpDir = getTmpDirPath("generator6");
-		logger.debug("Output to " + tmpDir);
+		log.debug("Output to " + tmpDir);
 
 		generatorTask.setDestDir(new File(tmpDir));
 		generatorTask.setMinOccurs(2);
@@ -194,7 +195,7 @@ public class GeneratorTaskTest extends AbstractTestCase {
 		generatorTask.setXsd(url.toURI().toASCIIString());
 
 		final String tmpDir = getTmpDirPath("generator7");
-		logger.debug("Output to " + tmpDir);
+		log.debug("Output to " + tmpDir);
 
 		generatorTask.setDestDir(new File(tmpDir));
 		generatorTask.setMinOccurs(2);
@@ -221,7 +222,7 @@ public class GeneratorTaskTest extends AbstractTestCase {
 			generatorTask.setCount(1);
 
 			final String tmpDir = getTmpDirPath("noValidation");
-			logger.debug("Output to " + tmpDir);
+			log.debug("Output to " + tmpDir);
 
 			generatorTask.setDestDir(new File(tmpDir));
 
@@ -246,7 +247,7 @@ public class GeneratorTaskTest extends AbstractTestCase {
 			generatorTask.setCount(1);
 
 			final String tmpDir = getTmpDirPath("noValidation");
-			logger.debug("Output to " + tmpDir);
+			log.debug("Output to " + tmpDir);
 
 			generatorTask.setDestDir(new File(tmpDir));
 
@@ -273,7 +274,7 @@ public class GeneratorTaskTest extends AbstractTestCase {
 			generatorTask.setRootElement( "stringtype");
 			
 			final String tmpDir = getTmpDirPath("lexicalPattern");
-			logger.debug("Output to " + tmpDir);
+			log.debug("Output to " + tmpDir);
 
 			generatorTask.setDestDir(new File(tmpDir));
 
