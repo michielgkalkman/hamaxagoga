@@ -162,7 +162,7 @@ public class StufTest extends AbstractTestCase {
 			params.setMaxFileSize( 10000);
 			params.setSeed( 1L);
 			params.setEncoding( "iso-8859-1");
-			params.setRootElementName( "test");
+//			params.setRootElementName( "test");
 			params.setIgnoringValidationErrors(true);
 		
 			final String targetDirectory = getTmpDirPath( "hamaxagoga/bg0204/test");

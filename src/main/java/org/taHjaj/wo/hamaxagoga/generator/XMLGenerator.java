@@ -586,7 +586,7 @@ public class XMLGenerator {
 		} else {
 
 			log.debug("Not a primitive datatype: " + name);
-			final XSTypeDefinition baseType = getBaseType(simpleTypeDefinition);
+			final XSTypeDefinition baseType = typeDefinition.getBaseType();
 
 			value = processPrimitiveDatatype(simpleTypeDefinition, baseType,
 					facet);
@@ -641,12 +641,12 @@ public class XMLGenerator {
 	}
 
 	private XSTypeDefinition getBaseType(final XSTypeDefinition typeDefinition) {
-		if ( "anySimpleType".equals(typeDefinition.getBaseType().getName())) {
+		final XSTypeDefinition baseType = typeDefinition.getBaseType();
+		if ( "anySimpleType".equals(baseType.getName())) {
 			return typeDefinition;
 		}
 
-//		return getBaseType(typeDefinition.getBaseType());
-		return typeDefinition.getBaseType();
+		return baseType;
 	}
 
 	private static final FastDateFormat ISO_8601_YEAR_MONTH = FastDateFormat

@@ -53,10 +53,10 @@ public class RegexGenerator {
 
 		String regex2 = regex;
 
-		for (Map.Entry<String, String> entry : regexConversions.entrySet()) {
-			regex2 = StringUtils.replace(regex2, entry.getKey(), entry
-					.getValue());
-		}
+//		for (Map.Entry<String, String> entry : regexConversions.entrySet()) {
+//			regex2 = StringUtils.replace(regex2, entry.getKey(), entry
+//					.getValue());
+//		}
 
 		regularExpression = new RegularExpression(regex2);
 		this.random = random;

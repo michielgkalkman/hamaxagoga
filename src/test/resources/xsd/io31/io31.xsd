@@ -1,0 +1,524 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:iwlz="http://www.istandaarden.nl/iwlz/2_2/basisschema/schema" xmlns:io31="http://www.istandaarden.nl/iwlz/2_2/io31/schema" targetNamespace="http://www.istandaarden.nl/iwlz/2_2/io31/schema" elementFormDefault="qualified">
+    <xs:import namespace="http://www.istandaarden.nl/iwlz/2_2/basisschema/schema" schemaLocation="basisschema.xsd"></xs:import>
+    <xs:annotation>
+        <xs:appinfo>
+            <iwlz:standaard>iwlz</iwlz:standaard>
+            <iwlz:bericht>io31</iwlz:bericht>
+            <iwlz:release>2.2</iwlz:release>
+            <iwlz:BerichtXsdVersie>1.0.1</iwlz:BerichtXsdVersie>
+            <iwlz:BerichtXsdMinVersie>1.0.0</iwlz:BerichtXsdMinVersie>
+            <iwlz:BerichtXsdMaxVersie>1.0.1</iwlz:BerichtXsdMaxVersie>
+            <iwlz:BasisschemaXsdVersie>1.1.0</iwlz:BasisschemaXsdVersie>
+            <iwlz:BasisschemaXsdMinVersie>1.0.0</iwlz:BasisschemaXsdMinVersie>
+            <iwlz:BasisschemaXsdMaxVersie>1.1.0</iwlz:BasisschemaXsdMaxVersie>
+        </xs:appinfo>
+    </xs:annotation>
+    <xs:element name="Bericht" type="io31:Root"></xs:element>
+    <xs:complexType name="Root">
+        <xs:annotation>
+            <xs:documentation>Bericht met informatie over de geindiceerde Wlz-zorg (CIZ naar zorgkantoor).</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Header" type="io31:Header"></xs:element>
+            <xs:element name="Clienten" type="io31:Clienten"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Header">
+        <xs:annotation>
+            <xs:documentation>De header bevat de identificerende gegevens van het bestand.  </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="BerichtCode">
+                <xs:annotation>
+                    <xs:documentation>Code ter identificatie van een soort bericht.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="iwlz:LDT_BerichtCode">
+                        <xs:pattern value="388"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="BerichtVersie">
+                <xs:annotation>
+                    <xs:documentation>Volgnummer van de formele uitgifte van een major release van een iStandaard.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="iwlz:LDT_BerichtVersie">
+                        <xs:pattern value="5"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="BerichtSubversie">
+                <xs:annotation>
+                    <xs:documentation>Volgnummer van de formele uitgifte van een minor release van een iStandaard.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="iwlz:LDT_BerichtSubversie">
+                        <xs:pattern value="2"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="Ontvanger" type="iwlz:LDT_ZorgkantoorCode">
+                <xs:annotation>
+                    <xs:documentation>Identificatie van het Zorgkantoor, verantwoordelijk voor het uitvoeren van de Wlz.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="BerichtIdentificatie" type="iwlz:CDT_BerichtIdentificatie">
+                <xs:annotation>
+                    <xs:documentation>Aanduiding ter identificatie van het bericht, bevat de datum dagtekening en een nummer.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="XsdVersie" type="iwlz:CDT_XsdVersie">
+                <xs:annotation>
+                    <xs:documentation>Volgnummer van de formele uitgifte van een versie van de XSD's die zijn ingezet voor het opstellen van het heenbericht.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Clienten">
+        <xs:sequence>
+            <xs:element name="Client" type="io31:Client"  maxOccurs="unbounded"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Client">
+        <xs:annotation>
+            <xs:documentation>Persoonsgegevens van de client.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Bsn" type="iwlz:LDT_BurgerServicenummer">
+                <xs:annotation>
+                    <xs:documentation>Een door de overheid toegekend identificerend nummer in het kader van het vereenvoudigen van het contact tussen overheid en burgers en het verminderen van de administratieve lasten.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="GeheimeClient" type="iwlz:LDT_JaNee">
+                <xs:annotation>
+                    <xs:documentation>Indicatie of er vanwege veiligheidsoverwegingen extra zorgvuldig omgegaan moet worden met de gegevens van een client.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Geboortedatum" type="iwlz:CDT_Geboortedatum">
+                <xs:annotation>
+                    <xs:documentation>Geboortedatum van de client of relatie.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Geslacht" type="iwlz:LDT_Geslacht">
+                <xs:annotation>
+                    <xs:documentation>De sekse van een persoon, zoals bij geboorte formeel vastgesteld of nadien formeel gewijzigd.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="BurgerlijkeStaat" type="iwlz:LDT_BurgerlijkeStaat" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Unieke aanduiding die de rechtspositie van een client al dan niet in relatie tot een of meer personen beschrijft.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Naam" type="iwlz:CDT_VolledigeNaam">
+                <xs:annotation>
+                    <xs:documentation>Volledige naam van een natuurlijk persoon, aangeduid als Geslachtsnaam, eventueel Partnernaam, Voornamen en/of Voorletters en NaamGebruik.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Leefeenheid" type="iwlz:LDT_Leefeenheid">
+                <xs:annotation>
+                    <xs:documentation>Gecodeerde aanduiding van de leefsituatie van een client.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Huisarts" type="iwlz:LDT_AgbCode" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Gecodeerde aanduiding van de huisarts van de client, opgebouwd uit zorgverlenerssoort gevolgd door een uniek zorgverlenersnummer.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Communicatie" type="iwlz:CDT_Communicatie" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Gecodeerde aanduiding van de bijzondere vorm van communicatie die gebruikt dient te worden.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Wzd" type="iwlz:CDT_Wzd" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Aanduiding of Wet zorg en dwang van toepassing is en voor welke periode. </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Commentaar" type="iwlz:LDT_Commentaar" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Vrije tekst (bijvoorbeeld toelichting) in een bericht.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Relaties" type="io31:Relaties" minOccurs="0"></xs:element>
+            <xs:element name="Contactgegevens" type="io31:Contactgegevens"></xs:element>
+            <xs:element name="Indicatie" type="io31:Indicatie"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Relaties">
+        <xs:sequence>
+            <xs:element name="Relatie" type="io31:Relatie"  maxOccurs="unbounded"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Relatie">
+        <xs:annotation>
+            <xs:documentation>Persoonsgegevens van de relatie van de client.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Nummer" type="iwlz:LDT_Persoonsid">
+                <xs:annotation>
+                    <xs:documentation>Identificerend nummer van de relatie van een client.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Volgorde" type="iwlz:LDT_RelatieVolgorde" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Aanduiding van de prioriteit van de contactpersoon.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Soort" type="iwlz:LDT_SoortRelatie">
+                <xs:annotation>
+                    <xs:documentation>De soort relatie die een persoon ten opzichte van de client heeft.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Geboortedatum" type="iwlz:CDT_Geboortedatum" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Geboortedatum van de client of relatie.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Geslacht" type="iwlz:LDT_Geslacht" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>De sekse van een persoon, zoals bij geboorte formeel vastgesteld of nadien formeel gewijzigd.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Naam" type="iwlz:CDT_VolledigeNaam">
+                <xs:annotation>
+                    <xs:documentation>Volledige naam van een natuurlijk persoon, aangeduid als Geslachtsnaam, eventueel Partnernaam, Voornamen en/of Voorletters en NaamGebruik.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Contact" type="io31:Contact"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Contact">
+        <xs:annotation>
+            <xs:documentation>Gegevens voor de aanduiding van het adres van de client of relatie.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Soort" type="iwlz:LDT_AdresSoort">
+                <xs:annotation>
+                    <xs:documentation>Nadere typering van het adres.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Adres" type="iwlz:CDT_Adres" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Adres van de client of relatie van de client.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Organisatie" type="iwlz:LDT_Organisatienaam" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>De naam van een organisatie waar de client of relatie van de client verblijft.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Telefoon" type="iwlz:CDT_Telefoonnummers" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>De telefoonnummers waarop de client of relatie van de client te bereiken is.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Emailadres" type="iwlz:LDT_Emailadres" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Het e-mailadres van de client of relatie van de client.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Periode" type="iwlz:CDT_OpenPeriode" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Begindatum en/of een einddatum van het verblijf van de client of relatie van de client op een tijdelijk adres.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Contactgegevens">
+        <xs:sequence>
+            <xs:element name="Contact" type="io31:Contact"  maxOccurs="unbounded"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Indicatie">
+        <xs:annotation>
+            <xs:documentation>De indicatie bevat de indicatiebesluitgegevens van de client.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Besluitnummer" type="iwlz:LDT_Besluitnummer">
+                <xs:annotation>
+                    <xs:documentation>Identificerend nummer van een indicatiebesluit.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Soort" type="iwlz:LDT_SoortIndicatie">
+                <xs:annotation>
+                    <xs:documentation>Gecodeerde aanduiding van de soort indicatie.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Grondslagen" type="iwlz:CDT_Grondslagen" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>De verzameling van gecodeerde aanduidingen die aangeven wat ten grondslag ligt aan het indicatiebesluit.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Afgiftedatum" type="iwlz:LDT_Datum">
+                <xs:annotation>
+                    <xs:documentation>De datum waarop het indicatiebesluit is afgegeven.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Ingangsdatum" type="iwlz:LDT_Datum">
+                <xs:annotation>
+                    <xs:documentation>De datum die aangeeft vanaf welke datum het indicatiebesluit rechtsgeldig is.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Einddatum" type="iwlz:LDT_Datum" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Datum die aangeeft tot en met welke datum het indicatiebesluit rechtsgeldig is.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Meerzorg" type="iwlz:LDT_JaNee" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Gecodeerde aanduiding waarmee het CIZ aangeeft of meerzorg van toepassing zou kunnen zijn.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Commentaar" type="iwlz:LDT_Commentaar" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Vrije tekst (bijvoorbeeld toelichting) in een bericht.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Stoornissen" type="io31:Stoornissen" minOccurs="0"></xs:element>
+            <xs:element name="Beperkingen" type="io31:Beperkingen" minOccurs="0"></xs:element>
+            <xs:element name="GeindiceerdeFuncties" type="io31:GeindiceerdeFuncties" minOccurs="0"></xs:element>
+            <xs:element name="StoornisScores" type="io31:StoornisScores" minOccurs="0"></xs:element>
+            <xs:element name="GeindiceerdeZorgzwaartepakketten" type="io31:GeindiceerdeZorgzwaartepakketten" minOccurs="0"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Stoornissen">
+        <xs:sequence>
+            <xs:element name="Stoornis" type="io31:Stoornis"  maxOccurs="unbounded"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Stoornis">
+        <xs:annotation>
+            <xs:documentation>Diagnostische gegevens m.b.t. ziektebeeld en/of stoornis van de client.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Grondslag" type="iwlz:LDT_Grondslag">
+                <xs:annotation>
+                    <xs:documentation>Codering die aangeeft wat ten grondslag ligt aan de zorg.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="DiagnoseCodelijst" type="iwlz:LDT_DiagnoseCodelijst">
+                <xs:annotation>
+                    <xs:documentation>Code die aangeeft welke diagnosecodelijst gebruikt is, met aanduiding van de oorsprong van de codes en/of de beheerder ervan.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="DiagnoseSubcodelijst" type="iwlz:LDT_DiagnoseSubcodelijst" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Code die aangeeft welke subcode van een diagnosecodelijst gebruikt is.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ZiektebeeldStoornis" type="iwlz:LDT_StoornisCode">
+                <xs:annotation>
+                    <xs:documentation>Code die het ziektebeeld of de stoornis van een client identificeert.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Prognose" type="iwlz:LDT_Prognose" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Aanduiding welke prognose er is inzake het ziektebeeld of de stoornis.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Commentaar" type="iwlz:LDT_Commentaar" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Vrije tekst (bijvoorbeeld toelichting) in een bericht.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Beperkingen">
+        <xs:sequence>
+            <xs:element name="Beperking" type="io31:Beperking"  maxOccurs="unbounded"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Beperking">
+        <xs:annotation>
+            <xs:documentation>Gegevens over beperkingen van de client.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Categorie" type="iwlz:LDT_BeperkingCategorie">
+                <xs:annotation>
+                    <xs:documentation>Gecodeerde aanduiding van de beperking.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Duur" type="iwlz:LDT_Duur" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Code die aangeeft wat de verwachte duur is van de categorie beperking.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Commentaar" type="iwlz:LDT_Commentaar" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Vrije tekst (bijvoorbeeld toelichting) in een bericht.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="BeperkingScores" type="io31:BeperkingScores" minOccurs="0"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="BeperkingScores">
+        <xs:sequence>
+            <xs:element name="BeperkingScore" type="io31:BeperkingScore"  maxOccurs="unbounded"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="BeperkingScore">
+        <xs:annotation>
+            <xs:documentation>Scoregegevens over de beperkingen van de client.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Vraag" type="iwlz:LDT_BeperkingVraag">
+                <xs:annotation>
+                    <xs:documentation>Gecodeerde aanduiding van de vraag over beperking.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Score" type="iwlz:LDT_BeperkingScore">
+                <xs:annotation>
+                    <xs:documentation>Gecodeerde aanduiding van de score op een vraag over een beperking.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Commentaar" type="iwlz:LDT_Commentaar" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Vrije tekst (bijvoorbeeld toelichting) in een bericht.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GeindiceerdeFuncties">
+        <xs:sequence>
+            <xs:element name="GeindiceerdeFunctie" type="io31:GeindiceerdeFunctie"  maxOccurs="unbounded"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GeindiceerdeFunctie">
+        <xs:annotation>
+            <xs:documentation>Gegevens over een geindiceerde functie.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="FunctieCode" type="iwlz:LDT_FunctieCode">
+                <xs:annotation>
+                    <xs:documentation>Gecodeerde aanduiding van een zorgfunctie.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Ingangsdatum" type="iwlz:LDT_Datum">
+                <xs:annotation>
+                    <xs:documentation>De datum die aangeeft vanaf welke datum de geindiceerde zorgeenheid rechtsgeldig is.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Einddatum" type="iwlz:LDT_Datum" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>De datum die aangeeft tot en met welke datum de geindiceerde zorgeenheid rechtsgeldig is.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Klasse" type="iwlz:LDT_Klasse">
+                <xs:annotation>
+                    <xs:documentation>Gecodeerde aanduiding van de mate van zorg betreffende een zorgeenheid, uitgedrukt in een klasse.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Opslag" type="iwlz:LDT_Opslag" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>De omvang van de opslag op de klasse van de functie.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Leveringsvoorwaarde" type="iwlz:LDT_Leveringsvoorwaarde">
+                <xs:annotation>
+                    <xs:documentation>Codering die aangeeft welke leveringsvoorwaarde van toepassing is op de zorg.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Vervoer" type="iwlz:LDT_Vervoer" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Gecodeerde aanduiding die aangeeft of vervoer van toepassing is.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="InstellingVoorkeur" type="iwlz:LDT_iWlzAgbCode" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Identificerende code van de instelling die de voorkeur heeft van de client.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Financiering" type="iwlz:LDT_Financiering">
+                <xs:annotation>
+                    <xs:documentation>Gecodeerde aanduiding van de wettelijke regeling op basis waarvan de zorg gefinancierd wordt.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Commentaar" type="iwlz:LDT_Commentaar" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Vrije tekst (bijvoorbeeld toelichting) in een bericht.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="StoornisScores">
+        <xs:sequence>
+            <xs:element name="StoornisScore" type="io31:StoornisScore"  maxOccurs="unbounded"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="StoornisScore">
+        <xs:annotation>
+            <xs:documentation>Scoregegevens over ziektebeeld / stoornis van de client.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Vraag" type="iwlz:LDT_StoornisVraag">
+                <xs:annotation>
+                    <xs:documentation>Gecodeerde aanduiding van de vraag over een stoornis.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Score" type="iwlz:LDT_StoornisScore">
+                <xs:annotation>
+                    <xs:documentation>Gecodeerde aanduiding van de score op een vraag over een stoornis.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Commentaar" type="iwlz:LDT_Commentaar" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Vrije tekst (bijvoorbeeld toelichting) in een bericht.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GeindiceerdeZorgzwaartepakketten">
+        <xs:sequence>
+            <xs:element name="GeindiceerdZorgzwaartepakket" type="io31:GeindiceerdZorgzwaartepakket"  maxOccurs="unbounded"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GeindiceerdZorgzwaartepakket">
+        <xs:annotation>
+            <xs:documentation>Gegevens over een geindiceerd zorgzwaartepakket.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="ZzpCode" type="iwlz:LDT_ZzpCode">
+                <xs:annotation>
+                    <xs:documentation>Gecodeerde aanduiding van een zorgzwaartepakket.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Ingangsdatum" type="iwlz:LDT_Datum">
+                <xs:annotation>
+                    <xs:documentation>De datum die aangeeft vanaf welke datum de geindiceerde zorgeenheid rechtsgeldig is.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Einddatum" type="iwlz:LDT_Datum" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>De datum die aangeeft tot en met welke datum de geindiceerde zorgeenheid rechtsgeldig is.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Klasse" type="iwlz:LDT_Klasse">
+                <xs:annotation>
+                    <xs:documentation>Gecodeerde aanduiding van de mate van zorg betreffende een zorgeenheid, uitgedrukt in een klasse.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="VoorkeurClient" type="iwlz:LDT_VoorkeurClient" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Gecodeerde aanduiding van de voorkeur van de client ten aanzien van plaats en vorm van zorglevering.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="InstellingVoorkeur" type="iwlz:LDT_iWlzAgbCode" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Identificerende code van de instelling die de voorkeur heeft van de client.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Financiering" type="iwlz:LDT_Financiering">
+                <xs:annotation>
+                    <xs:documentation>Gecodeerde aanduiding van de regeling op basis waarvan de zorg gefinancierd wordt.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Commentaar" type="iwlz:LDT_Commentaar" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Vrije tekst (bijvoorbeeld toelichting) in een bericht.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
