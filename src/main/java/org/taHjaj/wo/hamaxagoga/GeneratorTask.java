@@ -26,10 +26,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.math3.random.RandomGenerator;
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Task;
 
-public class GeneratorTask extends Task {
+public class GeneratorTask {
 	private Params params = new Params();
 
 	public GeneratorTask() {
@@ -51,28 +49,28 @@ public class GeneratorTask extends Task {
 		}
 	}
 
-	public void execute() throws BuildException {
-		if (params.getXsds().size() == 0) {
-			throw new BuildException(
-					"Hamaxagoga requires the xsd parameter to be set"
-							+ " with XML schema references, separated by spaces");
-		} else if (params.getDestDir() == null) {
-			throw new BuildException(
-					"Hamaxagoga requires the destDir parameter to be set"
-							+ " with the location where generated xml files will go");
-		} else {
-			this.log("Generating XML file(s) from "
-					+ params.getXsds().toString());
-
-			final String destDirPath = params.getDestDir().getAbsolutePath();
-			try {
-				new RandomXMLGenerator().generate(params, destDirPath, params
-						.getCount());
-			} catch (Exception exception) {
-				throw new BuildException(exception);
-			}
-		}
-	}
+//	public void execute() throws BuildException {
+//		if (params.getXsds().size() == 0) {
+//			throw new BuildException(
+//					"Hamaxagoga requires the xsd parameter to be set"
+//							+ " with XML schema references, separated by spaces");
+//		} else if (params.getDestDir() == null) {
+//			throw new BuildException(
+//					"Hamaxagoga requires the destDir parameter to be set"
+//							+ " with the location where generated xml files will go");
+//		} else {
+//			this.log("Generating XML file(s) from "
+//					+ params.getXsds().toString());
+//
+//			final String destDirPath = params.getDestDir().getAbsolutePath();
+//			try {
+//				new RandomXMLGenerator().generate(params, destDirPath, params
+//						.getCount());
+//			} catch (Exception exception) {
+//				throw new BuildException(exception);
+//			}
+//		}
+//	}
 
 	public void setRootElement(String rootElement) {
 		params.setRootElementName(rootElement);
@@ -115,7 +113,7 @@ public class GeneratorTask extends Task {
 	public void setNamespacePrefix(final String namespacePrefixes) {
 		final String[] xsds = StringUtils.split(namespacePrefixes);
 		if ((xsds.length & 1) == 1) {
-			throw new BuildException(
+			throw new IllegalArgumentException(
 					"Hamaxagoga requires the namespacePrefix parameter"
 							+ " to consists of pairs of URI prefix combinations separated by spaces");
 		}
