@@ -1187,7 +1187,7 @@ public class XMLGenerator {
 	}
 
 	/**
-	 * @see http://www.w3.org/TR/xmlschema11-2/#normalizedString
+	 * {@linktourl http://www.w3.org/TR/xmlschema11-2/#normalizedString}
 	 * 
 	 * @return
 	 */
@@ -1219,7 +1219,7 @@ public class XMLGenerator {
 	}
 
 	/**
-	 * @see http://www.w3.org/TR/xmlschema11-2/#negativeInteger
+	 * {@linktourl }http://www.w3.org/TR/xmlschema11-2/#negativeInteger}
 	 * 
 	 * @return
 	 */
@@ -1229,8 +1229,8 @@ public class XMLGenerator {
 	}
 
 	/**
-	 * @see http://www.w3.org/TR/xmlschema11-2/#nonPositiveInteger
-	 * 
+	 * {@linktourl http://www.w3.org/TR/xmlschema11-2/#nonPositiveInteger}
+	 *
 	 * @return
 	 */
 	private String getNonPositiveIntegerValue(
@@ -1239,7 +1239,7 @@ public class XMLGenerator {
 	}
 	
 	/**
-	 * @see http://www.w3.org/TR/xmlschema11-2/#token
+	 * {@linktourl http://www.w3.org/TR/xmlschema11-2/#token}
 	 * 
 	 * @return
 	 */
@@ -1271,7 +1271,7 @@ public class XMLGenerator {
 	}
 
 	/**
-	 * @see http://www.w3.org/TR/xmlschema11-2/#language
+	 * {@linktourl http://www.w3.org/TR/xmlschema11-2/#language}
 	 * @todo implement all facets
 	 * @return
 	 */
@@ -1286,7 +1286,7 @@ public class XMLGenerator {
 
 	
 	/**
-	 * @see http://www.w3.org/TR/xmlschema11-2/#name
+	 * {@linktourl http://www.w3.org/TR/xmlschema11-2/#name}
 	 * 
 	 * @return
 	 */
@@ -1296,7 +1296,7 @@ public class XMLGenerator {
 	}
 	
 	/**
-	 * @see http://www.w3.org/TR/xmlschema11-2/#token
+	 * {@linktourl http://www.w3.org/TR/xmlschema11-2/#token}
 	 * 
 	 * @return
 	 */
