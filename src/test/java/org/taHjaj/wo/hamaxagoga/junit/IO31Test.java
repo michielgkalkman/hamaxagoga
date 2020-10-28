@@ -74,7 +74,7 @@ public class IO31Test extends AbstractTestCase {
 			params.setXsds( xsds);
 			params.setMaxFileSize( 10000);
 			params.setSeed( 1L);
-//			params.setEncoding( "iso-8859-1");
+			params.setEncoding( "iso-8859-1");
 //			params.setRootElementName( "test");
 			params.setIgnoringValidationErrors(true);
 
@@ -99,11 +99,13 @@ public class IO31Test extends AbstractTestCase {
 			List<String> xsds = new ArrayList<>();
 			xsds.add(this.getClass().getResource(xsdFile).toExternalForm());
 			params.setXsds( xsds);
-			params.setMaxFileSize( 10000);
+			params.setMaxFileSize( 10000000);
 			params.setSeed( 1L);
-			params.setEncoding( "iso-8859-1");
+			params.setMinOccurs(2);
+			params.setMaxOccurs(5);
+//			params.setEncoding( "iso-8859-1");
 //			params.setRootElementName( "test");
-			params.setIgnoringValidationErrors(true);
+			params.setIgnoringValidationErrors(false);
 
 			final String targetDirectory = getTmpDirPath( "hamaxagoga/io31plus/test");
 			log.debug( "Target directory: " + targetDirectory);

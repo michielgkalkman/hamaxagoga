@@ -1100,7 +1100,7 @@
         <xs:restriction base="xs:string">
             <xs:minLength value="1"/>
             <xs:maxLength value="80"/>
-<!--            <xs:pattern value=".*[^\s].*"/>-->
+<!--            <xs:pattern value="q[abcde]*"/>-->
             <xs:pattern value=".*@.*"/>
         </xs:restriction>
     </xs:simpleType>
@@ -1304,7 +1304,7 @@
         <xs:restriction base="xs:string">
             <xs:minLength value="1"/>
             <xs:maxLength value="1"/>
-            <xs:pattern value=".*[^\s].*"/>
+            <xs:pattern value="q[abcde]*"/>
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="LDT_Huisnummer">
@@ -1323,7 +1323,7 @@
         <xs:restriction base="xs:string">
             <xs:minLength value="1"/>
             <xs:maxLength value="4"/>
-            <xs:pattern value=".*[^\s].*"/>
+            <xs:pattern value="q[abcde]*"/>
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="LDT_IdentificatieBericht">
@@ -1333,7 +1333,7 @@
         <xs:restriction base="xs:string">
             <xs:minLength value="1"/>
             <xs:maxLength value="12"/>
-            <xs:pattern value=".*[^\s].*"/>
+            <xs:pattern value="q[abcde]*"/>
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="LDT_iWlzAgbCode">
@@ -2801,7 +2801,7 @@
         <xs:restriction base="xs:string">
             <xs:minLength value="1"/>
             <xs:maxLength value="4"/>
-            <xs:pattern value=".*[^\s].*"/>
+            <xs:pattern value="q[abcde]*"/>
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="LDT_Leefeenheid">
@@ -3114,7 +3114,7 @@
         <xs:restriction base="xs:string">
             <xs:minLength value="1"/>
             <xs:maxLength value="200"/>
-            <xs:pattern value=".*[^\s].*"/>
+            <xs:pattern value="q[abcde]*"/>
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="LDT_NaamGebruik">
@@ -3180,7 +3180,7 @@
         <xs:restriction base="xs:string">
             <xs:minLength value="1"/>
             <xs:maxLength value="35"/>
-            <xs:pattern value=".*[^\s].*"/>
+            <xs:pattern value="q[abcde]*"/>
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="LDT_Percentage">
@@ -3199,7 +3199,7 @@
         <xs:restriction base="xs:string">
             <xs:minLength value="1"/>
             <xs:maxLength value="20"/>
-            <xs:pattern value=".*[^\s].*"/>
+            <xs:pattern value="q[abcde]*"/>
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="LDT_Plaatsnaam">
@@ -3209,7 +3209,7 @@
         <xs:restriction base="xs:string">
             <xs:minLength value="1"/>
             <xs:maxLength value="80"/>
-            <xs:pattern value=".*[^\s].*"/>
+            <xs:pattern value="q[abcde]*"/>
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="LDT_Postcode">
@@ -3219,7 +3219,7 @@
         <xs:restriction base="xs:string">
             <xs:minLength value="1"/>
             <xs:maxLength value="8"/>
-            <xs:pattern value=".*[^\s].*"/>
+            <xs:pattern value="q[abcde]*"/>
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="LDT_Prognose">
@@ -3309,7 +3309,7 @@
         </xs:annotation>
         <xs:restriction base="xs:string">
             <xs:minLength value="1"/>
-            <xs:pattern value=".*[^\s].*"/>
+            <xs:pattern value="q[abcde]*"/>
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="LDT_RelatieVolgorde">
@@ -4383,7 +4383,7 @@
         <xs:restriction base="xs:string">
             <xs:minLength value="1"/>
             <xs:maxLength value="24"/>
-            <xs:pattern value=".*[^\s].*"/>
+            <xs:pattern value="q[abcde]*"/>
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="LDT_Taal">
@@ -4393,7 +4393,7 @@
         <xs:restriction base="xs:string">
             <xs:minLength value="1"/>
             <xs:maxLength value="25"/>
-            <xs:pattern value=".*[^\s].*"/>
+            <xs:pattern value="q[abcde]*"/>
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="LDT_Telefoonnummer">
@@ -4594,7 +4594,7 @@
         <xs:restriction base="xs:string">
             <xs:minLength value="1"/>
             <xs:maxLength value="10"/>
-            <xs:pattern value=".*[^\s].*"/>
+            <xs:pattern value="q[abcde]*"/>
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="LDT_WzdVerklaring">

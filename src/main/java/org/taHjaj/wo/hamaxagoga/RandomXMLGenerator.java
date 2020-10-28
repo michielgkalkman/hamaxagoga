@@ -92,7 +92,7 @@ public class RandomXMLGenerator {
 		
 		final StringBuilder allParseErrorMsgs = new StringBuilder();
 		
-		for (int i = 0; (fValid || fIgnoreValidationErrors) && i < count; i++) {
+		for (int i = 0; i < count; i++) {
 			final String targetFile = i + ".xml";
 
 			final File file = new File(directory, targetFile);
@@ -107,18 +107,27 @@ public class RandomXMLGenerator {
 				fValid = validate(params, file, parseErrorMsgs);
 			} catch (FileNotFoundException e) {
 				log.error(e);
+				parseErrorMsgs.append("Error in " + file.getAbsolutePath() + ":" + e.getLocalizedMessage());
 				fValid = false;
 			} catch (HamaxagogaException e) {
 				log.error(e);
+				parseErrorMsgs.append("Error in " + file.getAbsolutePath() + ":" + e.getLocalizedMessage());
 				fValid = false;
 			} catch (SAXException e) {
 				log.error(e);
+				parseErrorMsgs.append("Error in " + file.getAbsolutePath() + ":" + e.getLocalizedMessage());
 				fValid = false;
 			} catch (IOException e) {
 				log.error(e);
+				parseErrorMsgs.append("Error in " + file.getAbsolutePath() + ":" + e.getLocalizedMessage());
 				fValid = false;
 			} catch (ParserConfigurationException e) {
 				log.error(e);
+				parseErrorMsgs.append("Error in " + file.getAbsolutePath() + ":" + e.getLocalizedMessage());
+				fValid = false;
+			} catch (Exception e) {
+				log.error(e);
+				parseErrorMsgs.append("Error in " + file.getAbsolutePath() + ":" + e.getLocalizedMessage());
 				fValid = false;
 			} finally {
 				if (outputStream != null) {

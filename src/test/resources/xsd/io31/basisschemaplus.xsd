@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2009 (http://www.altova.com) by College voor Zorgverzekeringen (College voor Zorgverzekeringen) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:iwlz="http://www.istandaarden.nl/iwlz/2_2/basisschema/schema"
+           targetNamespace="http://www.istandaarden.nl/iwlz/2_2/basisschemaplus/schema" elementFormDefault="qualified">
+
+    <xs:simpleType name="LDT_Transitiekenmerk">
+        <xs:annotation>
+            <xs:documentation>Gecodeerde aanduiding van het CIZ om het doorgeven van indicaties onder verschillende wetten goed te laten verlopen</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="AWBZ_VERZILVERING_ONBEKEND">
+                <xs:annotation>
+                    <xs:documentation>AWBZ - Verzilvering onbekend</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="WLZ_INTRAMURAAL">
+                <xs:annotation>
+                    <xs:documentation>Wlz Intramuraal</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="WLZ_EXTRAMURAAL">
+                <xs:annotation>
+                    <xs:documentation>Wlz Extramuraal</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="WLZ_EERSTELIJNSVERBLIJFSZORG">
+                <xs:annotation>
+                    <xs:documentation>Wlz Eerstelijnsverblijfszorg</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="JEUGDWET">
+                <xs:annotation>
+                    <xs:documentation>Jeugdwet</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="WMO">
+                <xs:annotation>
+                    <xs:documentation>WMO</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="ZVW">
+                <xs:annotation>
+                    <xs:documentation>ZVW</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

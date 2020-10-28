@@ -278,7 +278,7 @@
             </xs:element>
             <xs:element name="Stoornissen" type="io31:Stoornissen" minOccurs="0"></xs:element>
             <xs:element name="Beperkingen" type="io31:Beperkingen" minOccurs="0"></xs:element>
-            <xs:element name="GeindiceerdeFuncties" type="io31:GeindiceerdeFuncties" minOccurs="0"></xs:element>
+            <xs:element name="GeindiceerdeFuncties" type="io31:GeindiceerdeFuncties" minOccurs="1"></xs:element>
             <xs:element name="StoornisScores" type="io31:StoornisScores" minOccurs="0"></xs:element>
             <xs:element name="GeindiceerdeZorgzwaartepakketten" type="io31:GeindiceerdeZorgzwaartepakketten" minOccurs="0"></xs:element>
         </xs:sequence>

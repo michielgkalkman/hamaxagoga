@@ -33,7 +33,7 @@ import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 public class RegexGenerator {
-    private static final int MAX_RANGE = 30;
+    private static final int MAX_RANGE = 5;
     private final RegularExpression regularExpression;
     private final Random random;
 
@@ -238,36 +238,54 @@ public class RegexGenerator {
 		}
 	    }
 
-	    int choice = random.nextInt( Integer.MAX_VALUE - count);
-
-	    {
-		boolean fFound = false;
-		{
-		    int lower = 0;
-		    final int upper = rangeToken.ranges[0];
-
-		    if( choice >= lower && choice < upper) {
-			fFound = true;
-		    }
+	    int choice = random.nextInt( count);
+		int chosenCharacter = 0;
+		count = 0;
+		for( int i = 0; i < rangeToken.ranges.length; i += 2) {
+			final int lower = rangeToken.ranges[i];
+			final int upper = rangeToken.ranges[i + 1];
+			for( int j = lower; j <= upper; j++ ) {
+				if( count == choice) {
+					chosenCharacter = j;
+				}
+				count++;
+			}
 		}
 
-		for( int i = 0; !fFound && i < rangeToken.ranges.length; i += 2) {
-		    final int lower = rangeToken.ranges[i];
-		    final int upper = rangeToken.ranges[i + 1];
-		    final int currentRange = upper - lower + 1;
-
-		    if( choice < lower) {
-			fFound = true;
-		    } else {
-			choice += currentRange;
-		    }
+		if( chosenCharacter == 0) {
+			chosenCharacter = (int) 'a';
 		}
+
+		stringBuilder.append( (char) chosenCharacter);
+
+//		{
+//		boolean fFound = false;
+//		{
+//		    int lower = 0;
+//		    final int upper = rangeToken.ranges[0];
+//
+//		    if( choice >= lower && choice < upper) {
+//			fFound = true;
+//		    }
+//		}
+//
+//		for( int i = 0; !fFound && i < rangeToken.ranges.length; i += 2) {
+//		    final int lower = rangeToken.ranges[i];
+//		    final int upper = rangeToken.ranges[i + 1];
+//		    final int currentRange = upper - lower + 1;
+//
+//		    if( choice < lower) {
+//			fFound = true;
+//		    } else {
+//			choice += currentRange;
+//		    }
+//		}
 
 		// No ranges left, so choice should now contain the correct
 		// character.
-	    }
-
-	    stringBuilder.append( (char) choice);
+//	    }
+//
+//	    stringBuilder.append( (char) choice);
 
 	    break;
 	}

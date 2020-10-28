@@ -41,6 +41,10 @@ public class XMLChar {
 			}
 		}
 
+		// Temp using small number of characters
+//		final StringBuffer stringBuffer = new StringBuffer( "abcdefghijklmnoq");
+
+
 		validXmlChars = stringBuffer.toString().toCharArray();
 		
 		log.debug( validXmlChars.length + stringBuffer.toString());
