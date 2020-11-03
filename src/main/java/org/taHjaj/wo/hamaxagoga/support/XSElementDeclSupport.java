@@ -15,9 +15,8 @@ package org.taHjaj.wo.hamaxagoga.support;
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-import java.util.HashMap;
-import java.util.Map;
 
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.xerces.impl.xs.XSElementDecl;
 import org.apache.xerces.xs.XSComplexTypeDefinition;
@@ -29,7 +28,8 @@ import org.taHjaj.wo.hamaxagoga.generator.XMLGenerator;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import lombok.extern.log4j.Log4j2;
+import java.util.HashMap;
+import java.util.Map;
 
 @Log4j2
 public class XSElementDeclSupport extends XSSupport {

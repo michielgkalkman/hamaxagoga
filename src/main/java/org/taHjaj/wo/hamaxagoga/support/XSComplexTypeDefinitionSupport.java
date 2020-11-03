@@ -1,13 +1,12 @@
 package org.taHjaj.wo.hamaxagoga.support;
 
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.xerces.xs.XSComplexTypeDefinition;
 import org.apache.xerces.xs.XSParticle;
 import org.apache.xml.serialize.XMLSerializer;
 import org.taHjaj.wo.hamaxagoga.generator.XMLGenerator;
 import org.xml.sax.SAXException;
-
-import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 public class XSComplexTypeDefinitionSupport extends XSSupport {

@@ -16,20 +16,14 @@ package org.apache.xerces.impl.xpath.regex;
  * the License.
  */
 
+import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.xerces.impl.xpath.regex.Token.*;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import org.apache.xerces.impl.xpath.regex.Token.ClosureToken;
-import org.apache.xerces.impl.xpath.regex.Token.ConcatToken;
-import org.apache.xerces.impl.xpath.regex.Token.ParenToken;
-import org.apache.xerces.impl.xpath.regex.Token.StringToken;
-import org.apache.xerces.impl.xpath.regex.Token.UnionToken;
-
-import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 public class RegexGenerator {
@@ -52,11 +46,6 @@ public class RegexGenerator {
 		super();
 
 		String regex2 = regex;
-
-//		for (Map.Entry<String, String> entry : regexConversions.entrySet()) {
-//			regex2 = StringUtils.replace(regex2, entry.getKey(), entry
-//					.getValue());
-//		}
 
 		regularExpression = new RegularExpression(regex2);
 		this.random = random;
@@ -83,15 +72,16 @@ public class RegexGenerator {
     }
 
     public String generateString() {
-	final String result;
-	final StringBuilder stringBuilder = new StringBuilder();
+		final String result;
+		final StringBuilder stringBuilder = new StringBuilder();
 
-	final Token token = regularExpression.tokentree;
+		final Token token = regularExpression.tokentree;
 
-	process( stringBuilder, token);
+		process( stringBuilder, token);
 
-	result = stringBuilder.toString();
-	return result;
+		final RegexTree regexTree = new RegexTree(token, random, 1, 5);
+
+		return regexTree.getRandomizedValue();
     }
 
     private boolean isISOControl( final String string) {
@@ -123,213 +113,184 @@ public class RegexGenerator {
     private final Map< Token, Integer> totalRangesSize = new HashMap<Token, Integer>();  
     
     void process( final StringBuilder stringBuilder, final Token token) {
-	switch( token.type) {
-	case Token.CHAR: {
-	    stringBuilder.append( (char) token.getChar());
-	    break;
-	}
-	case Token.UNION: {
-	    final UnionToken unionToken = (UnionToken) token;
-	    final int size = unionToken.children.size();
-	    final int choice = random.nextInt( size);
+		switch( token.type) {
+			case Token.CHAR: {
+				stringBuilder.append( (char) token.getChar());
+				break;
+			}
+			case Token.UNION: {
+				final UnionToken unionToken = (UnionToken) token;
+				final int size = unionToken.children.size();
+				final int choice = random.nextInt( size);
 
-	    final Token childToken = unionToken.getChild( choice);
+				final Token childToken = unionToken.getChild( choice);
 
-	    process( stringBuilder, childToken);
+				process( stringBuilder, childToken);
 
-	    break;
-	}
-	case Token.CONCAT: {
-	    if( token instanceof ConcatToken) {
-		final ConcatToken concatToken = (ConcatToken) token;
+				break;
+			}
+			case Token.CONCAT: {
+				if( token instanceof ConcatToken) {
+					final ConcatToken concatToken = (ConcatToken) token;
 
-		process( stringBuilder, concatToken.child);
-		process( stringBuilder, concatToken.child2);
-	    } else {
-		final UnionToken unionToken = (UnionToken) token;
-		final int size = unionToken.children.size();
-		for( int i = 0; i < size; i++) {
-		    final Token childToken = unionToken.getChild( i);
-		    process( stringBuilder, childToken);
+					process( stringBuilder, concatToken.child);
+					process( stringBuilder, concatToken.child2);
+				} else {
+					final UnionToken unionToken = (UnionToken) token;
+					final int size = unionToken.children.size();
+					for( int i = 0; i < size; i++) {
+						final Token childToken = unionToken.getChild( i);
+						process( stringBuilder, childToken);
+					}
+
+					break;
+				}
+				break;
+			}
+			case Token.CLOSURE: {
+				final ClosureToken closureToken = (ClosureToken) token;
+
+				final int min;
+				if( closureToken.min == -1) {
+				min = 0;
+				} else {
+				min = closureToken.min;
+				}
+
+				final int max;
+				if( closureToken.max == -1) {
+				max = MAX_RANGE;
+				} else {
+				max = closureToken.max;
+				}
+
+				final int range = (max - min) + 1;
+
+				final int choice = min + random.nextInt( range);
+
+				for( int i = 0; i < choice; i++) {
+				process( stringBuilder, closureToken.child);
+				}
+				break;
+			}
+			case Token.RANGE: {
+				final RangeToken rangeToken = (RangeToken) token;
+
+				final int nrCharactersInRanges;
+
+				if( totalRangesSize.containsKey( rangeToken)) {
+				nrCharactersInRanges = totalRangesSize.get( rangeToken);
+				} else {
+				nrCharactersInRanges = determineNrCharactersInRanges( rangeToken);
+				totalRangesSize.put( rangeToken, nrCharactersInRanges);
+				}
+
+				final int choice = random.nextInt( nrCharactersInRanges);
+
+				int codePoint = 0;
+				{
+				boolean fFound = false;
+				int remainingRange = choice;
+				for( int i = 0; i < rangeToken.ranges.length; i += 2) {
+					final int lower = rangeToken.ranges[i];
+					final int upper = rangeToken.ranges[i + 1];
+					final int currentRange = upper - lower + 1;
+
+					if( currentRange > remainingRange) {
+					codePoint = lower + remainingRange;
+					fFound = true;
+					break;
+					}
+
+					remainingRange -= currentRange;
+				}
+
+				if( fFound == false) {
+					throw new RuntimeException();
+				}
+				}
+
+				stringBuilder.append( Character.toChars(  codePoint));
+
+				break;
+			}
+			case Token.NRANGE: {
+				final RangeToken rangeToken = (RangeToken) token;
+
+				int count = 0;
+				{
+				for( int i = 0; i < rangeToken.ranges.length; i += 2) {
+					final int lower = rangeToken.ranges[i];
+					final int upper = rangeToken.ranges[i + 1];
+					count += upper;
+					count -= lower;
+					count++;
+				}
+				}
+
+				int choice = random.nextInt( count);
+				int chosenCharacter = 0;
+				count = 0;
+				for( int i = 0; i < rangeToken.ranges.length; i += 2) {
+					final int lower = rangeToken.ranges[i];
+					final int upper = rangeToken.ranges[i + 1];
+					for( int j = lower; j <= upper; j++ ) {
+						if( count == choice) {
+							chosenCharacter = j;
+						}
+						count++;
+					}
+				}
+
+				if( chosenCharacter == 0) {
+					chosenCharacter = (int) 'a';
+				}
+
+				stringBuilder.append( (char) chosenCharacter);
+
+				break;
+			}
+			case Token.PAREN: {
+				final ParenToken parenToken = (ParenToken) token;
+
+				process( stringBuilder, parenToken.child);
+				break;
+			}
+			case Token.EMPTY: {
+				// hehe.
+				break;
+			}
+			case Token.STRING: {
+				final StringToken stringToken = (StringToken) token;
+				stringBuilder.append( stringToken.getString());
+				break;
+			}
+			case Token.DOT: {
+				stringBuilder.append( XMLChar.random( random, 1));
+				break;
+			}
+			default: {
+				final String logMessage = "Token with type " + token.type
+					+ " not implemented yet.";
+				log.debug( logMessage);
+				throw new RuntimeException( logMessage);
+			}
 		}
-
-		break;
-	    }
-	    break;
 	}
-	case Token.CLOSURE: {
-	    final ClosureToken closureToken = (ClosureToken) token;
 
-	    final int min;
-	    if( closureToken.min == -1) {
-		min = 0;
-	    } else {
-		min = closureToken.min;
-	    }
-
-	    final int max;
-	    if( closureToken.max == -1) {
-		max = MAX_RANGE;
-	    } else {
-		max = closureToken.max;
-	    }
-
-	    final int range = (max - min) + 1;
-
-	    final int choice = min + random.nextInt( range);
-
-	    for( int i = 0; i < choice; i++) {
-		process( stringBuilder, closureToken.child);
-	    }
-	    break;
-	}
-	case Token.RANGE: {
-	    final RangeToken rangeToken = (RangeToken) token;
-
-	    final int nrCharactersInRanges;
-	    
-	    if( totalRangesSize.containsKey( rangeToken)) {
-		nrCharactersInRanges = totalRangesSize.get( rangeToken);
-	    } else {
-		nrCharactersInRanges = determineNrCharactersInRanges( rangeToken);
-		totalRangesSize.put( rangeToken, nrCharactersInRanges);
-	    }
-
-	    final int choice = random.nextInt( nrCharactersInRanges);
-
-	    int codePoint = 0;
-	    {
-		boolean fFound = false;
-		int remainingRange = choice;
-		for( int i = 0; i < rangeToken.ranges.length; i += 2) {
-		    final int lower = rangeToken.ranges[i];
-		    final int upper = rangeToken.ranges[i + 1];
-		    final int currentRange = upper - lower + 1;
-
-		    if( currentRange > remainingRange) {
-			codePoint = lower + remainingRange;
-			fFound = true;
-			break;
-		    }
-
-		    remainingRange -= currentRange;
-		}
-
-		if( fFound == false) {
-		    throw new RuntimeException();
-		}
-	    }
-	    
-	    stringBuilder.append( Character.toChars(  codePoint));
-
-	    break;
-	}
-	case Token.NRANGE: {
-	    final RangeToken rangeToken = (RangeToken) token;
-
-	    int count = 0;
-	    {
-		for( int i = 0; i < rangeToken.ranges.length; i += 2) {
-		    final int lower = rangeToken.ranges[i];
-		    final int upper = rangeToken.ranges[i + 1];
-		    count += upper;
-		    count -= lower;
-		    count++;
-		}
-	    }
-
-	    int choice = random.nextInt( count);
-		int chosenCharacter = 0;
-		count = 0;
+	private int determineNrCharactersInRanges( final RangeToken rangeToken) {
+		int nrCharactersInRanges;
+		nrCharactersInRanges = 0;
+		{
 		for( int i = 0; i < rangeToken.ranges.length; i += 2) {
 			final int lower = rangeToken.ranges[i];
 			final int upper = rangeToken.ranges[i + 1];
-			for( int j = lower; j <= upper; j++ ) {
-				if( count == choice) {
-					chosenCharacter = j;
-				}
-				count++;
-			}
+			nrCharactersInRanges += upper;
+			nrCharactersInRanges -= lower;
+			nrCharactersInRanges++;
 		}
-
-		if( chosenCharacter == 0) {
-			chosenCharacter = (int) 'a';
 		}
-
-		stringBuilder.append( (char) chosenCharacter);
-
-//		{
-//		boolean fFound = false;
-//		{
-//		    int lower = 0;
-//		    final int upper = rangeToken.ranges[0];
-//
-//		    if( choice >= lower && choice < upper) {
-//			fFound = true;
-//		    }
-//		}
-//
-//		for( int i = 0; !fFound && i < rangeToken.ranges.length; i += 2) {
-//		    final int lower = rangeToken.ranges[i];
-//		    final int upper = rangeToken.ranges[i + 1];
-//		    final int currentRange = upper - lower + 1;
-//
-//		    if( choice < lower) {
-//			fFound = true;
-//		    } else {
-//			choice += currentRange;
-//		    }
-//		}
-
-		// No ranges left, so choice should now contain the correct
-		// character.
-//	    }
-//
-//	    stringBuilder.append( (char) choice);
-
-	    break;
-	}
-	case Token.PAREN: {
-	    final ParenToken parenToken = (ParenToken) token;
-
-	    process( stringBuilder, parenToken.child);
-	    break;
-	}
-	case Token.EMPTY: {
-	    // hehe.
-	    break;
-	}
-	case Token.STRING: {
-	    final StringToken stringToken = (StringToken) token;
-	    stringBuilder.append( stringToken.getString());
-	    break;
-	}
-	case Token.DOT: {
-	    stringBuilder.append( XMLChar.random( random, 1));
-	    break;
-	}
-	default: {
-	    final String logMessage = "Token with type " + token.type
-		    + " not implemented yet.";
-	    log.debug( logMessage);
-	    throw new RuntimeException( logMessage);
-	}
-	}
-    }
-
-    private int determineNrCharactersInRanges( final RangeToken rangeToken) {
-	int nrCharactersInRanges;
-	nrCharactersInRanges = 0;
-	{
-	for( int i = 0; i < rangeToken.ranges.length; i += 2) {
-	    final int lower = rangeToken.ranges[i];
-	    final int upper = rangeToken.ranges[i + 1];
-	    nrCharactersInRanges += upper;
-	    nrCharactersInRanges -= lower;
-	    nrCharactersInRanges++;
-	}
-	}
-	return nrCharactersInRanges;
+		return nrCharactersInRanges;
     }
 
     @Override

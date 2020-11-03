@@ -15,9 +15,6 @@ package org.taHjaj.wo.hamaxagoga.support;
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import org.apache.xerces.impl.xs.XSParticleDecl;
 import org.apache.xerces.xs.XSModelGroup;
@@ -28,6 +25,10 @@ import org.apache.xml.serialize.XMLSerializer;
 import org.taHjaj.wo.hamaxagoga.HamaxagogaException;
 import org.taHjaj.wo.hamaxagoga.generator.XMLGenerator;
 import org.xml.sax.SAXException;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class XSModelGroupSupport extends XSSupport {
     private final XSModelGroup modelGroup;

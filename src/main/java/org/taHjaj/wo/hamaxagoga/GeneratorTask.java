@@ -16,16 +16,16 @@ package org.taHjaj.wo.hamaxagoga;
  * the License.
  */
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.commons.math3.random.RandomGenerator;
+
 import java.io.File;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import org.apache.commons.math3.random.RandomGenerator;
 
 public class GeneratorTask {
 	private Params params = new Params();

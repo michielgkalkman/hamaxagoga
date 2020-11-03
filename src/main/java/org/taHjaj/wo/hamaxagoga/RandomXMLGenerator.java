@@ -16,16 +16,13 @@ package org.taHjaj.wo.hamaxagoga;
  * limitations under the License.
  */
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
-import java.io.Reader;
+import lombok.extern.log4j.Log4j2;
+import org.apache.commons.io.output.TeeOutputStream;
+import org.apache.xerces.xs.XSModel;
+import org.taHjaj.wo.hamaxagoga.generator.XMLGenerator;
+import org.taHjaj.wo.hamaxagoga.generator.XSHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.ParserConfigurationException;
@@ -34,15 +31,7 @@ import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-
-import org.apache.commons.io.output.TeeOutputStream;
-import org.apache.xerces.xs.XSModel;
-import org.taHjaj.wo.hamaxagoga.generator.XMLGenerator;
-import org.taHjaj.wo.hamaxagoga.generator.XSHandler;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
-import lombok.extern.log4j.Log4j2;
+import java.io.*;
 
 @Log4j2
 public class RandomXMLGenerator {

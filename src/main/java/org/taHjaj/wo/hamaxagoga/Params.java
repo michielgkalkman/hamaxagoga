@@ -16,18 +16,13 @@ package org.taHjaj.wo.hamaxagoga;
  * limitations under the License.
  */
 
-import java.io.File;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
+import lombok.Data;
 import org.apache.commons.math3.random.RandomAdaptor;
 import org.apache.commons.math3.random.RandomGenerator;
 
-import lombok.Data;
+import java.io.File;
+import java.net.URI;
+import java.util.*;
 
 @Data
 public class Params {

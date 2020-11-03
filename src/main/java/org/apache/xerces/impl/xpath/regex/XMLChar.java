@@ -16,12 +16,11 @@ package org.apache.xerces.impl.xpath.regex;
  * limitations under the License.
  */
 
-import java.util.Random;
-
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.CharUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 
-import lombok.extern.log4j.Log4j2;
+import java.util.Random;
 
 @Log4j2
 public class XMLChar {

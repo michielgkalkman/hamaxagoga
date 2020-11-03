@@ -16,13 +16,12 @@ package org.taHjaj.wo.hamaxagoga.generator;
  * limitations under the License.
  */
 
-import java.util.ArrayList;
-import java.util.List;
-
+import lombok.extern.log4j.Log4j2;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import lombok.extern.log4j.Log4j2;
+import java.util.ArrayList;
+import java.util.List;
 
 @Log4j2
 public class XSHandler extends DefaultHandler {
