@@ -128,12 +128,12 @@ public class RandomXMLGenerator {
 				}
 			}
 			if( fValid) {
-				log.info( "No errors during xml generation of file %s.", file.getAbsolutePath());
+				log.info( String.format("No errors during xml generation of file %s.", file.getAbsolutePath()));
 			} else {
 				if( allParseErrorMsgs.length() > 0) {
 					allParseErrorMsgs.append( '\n');
 					allParseErrorMsgs.append( parseErrorMsgs);
-					log.error( "Errors during xml generation of file %s: %s", file.getAbsolutePath(), parseErrorMsgs);
+					log.error( String.format("Errors during xml generation of file %s: %s", file.getAbsolutePath(), parseErrorMsgs));
 				}
 			}
 		}
