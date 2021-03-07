@@ -72,20 +72,20 @@ public class RandomXMLGenerator {
 	}
 
 	public void generateWithValidation( final XSModel xsmodel, final Params params, final File directory) {
-		if(directory.mkdirs()) {
+		if(directory.exists() || directory.mkdirs()) {
 
 			final int count = params.getCount();
 
 			boolean fValid = true;
 			final boolean fIgnoreValidationErrors = params.isIgnoringValidationErrors();
 
-			final StringBuilder allParseErrorMsgs = new StringBuilder();
+			final StringBuilder allParseErrorMessages = new StringBuilder();
 
 			for (int i = 0; i < count; i++) {
 				final String targetFile = i + ".xml";
 
 				final File file = new File(directory, targetFile);
-				final StringBuilder parseErrorMsgs = new StringBuilder();
+				final StringBuilder parseErrorMessages = new StringBuilder();
 
 				OutputStream outputStream = null;
 				try {
@@ -93,10 +93,10 @@ public class RandomXMLGenerator {
 					new XMLGenerator(params).createXMLDocument(outputStream,
 							xsmodel);
 
-					fValid = validate(params, file, parseErrorMsgs);
+					fValid = validate(params, file, parseErrorMessages);
 				} catch (Exception e) {
 					log.error(e);
-					parseErrorMsgs.append("Error in ").append(file.getAbsolutePath()).append(":").append(e.getLocalizedMessage());
+					parseErrorMessages.append("Error in ").append(file.getAbsolutePath()).append(":").append(e.getLocalizedMessage());
 					fValid = false;
 				} finally {
 					if (outputStream != null) {
@@ -110,18 +110,18 @@ public class RandomXMLGenerator {
 				if (fValid) {
 					log.info(String.format("No errors during xml generation of file %s.", file.getAbsolutePath()));
 				} else {
-					if (allParseErrorMsgs.length() > 0) {
-						allParseErrorMsgs.append('\n');
-						allParseErrorMsgs.append(parseErrorMsgs);
-						log.error(String.format("Errors during xml generation of file %s: %s", file.getAbsolutePath(), parseErrorMsgs));
+					if (allParseErrorMessages.length() > 0) {
+						allParseErrorMessages.append('\n');
+						allParseErrorMessages.append(parseErrorMessages);
+						log.error(String.format("Errors during xml generation of file %s: %s", file.getAbsolutePath(), parseErrorMessages));
 					}
 				}
 			}
 			if (!fValid && !fIgnoreValidationErrors) {
 				throw new HamaxagogaException(
-						"Exception during XML generation: " + allParseErrorMsgs);
-			} else if (allParseErrorMsgs.length() > 0) {
-				log.error(allParseErrorMsgs);
+						"Exception during XML generation: " + allParseErrorMessages);
+			} else if (allParseErrorMessages.length() > 0) {
+				log.error(allParseErrorMessages);
 			} else {
 				log.info("No errors during xml generation.");
 			}
@@ -134,7 +134,7 @@ public class RandomXMLGenerator {
 
 
 	public void generateWithoutValidation( final XSModel xsmodel, final Params params, final File directory) {
-		if( directory.mkdirs()) {
+		if(directory.exists() || directory.mkdirs()) {
 
 			final int count = params.getCount();
 
@@ -180,7 +180,7 @@ public class RandomXMLGenerator {
 	
 	public void generateWithParallelValidation(final Params params,
 			final File directory, final int count) {
-		if( directory.mkdirs()) {
+		if(directory.exists() || directory.mkdirs()) {
 
 			boolean fValid = true;
 			final boolean fIgnoreValidationErrors = params.isIgnoringValidationErrors();
@@ -193,13 +193,13 @@ public class RandomXMLGenerator {
 				throw new HamaxagogaException( classNotFoundException);
 			}
 
-			final StringBuilder allParseErrorMsgs = new StringBuilder();
+			final StringBuilder allParseErrorMessages = new StringBuilder();
 
 			for (int i = 0; (fValid||fIgnoreValidationErrors) && i < count; i++) {
 				final String targetFile = i + ".xml";
 
 				final File file = new File(directory, targetFile);
-				final StringBuilder currentFileParseErrorMsgs = new StringBuilder( file.getAbsolutePath()).append( '\n');
+				final StringBuilder currentFileParseErrorMessages = new StringBuilder( file.getAbsolutePath()).append( '\n');
 
 				OutputStream outputStream = null;
 				TeeOutputStream teeOutputStream = null;
@@ -219,7 +219,7 @@ public class RandomXMLGenerator {
 						public void run() {
 							try {
 								threadCommunicator.fValid = validate(params,
-										pipedInputStream, currentFileParseErrorMsgs);
+										pipedInputStream, currentFileParseErrorMessages);
 							} catch (ParserConfigurationException | SAXException | IOException e) {
 								log.error(e);
 							} finally {
@@ -270,15 +270,15 @@ public class RandomXMLGenerator {
 				}
 
 				if( !fValid) {
-					if( allParseErrorMsgs.length() > 0) {
-						allParseErrorMsgs.append( '\n');
+					if( allParseErrorMessages.length() > 0) {
+						allParseErrorMessages.append( '\n');
 					}
-					allParseErrorMsgs.append( currentFileParseErrorMsgs);
+					allParseErrorMessages.append( currentFileParseErrorMessages);
 				}
 			}
 			if (!fValid && !fIgnoreValidationErrors) {
 				throw new HamaxagogaException(
-						"Exception during XML generation: " + allParseErrorMsgs);
+						"Exception during XML generation: " + allParseErrorMessages);
 			}
 		} else {
 			final String message = String.format("Could not create directory %s", directory.getAbsolutePath());
@@ -297,11 +297,11 @@ public class RandomXMLGenerator {
 		Reader reader = null;
 		try {
 			reader = new FileReader(file);
-			final StringBuilder errorMsgs = new StringBuilder( file.getAbsolutePath()).append( ':');
-			final boolean fValid = validate(params, reader, errorMsgs);
+			final StringBuilder errorMessages = new StringBuilder( file.getAbsolutePath()).append( ':');
+			final boolean fValid = validate(params, reader, errorMessages);
 			
 			if( !fValid) {
-				errorMsg.append( errorMsgs);
+				errorMsg.append( errorMessages);
 			}
 			
 			return fValid;
