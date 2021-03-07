@@ -54,19 +54,19 @@ public class RegexGenerator {
     }
     
     public String generateXMLString() {
-	final String result;
-	
-	result = generateString();
-	
-	final String xmlResult;
-	
-	if( isISOControl( result)) {
-	    xmlResult = toXML( result);
-	} else {
-	    xmlResult = result;
-	}
-	
-	return xmlResult;
+		final String result;
+
+		result = generateString();
+
+		final String xmlResult;
+
+		if( isISOControl( result)) {
+			xmlResult = toXML( result);
+		} else {
+			xmlResult = result;
+		}
+
+		return xmlResult;
     }
 
 	public String generateString() {
@@ -77,6 +77,22 @@ public class RegexGenerator {
 		process( stringBuilder, token);
 
 		return stringBuilder.toString();
+	}
+
+	public String generateXMLString( int min, int max) {
+		final String result;
+
+		result = generateString( min, max);
+
+		final String xmlResult;
+
+		if( isISOControl( result)) {
+			xmlResult = toXML( result);
+		} else {
+			xmlResult = result;
+		}
+
+		return xmlResult;
 	}
 
 	public String generateString( int min, int max) {

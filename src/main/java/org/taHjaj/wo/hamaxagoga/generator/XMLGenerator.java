@@ -1056,7 +1056,7 @@ public class XMLGenerator {
 
 		final StringList stringList = simpleTypeDefinition.getLexicalPattern();
 		if (stringList != null && stringList.getLength() > 0) {
-			value = getRandomString(stringList);
+			value = getRandomString(stringList, facet.getMinLength(), facet.getMaxLength());
 		} else {
 			final StringList lexicalEnumerations = simpleTypeDefinition
 					.getLexicalEnumeration();
@@ -1091,6 +1091,19 @@ public class XMLGenerator {
 		return getRandomString(lexicalPattern);
 	}
 
+	private String getRandomString(final StringList stringList, int min, int max) {
+		final String lexicalPattern = stringList.item(random.nextInt(stringList
+				.getLength()));
+
+		if ("[\\i-[:]][\\c-[:]]*".equals(lexicalPattern)) {
+			// Regex cannot handle the above regular expression.
+			// Use one that will succeed.
+			return getRandomString("[#x0041-#x005A]");
+		}
+
+		return getRandomString(lexicalPattern, min, max);
+	}
+
 	// Map lexical pattern on regexgenerator
 	private static final Map<String, RegexGenerator> regexGenerators = new HashMap<String, RegexGenerator>();
 
@@ -1107,6 +1120,22 @@ public class XMLGenerator {
 		}
 
 		value = regexGenerator.generateXMLString();
+		return value;
+	}
+
+	private String getRandomString(final String lexicalPattern, int min, int max) {
+		final String value;
+
+		final RegexGenerator regexGenerator;
+		RegexGenerator tmpRegexGenerator = regexGenerators.get(lexicalPattern);
+		if (tmpRegexGenerator != null) {
+			regexGenerator = tmpRegexGenerator;
+		} else {
+			regexGenerator = new RegexGenerator(random, lexicalPattern);
+			regexGenerators.put(lexicalPattern, regexGenerator);
+		}
+
+		value = regexGenerator.generateXMLString(min, max);
 		return value;
 	}
 
