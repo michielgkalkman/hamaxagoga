@@ -81,11 +81,11 @@ public class RegexTest extends AbstractTestCase {
 		log.debug("Generated strings from:" + regex);
 
 		for (int i = 0; i < 25; i++) {
-			run(regexGenerator, regex);
+			run(regexGenerator);
 		}
 	}
 
-	private void run(final RegexGenerator regexGenerator, final String regex) {
+	private void run(final RegexGenerator regexGenerator) {
 		try {
 			final String generatedString = regexGenerator.generateString();
 

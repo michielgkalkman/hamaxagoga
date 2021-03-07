@@ -33,8 +33,6 @@ public class NMTokenTest extends AbstractTestCase {
 	
 	@Test
 	public void testSimple() {
-		final int count = REPEATS;
-	
 		try {
 			final String xsdFile = "/xsd/NMTOKEN.xsd";
 			final URI uri = this.getClass().getResource(xsdFile).toURI();
@@ -47,7 +45,7 @@ public class NMTokenTest extends AbstractTestCase {
 			final String targetDirectory = getTmpDirPath( "hamaxagoga/NMTOKEN");
 			log.debug( "Target directory: " + targetDirectory);
 			new RandomXMLGenerator().generate(
-					params, targetDirectory, count);
+					params, targetDirectory, REPEATS);
 		} catch( final Exception exception) {
 			log.error( exception.getLocalizedMessage(), exception);
 			fail( exception.getLocalizedMessage());
