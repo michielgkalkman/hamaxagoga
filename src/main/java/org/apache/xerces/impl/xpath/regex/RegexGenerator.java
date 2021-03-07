@@ -31,7 +31,7 @@ public class RegexGenerator {
     private final RegularExpression regularExpression;
     private final Random random;
 
-    private static Map<String, String> regexConversions = new HashMap<String, String>();
+    private static final Map<String, String> regexConversions = new HashMap<>();
     
     static {
 	regexConversions.put( "\\s", "[\u0020\\t\\u000A\\r]");
@@ -45,9 +45,7 @@ public class RegexGenerator {
     public RegexGenerator( final Random random, final String regex) {
 		super();
 
-		String regex2 = regex;
-
-		regularExpression = new RegularExpression(regex2);
+		regularExpression = new RegularExpression(regex);
 		this.random = random;
 	}
 
@@ -72,16 +70,17 @@ public class RegexGenerator {
     }
 
 	public String generateString() {
-    	return generateString(1,1);
-	}
-
-	public String generateString( int min, int max) {
-		final String result;
 		final StringBuilder stringBuilder = new StringBuilder();
 
 		final Token token = regularExpression.tokentree;
 
 		process( stringBuilder, token);
+
+		return stringBuilder.toString();
+	}
+
+	public String generateString( int min, int max) {
+		final Token token = regularExpression.tokentree;
 
 		final RegexTree regexTree = new RegexTree(token, random);
 
@@ -114,7 +113,7 @@ public class RegexGenerator {
 	return stringBuilder.toString();
     }
     
-    private final Map< Token, Integer> totalRangesSize = new HashMap<Token, Integer>();  
+    private final Map< Token, Integer> totalRangesSize = new HashMap<>();
     
     void process( final StringBuilder stringBuilder, final Token token) {
 		switch( token.type) {
@@ -180,76 +179,48 @@ public class RegexGenerator {
 			case Token.RANGE: {
 				final RangeToken rangeToken = (RangeToken) token;
 
+				// Ranges are inclusive
 				final int nrCharactersInRanges;
 
-				if( totalRangesSize.containsKey( rangeToken)) {
-				nrCharactersInRanges = totalRangesSize.get( rangeToken);
+				if (totalRangesSize.containsKey(rangeToken)) {
+					nrCharactersInRanges = totalRangesSize.get(rangeToken);
 				} else {
-				nrCharactersInRanges = determineNrCharactersInRanges( rangeToken);
-				totalRangesSize.put( rangeToken, nrCharactersInRanges);
+					nrCharactersInRanges = determineNrCharactersInRanges(rangeToken);
+					totalRangesSize.put(rangeToken, nrCharactersInRanges);
 				}
 
-				final int choice = random.nextInt( nrCharactersInRanges);
+				final int choice = random.nextInt(nrCharactersInRanges);
 
 				int codePoint = 0;
-				{
 				boolean fFound = false;
 				int remainingRange = choice;
-				for( int i = 0; i < rangeToken.ranges.length; i += 2) {
+				for (int i = 0; i < rangeToken.ranges.length; i += 2) {
 					final int lower = rangeToken.ranges[i];
 					final int upper = rangeToken.ranges[i + 1];
 					final int currentRange = upper - lower + 1;
 
-					if( currentRange > remainingRange) {
-					codePoint = lower + remainingRange;
-					fFound = true;
-					break;
+					if (currentRange > remainingRange) {
+						codePoint = lower + remainingRange;
+						fFound = true;
+						break;
 					}
 
 					remainingRange -= currentRange;
 				}
 
-				if( fFound == false) {
+				if (!fFound) {
 					throw new RuntimeException();
 				}
-				}
 
-				stringBuilder.append( Character.toChars(  codePoint));
+				stringBuilder.append(Character.toChars(codePoint));
 
 				break;
 			}
 			case Token.NRANGE: {
 				final RangeToken rangeToken = (RangeToken) token;
 
-				int count = 0;
-				{
-				for( int i = 0; i < rangeToken.ranges.length; i += 2) {
-					final int lower = rangeToken.ranges[i];
-					final int upper = rangeToken.ranges[i + 1];
-					count += upper;
-					count -= lower;
-					count++;
-				}
-				}
 
-				int choice = random.nextInt( count);
-				int chosenCharacter = 0;
-				count = 0;
-				for( int i = 0; i < rangeToken.ranges.length; i += 2) {
-					final int lower = rangeToken.ranges[i];
-					final int upper = rangeToken.ranges[i + 1];
-					for( int j = lower; j <= upper; j++ ) {
-						if( count == choice) {
-							chosenCharacter = j;
-						}
-						count++;
-					}
-				}
-
-				if( chosenCharacter == 0) {
-					chosenCharacter = (int) 'a';
-				}
-
+				int	chosenCharacter = XMLChar.random( random, 1).charAt(0);
 				stringBuilder.append( (char) chosenCharacter);
 
 				break;

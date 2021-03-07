@@ -81,7 +81,7 @@ public class SimpleXSDsTest extends AbstractTestCase {
 					
 					final File targetDir = new File( tmpDir, rootName);
 					
-					log.debug(">>> Processing " + xsdFile.getAbsolutePath()
+					log.info(">>> Processing " + xsdFile.getAbsolutePath()
 							+ " Output to " + targetDir);
 					
 					for (int i = 0; i < REPEATS; i++) {
