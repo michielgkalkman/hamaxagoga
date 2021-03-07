@@ -29,10 +29,10 @@ import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 public class RegexTest extends AbstractTestCase {
-//	@Test
-//	public void testDebugSimple() {
-//		doTestRegex("\\cc+");
-//	}
+	@Test
+	public void testDebugSimple() {
+		doTestRegex("\\cC");
+	}
 
 	@Test
 	public void testSimple() {

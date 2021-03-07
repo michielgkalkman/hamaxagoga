@@ -72,110 +72,100 @@ public class RandomXMLGenerator {
 	}
 
 	public void generateWithValidation( final XSModel xsmodel, final Params params, final File directory) {
-		directory.mkdirs();
+		if(directory.mkdirs()) {
 
-		final int count = params.getCount();
-		
-		boolean fValid = true;
-		final boolean fIgnoreValidationErrors = params.isIgnoringValidationErrors();
-		
-		final StringBuilder allParseErrorMsgs = new StringBuilder();
-		
-		for (int i = 0; i < count; i++) {
-			final String targetFile = i + ".xml";
+			final int count = params.getCount();
 
-			final File file = new File(directory, targetFile);
-			final StringBuilder parseErrorMsgs = new StringBuilder();
-			
-			OutputStream outputStream = null;
-			try {
-				outputStream = new FileOutputStream(file);
-				new XMLGenerator(params).createXMLDocument(outputStream,
-						xsmodel);
+			boolean fValid = true;
+			final boolean fIgnoreValidationErrors = params.isIgnoringValidationErrors();
 
-				fValid = validate(params, file, parseErrorMsgs);
-			} catch (FileNotFoundException e) {
-				log.error(e);
-				parseErrorMsgs.append("Error in " + file.getAbsolutePath() + ":" + e.getLocalizedMessage());
-				fValid = false;
-			} catch (HamaxagogaException e) {
-				log.error(e);
-				parseErrorMsgs.append("Error in " + file.getAbsolutePath() + ":" + e.getLocalizedMessage());
-				fValid = false;
-			} catch (SAXException e) {
-				log.error(e);
-				parseErrorMsgs.append("Error in " + file.getAbsolutePath() + ":" + e.getLocalizedMessage());
-				fValid = false;
-			} catch (IOException e) {
-				log.error(e);
-				parseErrorMsgs.append("Error in " + file.getAbsolutePath() + ":" + e.getLocalizedMessage());
-				fValid = false;
-			} catch (ParserConfigurationException e) {
-				log.error(e);
-				parseErrorMsgs.append("Error in " + file.getAbsolutePath() + ":" + e.getLocalizedMessage());
-				fValid = false;
-			} catch (Exception e) {
-				log.error(e);
-				parseErrorMsgs.append("Error in " + file.getAbsolutePath() + ":" + e.getLocalizedMessage());
-				fValid = false;
-			} finally {
-				if (outputStream != null) {
-					try {
-						outputStream.close();
-					} catch (IOException e) {
-						log.error(e);
+			final StringBuilder allParseErrorMsgs = new StringBuilder();
+
+			for (int i = 0; i < count; i++) {
+				final String targetFile = i + ".xml";
+
+				final File file = new File(directory, targetFile);
+				final StringBuilder parseErrorMsgs = new StringBuilder();
+
+				OutputStream outputStream = null;
+				try {
+					outputStream = new FileOutputStream(file);
+					new XMLGenerator(params).createXMLDocument(outputStream,
+							xsmodel);
+
+					fValid = validate(params, file, parseErrorMsgs);
+				} catch (Exception e) {
+					log.error(e);
+					parseErrorMsgs.append("Error in ").append(file.getAbsolutePath()).append(":").append(e.getLocalizedMessage());
+					fValid = false;
+				} finally {
+					if (outputStream != null) {
+						try {
+							outputStream.close();
+						} catch (IOException e) {
+							log.error(e);
+						}
+					}
+				}
+				if (fValid) {
+					log.info(String.format("No errors during xml generation of file %s.", file.getAbsolutePath()));
+				} else {
+					if (allParseErrorMsgs.length() > 0) {
+						allParseErrorMsgs.append('\n');
+						allParseErrorMsgs.append(parseErrorMsgs);
+						log.error(String.format("Errors during xml generation of file %s: %s", file.getAbsolutePath(), parseErrorMsgs));
 					}
 				}
 			}
-			if( fValid) {
-				log.info( String.format("No errors during xml generation of file %s.", file.getAbsolutePath()));
+			if (!fValid && !fIgnoreValidationErrors) {
+				throw new HamaxagogaException(
+						"Exception during XML generation: " + allParseErrorMsgs);
+			} else if (allParseErrorMsgs.length() > 0) {
+				log.error(allParseErrorMsgs);
 			} else {
-				if( allParseErrorMsgs.length() > 0) {
-					allParseErrorMsgs.append( '\n');
-					allParseErrorMsgs.append( parseErrorMsgs);
-					log.error( String.format("Errors during xml generation of file %s: %s", file.getAbsolutePath(), parseErrorMsgs));
-				}
+				log.info("No errors during xml generation.");
 			}
-		}
-		if (!fValid && !fIgnoreValidationErrors) {
-			throw new HamaxagogaException(
-					"Exception during XML generation: " + allParseErrorMsgs);
-		} else if( allParseErrorMsgs.length() > 0) {
-			log.error( allParseErrorMsgs);
 		} else {
-			log.info( "No errors during xml generation.");
+			final String message = String.format("Could not create directory %s", directory.getAbsolutePath());
+			log.error(message);
+			throw new HamaxagogaException(message);
 		}
 	}
 
 
 	public void generateWithoutValidation( final XSModel xsmodel, final Params params, final File directory) {
-		directory.mkdirs();
+		if( directory.mkdirs()) {
 
-		final int count = params.getCount();
+			final int count = params.getCount();
 
-		for (int i = 0; i < count; i++) {
-			final String targetFile = i + ".xml";
+			for (int i = 0; i < count; i++) {
+				final String targetFile = i + ".xml";
 
-			final File file = new File(directory, targetFile);
-			
-			OutputStream outputStream = null;
-			try {
-				outputStream = new FileOutputStream(file);
-				new XMLGenerator(params).createXMLDocument(outputStream,
-						xsmodel);
-			} catch ( final Throwable throwable) {
-				final String errorMsg = "Error while generating XML document " + targetFile;
-				log.error( errorMsg, throwable);
-				throw new HamaxagogaException( errorMsg, throwable);
-			} finally {
-				if (outputStream != null) {
-					try {
-						outputStream.close();
-					} catch (IOException e) {
-						log.error(e);
+				final File file = new File(directory, targetFile);
+
+				OutputStream outputStream = null;
+				try {
+					outputStream = new FileOutputStream(file);
+					new XMLGenerator(params).createXMLDocument(outputStream,
+							xsmodel);
+				} catch ( final Throwable throwable) {
+					final String errorMsg = "Error while generating XML document " + targetFile;
+					log.error( errorMsg, throwable);
+					throw new HamaxagogaException( errorMsg, throwable);
+				} finally {
+					if (outputStream != null) {
+						try {
+							outputStream.close();
+						} catch (IOException e) {
+							log.error(e);
+						}
 					}
 				}
 			}
+		} else {
+			final String message = String.format("Could not create directory %s", directory.getAbsolutePath());
+			log.error(message);
+			throw new HamaxagogaException(message);
 		}
 	}
 
@@ -184,76 +174,55 @@ public class RandomXMLGenerator {
 	}
 
 	public void generateWithParallelValidation(final Params params,
-			final String directory) {
-		generate(params, directory, params.getCount());
-	}
-	
-	public void generateWithParallelValidation(final Params params,
-			final File directory) {
-		generate(params, directory, params.getCount());
-	}
-	
-	public void generateWithParallelValidation(final Params params,
 			final String targetDirectory, final int count) {
 		generateWithParallelValidation( params, new File(targetDirectory), count);
 	}
 	
 	public void generateWithParallelValidation(final Params params,
 			final File directory, final int count) {
-		directory.mkdirs();
+		if( directory.mkdirs()) {
 
-		boolean fValid = true;
-		final boolean fIgnoreValidationErrors = params.isIgnoringValidationErrors();
+			boolean fValid = true;
+			final boolean fIgnoreValidationErrors = params.isIgnoringValidationErrors();
 
-		final XSModel xsmodel;
-		try {
-			xsmodel = XMLGenerator.getXsModel(params);
-		} catch ( final ClassNotFoundException classNotFoundException) {
-			log.error( classNotFoundException);
-			throw new HamaxagogaException( classNotFoundException);
-		} catch ( final InstantiationException instantiationException) {
-			log.error( instantiationException);
-			throw new HamaxagogaException( instantiationException);
-		} catch ( final IllegalAccessException illegalAccessException) {
-			log.error( illegalAccessException);
-			throw new HamaxagogaException( illegalAccessException);
-		}
-		
-		final StringBuilder allParseErrorMsgs = new StringBuilder();
-		
-		for (int i = 0; (fValid||fIgnoreValidationErrors) && i < count; i++) {
-			final String targetFile = i + ".xml";
-
-			final File file = new File(directory, targetFile);
-			final StringBuilder currentFileParseErrorMsgs = new StringBuilder( file.getAbsolutePath()).append( '\n');
-			
-			OutputStream outputStream = null;
-			TeeOutputStream teeOutputStream = null;
-			PipedOutputStream pipedOutputStream = null;
+			final XSModel xsmodel;
 			try {
-				outputStream = new FileOutputStream(file);
-				final PipedInputStream pipedInputStream = new PipedInputStream();
-				pipedOutputStream = new PipedOutputStream();
-				teeOutputStream = new TeeOutputStream(outputStream,
-						pipedOutputStream);
+				xsmodel = XMLGenerator.getXsModel(params);
+			} catch ( final ClassNotFoundException | InstantiationException | IllegalAccessException classNotFoundException) {
+				log.error( classNotFoundException);
+				throw new HamaxagogaException( classNotFoundException);
+			}
 
-				pipedInputStream.connect(pipedOutputStream);
+			final StringBuilder allParseErrorMsgs = new StringBuilder();
 
-				final ThreadCommunicator threadCommunicator = new ThreadCommunicator();
+			for (int i = 0; (fValid||fIgnoreValidationErrors) && i < count; i++) {
+				final String targetFile = i + ".xml";
 
-				final Runnable runnable = new Runnable() {
-					public void run() {
-						try {
-							threadCommunicator.fValid = validate(params,
-									pipedInputStream, currentFileParseErrorMsgs);
-						} catch (ParserConfigurationException e) {
-							log.error(e);
-						} catch (IOException e) {
-							log.error(e);
-						} catch (SAXException e) {
-							log.error(e);
-						} finally {
-							if (pipedInputStream != null) {
+				final File file = new File(directory, targetFile);
+				final StringBuilder currentFileParseErrorMsgs = new StringBuilder( file.getAbsolutePath()).append( '\n');
+
+				OutputStream outputStream = null;
+				TeeOutputStream teeOutputStream = null;
+				PipedOutputStream pipedOutputStream = null;
+				try {
+					outputStream = new FileOutputStream(file);
+					final PipedInputStream pipedInputStream = new PipedInputStream();
+					pipedOutputStream = new PipedOutputStream();
+					teeOutputStream = new TeeOutputStream(outputStream,
+							pipedOutputStream);
+
+					pipedInputStream.connect(pipedOutputStream);
+
+					final ThreadCommunicator threadCommunicator = new ThreadCommunicator();
+
+					final Runnable runnable = new Runnable() {
+						public void run() {
+							try {
+								threadCommunicator.fValid = validate(params,
+										pipedInputStream, currentFileParseErrorMsgs);
+							} catch (ParserConfigurationException | SAXException | IOException e) {
+								log.error(e);
+							} finally {
 								try {
 									pipedInputStream.close();
 								} catch ( final IOException exception) {
@@ -262,67 +231,59 @@ public class RandomXMLGenerator {
 								}
 							}
 						}
+					};
+
+					final Thread thread = new Thread(runnable);
+					thread.start();
+
+					new XMLGenerator(params).createXMLDocument(teeOutputStream,
+							xsmodel);
+
+					thread.join();
+
+					fValid = threadCommunicator.fValid;
+				} catch (InterruptedException | HamaxagogaException | SAXException | IOException e) {
+					log.error(e);
+					fValid = false;
+				} finally {
+					if (outputStream != null) {
+						try {
+							outputStream.close();
+						} catch (IOException e) {
+							log.error(e);
+						}
 					}
-				};
-
-				final Thread thread = new Thread(runnable);
-				thread.start();
-
-				new XMLGenerator(params).createXMLDocument(teeOutputStream,
-						xsmodel);
-
-				thread.join();
-
-				fValid = threadCommunicator.fValid;
-			} catch (InterruptedException e) {
-				log.error(e);
-				fValid = false;
-			} catch (FileNotFoundException e) {
-				log.error(e);
-				fValid = false;
-			} catch (HamaxagogaException e) {
-				log.error(e);
-				fValid = false;
-			} catch (SAXException e) {
-				log.error(e);
-				fValid = false;
-			} catch (IOException e) {
-				log.error(e);
-				fValid = false;
-			} finally {
-				if (outputStream != null) {
-					try {
-						outputStream.close();
-					} catch (IOException e) {
-						log.error(e);
+					if ( pipedOutputStream != null) {
+						try {
+							pipedOutputStream.close();
+						} catch (IOException e) {
+							log.error(e);
+						}
 					}
-				}
-				if ( pipedOutputStream != null) {
-					try {
-						pipedOutputStream.close();
-					} catch (IOException e) {
-						log.error(e);
+					if ( teeOutputStream != null) {
+						try {
+							teeOutputStream.close();
+						} catch (IOException e) {
+							log.error(e);
+						}
 					}
 				}
-				if ( teeOutputStream != null) {
-					try {
-						teeOutputStream.close();
-					} catch (IOException e) {
-						log.error(e);
+
+				if( !fValid) {
+					if( allParseErrorMsgs.length() > 0) {
+						allParseErrorMsgs.append( '\n');
 					}
+					allParseErrorMsgs.append( currentFileParseErrorMsgs);
 				}
 			}
-
-			if( !fValid) {
-				if( allParseErrorMsgs.length() > 0) {
-					allParseErrorMsgs.append( '\n');
-				}
-				allParseErrorMsgs.append( currentFileParseErrorMsgs);
+			if (!fValid && !fIgnoreValidationErrors) {
+				throw new HamaxagogaException(
+						"Exception during XML generation: " + allParseErrorMsgs);
 			}
-		}
-		if (!fValid && !fIgnoreValidationErrors) {
-			throw new HamaxagogaException(
-					"Exception during XML generation: " + allParseErrorMsgs);
+		} else {
+			final String message = String.format("Could not create directory %s", directory.getAbsolutePath());
+			log.error(message);
+			throw new HamaxagogaException(message);
 		}
 	}
 
@@ -374,7 +335,7 @@ public class RandomXMLGenerator {
 				.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 		final Schema schema = factory.newSchema(sources);
 
-		/** Setup SAX parser for schema validation. */
+		/* Setup SAX parser for schema validation. */
 		SAXParserFactory parserFactory = SAXParserFactory.newInstance();
 		parserFactory.setNamespaceAware(true);
 		parserFactory.setSchema(schema);
@@ -410,7 +371,7 @@ public class RandomXMLGenerator {
 				.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 		final Schema schema = factory.newSchema(sources);
 
-		/** Setup SAX parser for schema validation. */
+		/* Setup SAX parser for schema validation. */
 		SAXParserFactory parserFactory = SAXParserFactory.newInstance();
 		parserFactory.setNamespaceAware(true);
 		parserFactory.setSchema(schema);
