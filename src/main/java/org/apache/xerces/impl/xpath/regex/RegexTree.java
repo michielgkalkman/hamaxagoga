@@ -10,10 +10,6 @@ public class RegexTree {
 
     private final Random random;
 
-    public String getRandomizedValue() {
-        return this.root.getRandomizedValue();
-    }
-
     abstract static class RegexNode {
 
         abstract public int size();
@@ -27,10 +23,7 @@ public class RegexTree {
         protected abstract void rewritableAsString(final StringBuilder stringBuilder);
 
         public String toString() {
-            final StringBuilder stringBuilder = new StringBuilder();
-            rewritableAsString(stringBuilder);
-            stringBuilder.append( "rewritable: ").append(stringBuilder);
-            return stringBuilder.toString();
+            return rewritableAsString();
         }
 
         public String rewritableAsString() {
@@ -231,7 +224,7 @@ public class RegexTree {
                     break;
                 }
                 default: {
-                    System.out.println("TokenNode, type " + token.type + " not supported yet.");
+                    log.atInfo().log("TokenNode, type " + token.type + " not supported yet.");
                 }
             }
 
@@ -294,13 +287,22 @@ public class RegexTree {
         }
         @Override
         public int size() {
-            return rewritable.size();
+            return template.size();
         }
 
         @Override
         boolean randomize() {
             rewritable.randomize( template, min, max);
             return false;
+        }
+
+        /**
+         * Apply closure node once more
+         * @param closureNodes
+         */
+        public void increase(Set<ClosureNode> closureNodes) {
+            rewritable.add(template);
+            // TODO add any new closuernodes
         }
 
         @Override
@@ -332,53 +334,62 @@ public class RegexTree {
     private final RegexNode root;
     private final Set<ClosureNode> closureNodes = new HashSet<>();
 
-    public RegexTree(final Token token, final Random random, int min, int max) {
+    public RegexTree(final Token token, final Random random) {
         this.random = random;
 
-        root = createRegex( token, min, max, closureNodes);
-
-
-
-        if( root == null) {
-            System.out.println("root is null!");
-        } else {
-            System.out.println(root.size());
-
-            root.randomize();
-
-            System.out.println(root.size());
-            final String randomizedValue = root.getRandomizedValue();
-            System.out.println(randomizedValue);
-
-            System.out.println( "Michiel rewritableAsString: " + this.root.rewritableAsString());
-
-            if( randomizedValue.length() < min) {
-
-                enlarge( root.size(), min, max);
-
-            } else if (randomizedValue.length() > max) {
-
-            } else {
-
-            }
-        }
+        root = createRegex(token, closureNodes);
     }
 
-    private void enlarge(int size, int min, int max) {
+    public String getRandomString(int min, int max) {
+        log.atInfo().log( "Michiel rewritableAsString: " + this.root.rewritableAsString());
+
+        if( root.rewritableAsString().length() < min) {
+            while( root.rewritableAsString().length() < min && enlarge(root.size(), min, max)) {
+                log.atInfo().log( "Michiel rewritableAsString: " + this.root.rewritableAsString());
+            }
+
+        } else if (root.rewritableAsString().length() > max) {
+
+        } else {
+
+        }
+
+        return root.rewritableAsString();
+    }
+
+    private boolean enlarge(int size, int min, int max) {
+        boolean fEnlarged = false;
         if( size < min) {
             // find all closurenodes. Select one that increases the size of the string,
             // but does not go over it.
+
+            List<ClosureNode> selectableClosureNodes = new ArrayList<>();
+
             for(ClosureNode closureNode : closureNodes) {
-                System.out.println( "Michiel closurenode " + closureNode.template + ":" + closureNode.size());
+                log.atInfo().log( "Michiel closurenode " + closureNode.template + ":" + closureNode.size());
+                if( closureNode.size() + size <= max) {
+                    selectableClosureNodes.add(closureNode);
+                }
+            }
+
+            if( !selectableClosureNodes.isEmpty()) {
+                final int nextInt = random.nextInt(selectableClosureNodes.size());
+
+                final ClosureNode closureNode = selectableClosureNodes.get(nextInt);
+
+                closureNode.increase(closureNodes);
+
+                fEnlarged = true;
             }
         }
+        return fEnlarged;
     }
 
     public int size() {
         return root.size();
     }
 
-    private RegexNode createRegex(Token token, int min, int max, Set<ClosureNode> closureNodes) {
+    private RegexNode createRegex(@NonNull Token token, Set<ClosureNode> closureNodes) {
         final RegexNode regexNode;
 
         switch( token.type) {
@@ -390,10 +401,16 @@ public class RegexTree {
                 regexNode = new TokenNode(token);
                 break;
             }
-//            case Token.UNION: {
-//                final Token.UnionToken unionToken = (Token.UnionToken) token;
-//                break;
-//            }
+            case Token.PAREN:
+            case Token.UNION: {
+                final Regex regex = new Regex();
+
+                for( int i=0; i<token.size(); i++) {
+                    regex.add( createRegex( token.getChild(i), closureNodes));
+                }
+
+                regexNode = regex;
+                break;            }
             case Token.CONCAT: {
                 if( token instanceof Token.ConcatToken) {
                     final Token.ConcatToken concatToken = (Token.ConcatToken) token;
@@ -405,7 +422,7 @@ public class RegexTree {
                     final int size = unionToken.children.size();
                     for( int i = 0; i < size; i++) {
                         final Token childToken = unionToken.getChild( i);
-                        regex.add( createRegex(childToken, min, max, closureNodes));
+                        regex.add( createRegex(childToken, closureNodes));
                     }
 
                     regexNode = regex;
@@ -416,7 +433,7 @@ public class RegexTree {
                 final Token.ClosureToken closureToken = (Token.ClosureToken) token;
 
                 final ClosureNode closureNode = new ClosureNode(
-                        new Regex(createRegex(token.getChild(0), min, max, closureNodes)), min, max);
+                        new Regex(createRegex(token.getChild(0), closureNodes)), token.getMin(), token.getMax());
 
                 closureNodes.add(closureNode);
 
@@ -428,12 +445,6 @@ public class RegexTree {
 //                final RangeToken rangeToken = (RangeToken) token;
 //                break;
 //            }
-            case Token.PAREN: {
-                final Token.ParenToken parenToken = (Token.ParenToken) token;
-
-                regexNode = createRegex(parenToken, min, max, closureNodes);
-                break;
-            }
             default: {
                 final String errorString = String.format("Token %s with value '%s' not handled", token.type,
                         token.getString());

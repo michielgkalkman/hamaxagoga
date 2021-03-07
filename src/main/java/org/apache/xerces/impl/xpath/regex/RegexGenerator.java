@@ -71,7 +71,11 @@ public class RegexGenerator {
 	return xmlResult;
     }
 
-    public String generateString() {
+	public String generateString() {
+    	return generateString(1,1);
+	}
+
+	public String generateString( int min, int max) {
 		final String result;
 		final StringBuilder stringBuilder = new StringBuilder();
 
@@ -79,12 +83,12 @@ public class RegexGenerator {
 
 		process( stringBuilder, token);
 
-		final RegexTree regexTree = new RegexTree(token, random, 1, 5);
+		final RegexTree regexTree = new RegexTree(token, random);
 
-		return regexTree.getRandomizedValue();
-    }
+		return regexTree.getRandomString( min, max);
+	}
 
-    private boolean isISOControl( final String string) {
+	private boolean isISOControl( final String string) {
 	boolean fIsISOControl = false;
 	for( int index=string.length()-1; ! fIsISOControl && index>=0; index--) {
 	    fIsISOControl = Character.isISOControl(   

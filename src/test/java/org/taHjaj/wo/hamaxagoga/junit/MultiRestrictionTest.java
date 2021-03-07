@@ -11,6 +11,7 @@ import java.net.URL;
 import java.security.SecureRandom;
 import java.util.Random;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 @Log4j2
@@ -36,9 +37,46 @@ public class MultiRestrictionTest extends AbstractTestCase {
 
 	@Test
 	public void testMultirestrictions2() {
+
+		final Random random = new SecureRandom();
+		RegexGenerator regexGenerator = new RegexGenerator( random, "a*");
+
+		final int min = 6;
+		final int max = 8;
+
+		for( int i=0; i<10; i++) {
+			final String generatedString = regexGenerator.generateString(min, max);
+
+			assertTrue(generatedString.length() >= min);
+			assertTrue(generatedString.length() <= max);
+		}
+	}
+
+	@Test
+	public void testMultirestrictions3() {
+
+		final Random random = new SecureRandom();
+		RegexGenerator regexGenerator = new RegexGenerator( random, "a*b");
+
+		final int min = 6;
+		final int max = 8;
+
+		for( int i=0; i<10; i++) {
+			final String generatedString = regexGenerator.generateString(min, max);
+
+			assertTrue(generatedString.length() >= min);
+			assertTrue(generatedString.length() <= max);
+		}
+	}
+
+//	@Test
+	public void testMultirestrictionsWithPipes() {
+		// TODO pipes are not handled yet.
 		final Random random = new SecureRandom();
 		RegexGenerator regexGenerator = new RegexGenerator( random, "(a*|b)*");
 
-		regexGenerator.generateString();
+		for( int i=0; i<10; i++) {
+			regexGenerator.generateString( 3, 5);
+		}
 	}
 }

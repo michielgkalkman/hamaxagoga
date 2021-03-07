@@ -47,7 +47,7 @@ public class IO31Test extends AbstractTestCase {
 			params.setMaxFileSize( 10000);
 			params.setSeed( 1L);
 			params.setEncoding( "iso-8859-1");
-			params.setRootElementName( "test");
+			params.setRootElementName( "Bericht");
 			params.setIgnoringValidationErrors(true);
 
 			final String targetDirectory = getTmpDirPath( "hamaxagoga/io31/test");
