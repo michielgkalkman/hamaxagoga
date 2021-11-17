@@ -31,7 +31,14 @@ import lombok.extern.log4j.Log4j2;
 public class RegexTest extends AbstractTestCase {
 	@Test
 	public void testDebugSimple() {
-		doTestRegex("\\cC");
+//		String regex = "(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)";
+		String regex = "(0|1)*";
+		final RegexGenerator regexGenerator = new RegexGenerator(new Random(), regex);
+
+		log.info(String.format("regex: %s", regexGenerator.getRegex().toString()));
+
+		final String generatedString = regexGenerator.generateString(10,12);
+		log.info( String.format("Generated: %s", generatedString));
 	}
 
 	@Test

@@ -108,7 +108,7 @@ public class IO31Test extends AbstractTestCase {
 			params.setIgnoringValidationErrors(false);
 
 			final String targetDirectory = getTmpDirPath( "hamaxagoga/io31plus/test");
-			log.debug( "Target directory: " + targetDirectory);
+			log.info( "Target directory: " + targetDirectory);
 			new RandomXMLGenerator().generate(
 					params, targetDirectory, count);
 		} catch( final Exception exception) {
