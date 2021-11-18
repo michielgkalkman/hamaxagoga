@@ -102,13 +102,17 @@ public class RegexTree {
         }
     }
 
-    class Regex extends RegexNode {
+    static class Regex extends RegexNode {
+        private final Random random;
+
         private final LinkedList<RegexNode> regexNodes = new LinkedList<>();
 
-        public Regex() {
+        public Regex(final Random random) {
+            this.random = random;
         }
 
-        public Regex(@NonNull RegexNode regex) {
+        public Regex(final Random random, @NonNull RegexNode regex) {
+            this.random = random;
             regexNodes.add(regex);
         }
 
@@ -155,7 +159,7 @@ public class RegexTree {
 
         @Override
         protected RegexNode cloneRegexNode() {
-            final Regex regex = new Regex();
+            final Regex regex = new Regex(random);
             for( RegexNode regexNode : regexNodes) {
                 regex.add(regexNode.cloneRegexNode());
             }
@@ -184,10 +188,12 @@ public class RegexTree {
         }
     }
 
-    class TokenNode extends RegexNode {
+    static class TokenNode extends RegexNode {
+        private final Random random;
         private final Token token;
 
-        public TokenNode(Token token) {
+        public TokenNode(@NonNull final Random random, Token token) {
+            this.random = random;
             this.token = token;
         }
 
@@ -289,7 +295,7 @@ public class RegexTree {
                         chosenCharacter = 'a';
                     }
 
-                    randomizedValue = String.valueOf( chosenCharacter);
+                    randomizedValue = String.valueOf( (char)chosenCharacter);
 
                     break;
                 }
@@ -318,7 +324,7 @@ public class RegexTree {
 
         @Override
         protected RegexNode cloneRegexNode() {
-            return new TokenNode(token);
+            return new TokenNode(random, token);
         }
 
         @Override
@@ -342,15 +348,17 @@ public class RegexTree {
         }
     }
 
-    class ClosureNode extends RegexNode {
+    static class ClosureNode extends RegexNode {
+        private final Random random;
         private final Regex template;
         private final Regex rewritable;
         private final int min;
         private final int max;
 
-        public ClosureNode(@NonNull Regex regex, int min, int max) {
+        public ClosureNode(@NonNull Random random, @NonNull Regex regex, int min, int max) {
+            this.random = random;
             this.template = regex;
-            this.rewritable = new Regex();
+            this.rewritable = new Regex(random);
 
             this.min = min;
             this.max = max;
@@ -372,7 +380,7 @@ public class RegexTree {
          * @param closureNodes
          */
         public void increase(Set<ClosureNode> closureNodes) {
-            final RegexNode regexNode = template.regexNodes.get(0).getRegexNodes().iterator().next();
+            final RegexNode regexNode = template.regexNodes.get(0);
             rewritable.add(regexNode);
         }
 
@@ -393,7 +401,7 @@ public class RegexTree {
 
         @Override
         protected RegexNode cloneRegexNode() {
-            return new ClosureNode(template, min, max);
+            return new ClosureNode(random, template, min, max);
         }
 
         @Override
@@ -414,7 +422,6 @@ public class RegexTree {
     public String getRandomString(int min, int max) {
         log.atInfo().log( "Michiel rewritableAsString: " + this.root.rewritableAsString());
 
-//        if( root.rewritableAsString().length() < min) {
         if( root.size() < min) {
             while( root.rewritableAsString().length() < min && enlarge(root.size(), min, max)) {
                 log.atInfo().log( "Michiel rewritableAsString: " + this.root.rewritableAsString());
@@ -471,7 +478,7 @@ public class RegexTree {
             case Token.CHAR:
             case Token.STRING:
             case Token.RANGE: {
-                regexNode = new TokenNode(token);
+                regexNode = new TokenNode(random,token);
                 break;
             }
             case Token.UNION: {
@@ -487,9 +494,9 @@ public class RegexTree {
             case Token.CONCAT: {
                 if( token instanceof Token.ConcatToken) {
                     final Token.ConcatToken concatToken = (Token.ConcatToken) token;
-                    regexNode = new TokenNode(concatToken);
+                    regexNode = new TokenNode(random, concatToken);
                 } else if( token instanceof Token.ParenToken) {
-                    Regex regex = new Regex();
+                    Regex regex = new Regex(random);
 
                     final Token.ParenToken parenToken = (Token.ParenToken) token;
 
@@ -497,7 +504,7 @@ public class RegexTree {
 
                     regexNode = regex;
                 } else {
-                    Regex regex = new Regex();
+                    Regex regex = new Regex(random);
 
                     final Token.UnionToken unionToken = (Token.UnionToken) token;
                     final int size = unionToken.children.size();
@@ -515,7 +522,7 @@ public class RegexTree {
 
                 final RegexNode regexNode1 = createRegex(token.getChild(0), closureNodes);
                 final ClosureNode closureNode = new ClosureNode(
-                        new Regex(regexNode1), 1, 2);
+                        random, new Regex(random, regexNode1), 1, 2);
 
                 closureNodes.add(closureNode);
 
