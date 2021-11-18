@@ -14,35 +14,18 @@ import java.util.stream.Stream;
 
 @Log4j2
 public class RegexTreeTest {
-    @Test
-    public void testClosureNode() {
-        final Random random = new SecureRandom();
-
-        RegexTree.Regex regex = new RegexTree.Regex(random);
-
-        RegexTree.ClosureNode closureNode =
-                new RegexTree.ClosureNode( random, regex, 1, 2);
-
-        closureNode.randomize();
-
-        final String randomizedValue = closureNode.getRandomizedValue();
-
-        Assertions.assertNotNull(randomizedValue);
-        Assertions.assertEquals("", randomizedValue);
-    }
-
     @SuppressWarnings({ "unused" }) // Eclipse thinks this method is not used.
     private static Stream<Arguments> dataForTestSearchString() {
         return Stream.of(//
-                Arguments.of("a"), //
-                Arguments.of("[a-f]"), //
-                Arguments.of("[^a-f]") //
+                Arguments.of("a", 1, 1), //
+                Arguments.of("[a-f]", 1, 4), //
+                Arguments.of("[^a-f]", 1, 4) //
         );
     }
 
     @ParameterizedTest(name = "#{index} - [{0}]")
     @MethodSource("dataForTestSearchString")
-    public void testClosureNode2(final String regularXpression) {
+    public void testClosureNode(final String regularXpression, final int min, final int max) {
         final Random random = new SecureRandom();
 
         final RegularExpression regularExpression = new RegularExpression(regularXpression);
@@ -52,13 +35,16 @@ public class RegexTreeTest {
         RegexTree.Regex regex = new RegexTree.Regex(random, tokenNode);
 
         RegexTree.ClosureNode closureNode =
-                new RegexTree.ClosureNode( random, regex, 1, 2);
+                new RegexTree.ClosureNode( random, regex, min, max);
 
         closureNode.randomize();
 
         final String randomizedValue = closureNode.getRandomizedValue();
 
         Assertions.assertNotNull(randomizedValue);
-        Assertions.assertTrue(randomizedValue.length() == 1, "Expected string of length 1, but was '" + randomizedValue + "'");
+        Assertions.assertTrue(randomizedValue.length() >= min, String.format(
+                "Expected string of minimum length %d, but was '%s'", min, randomizedValue));
+        Assertions.assertTrue(randomizedValue.length() <= max, String.format(
+                "Expected string of maximum length %d, but was '%s'", max, randomizedValue));
     }
 }

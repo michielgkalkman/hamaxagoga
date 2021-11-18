@@ -176,7 +176,7 @@ public class RegexTree {
         public void randomize(Regex template, int min, int max) {
             regexNodes.clear();
 
-            int nrTokens = random.nextInt( max-min) + min;
+            int nrTokens = random.nextInt( 1+max-min) + min;
 
             for( int i=0; i<nrTokens; i++) {
                 for( RegexNode regexNode : template.getRegexNodes()) {
