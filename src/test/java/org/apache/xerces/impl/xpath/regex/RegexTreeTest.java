@@ -2,6 +2,7 @@ package org.apache.xerces.impl.xpath.regex;
 
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -34,7 +35,7 @@ public class RegexTreeTest {
         RegexTree.Regex regex = new RegexTree.Regex(random, tokenNode);
 
         RegexTree.ClosureNode closureNode =
-                new RegexTree.ClosureNode( random, regex, min, max);
+                new RegexTree.ClosureNode( random, regex);
 
         final String randomizedValue = closureNode.getRandomizedValue( min, max);
 
@@ -49,6 +50,7 @@ public class RegexTreeTest {
     private static Stream<Arguments> dataForTestConcatNode() {
         return Stream.of(//
                 Arguments.of("[a-f]", "[x-z]")
+                ,Arguments.of("q", "[x-z]")
         );
     }
 
@@ -101,5 +103,24 @@ public class RegexTreeTest {
         final String randomizedValue = unionRegex.getRandomizedValue(1,3);
 
         Assertions.assertNotNull(randomizedValue);
+    }
+
+    @Test
+    public void test() {
+        final Random random = new SecureRandom();
+
+        RegularExpression regularExpression = new RegularExpression("q[abcde]*");
+
+        final Token token = regularExpression.tokentree;
+
+        final RegexTree regexTree = new RegexTree(token, random);
+
+        int min = 1;
+        int max = 3;
+
+        final String randomString = regexTree.getRandomString(1, 3);
+        Assertions.assertTrue( randomString.length() >= min, String.format("Generated string %s is shorter than %d positions", randomString, min));
+        Assertions.assertTrue( randomString.length() <= max
+                , String.format("Generated string %s is longer than %d positions", randomString, max));
     }
 }
