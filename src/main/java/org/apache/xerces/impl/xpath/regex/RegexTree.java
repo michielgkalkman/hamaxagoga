@@ -70,15 +70,20 @@ public class RegexTree {
 
             for( int i=0; i<10; i++) {
                 String sample = "";
-                for( int j=0; j<regexNodes.size(); j++) {
+                int tmpMax = max;
+                for( int j=0; j<regexNodes.size() && tmpMax > 0; j++) {
                     final List<String> samples1 = new
-                            ArrayList<>(regexNodes.get(j).getSamples(min,max));
+                            ArrayList<>(regexNodes.get(j).getSamples(min,tmpMax));
                     final String sample1 = samples1.get(random.nextInt(samples1.size()));
-                    max = max - sample1.length();
-                    sample = sample + sample1;
+                    tmpMax = tmpMax - sample1.length();
+                    if( tmpMax > 0) {
+                        sample = sample + sample1;
+                    }
                 }
 
-                samples.add(sample);
+                if( tmpMax >=0) {
+                    samples.add(sample);
+                }
             }
 
             return samples;
@@ -356,7 +361,7 @@ public class RegexTree {
 
                 String temp = sample;
 
-                while( sample.length() <= max) {
+                while(random.nextBoolean() && sample.length() <= max) {
                     temp = sample;
                     sample = sample + templateSamples.get(random.nextInt( templateSamples.size()));
                 }
@@ -368,13 +373,17 @@ public class RegexTree {
     }
 
     private final RegexNode root;
+    private final int min;
+    private final int max;
 
     public RegexTree(final Token token, final Random random) {
         root = createRegex(random, token);
+        min = token.getMin();
+        max = token.getMax() < 0 ? 10 : token.getMax();
     }
 
-    public String getRandomString(int min, int max) {
-        return root.getRandomizedValue(min, max);
+    public String getRandomString(int _min, int _max) {
+        return root.getRandomizedValue(_min > min ? _min : min, _max < max ? _max : max);
     }
 
     private RegexNode createRegex(@NonNull Random random, @NonNull Token token) {

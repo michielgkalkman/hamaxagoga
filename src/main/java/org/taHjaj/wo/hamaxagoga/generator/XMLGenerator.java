@@ -1135,6 +1135,11 @@ public class XMLGenerator {
 			regexGenerators.put(lexicalPattern, regexGenerator);
 		}
 
+		if( max == 0) {
+			// Make it huge.
+			max = 10;
+		}
+
 		value = regexGenerator.generateXMLString(min, max);
 		return value;
 	}
