@@ -8,15 +8,12 @@ import java.util.*;
 @Flogger
 public class RegexTree {
 
-    private final Random random;
-
     abstract static class RegexNode {
+        protected final Random random;
 
-        abstract public int size();
-        abstract boolean randomize();
-        abstract String getRandomizedValue();
-        abstract StringBuilder getRandomizedValue(StringBuilder stringBuilder);
-        protected abstract Iterable<? extends RegexNode> getRegexNodes();
+        public RegexNode(@NonNull final Random random) {
+            this.random = random;
+        }
 
         protected abstract RegexNode cloneRegexNode();
 
@@ -31,57 +28,27 @@ public class RegexTree {
             rewritableAsString(stringBuilder);
             return stringBuilder.toString();
         }
+
+        public String getRandomizedValue(int min, int max) {
+            final Set<String> samples = getSamples(min, max);
+            final List<String> options = new ArrayList<>(samples);
+
+            return options.get(random.nextInt(samples.size()));
+        }
+
+        public abstract Set<String> getSamples(int min, int max);
     }
 
-    class UnionRegex extends RegexNode {
+    static class UnionRegex extends RegexNode {
         private final LinkedList<RegexNode> regexNodes = new LinkedList<>();
 
-        @Override
-        public int size() {
-            int size = 0;
-            for( RegexNode regexNode : regexNodes) {
-                final int size1 = regexNode.size();
-
-                if( size1 > size) {
-                    size = size1;
-                }
-            }
-            return size;
-        }
-
-        @Override
-        boolean randomize() {
-            for( RegexNode regexNode : regexNodes) {
-                regexNode.randomize();
-            }
-            return false;
-        }
-
-        @Override
-        String getRandomizedValue() {
-            StringBuilder stringBuilder = new StringBuilder();
-            return getRandomizedValue(stringBuilder).toString();
-        }
-
-        @Override
-        StringBuilder getRandomizedValue(StringBuilder stringBuilder) {
-            final RegexNode regexNode = regexNodes.get(random.nextInt(regexNodes.size()));
-
-            regexNode.randomize();
-
-            regexNode.getRandomizedValue(stringBuilder);
-
-            return stringBuilder;
-        }
-
-        @Override
-        protected Iterable<? extends RegexNode> getRegexNodes() {
-            return regexNodes;
+        public UnionRegex(@NonNull final Random random) {
+            super(random);
         }
 
         @Override
         protected RegexNode cloneRegexNode() {
-            final UnionRegex regex = new UnionRegex();
+            final UnionRegex regex = new UnionRegex(random);
             for( RegexNode regexNode : regexNodes) {
                 regex.add(regexNode.cloneRegexNode());
             }
@@ -97,64 +64,37 @@ public class RegexTree {
             }
         }
 
+        @Override
+        public Set<String> getSamples(int min, int max) {
+            final Set<String> samples = new HashSet<>();
+
+            for( int i=0; i<10; i++) {
+                final Set<String> samples1 = regexNodes.get(random.nextInt(regexNodes.size())).getSamples(min, max);
+                samples.addAll(samples1);
+            }
+
+            return samples;
+        }
+
         public void add(@NonNull RegexNode regex) {
             regexNodes.add(regex);
         }
     }
 
     static class Regex extends RegexNode {
-        private final Random random;
-
         private final LinkedList<RegexNode> regexNodes = new LinkedList<>();
 
         public Regex(final Random random) {
-            this.random = random;
+            super(random);
         }
 
-        public Regex(final Random random, @NonNull RegexNode regex) {
-            this.random = random;
+        public Regex( @NonNull final Random random, @NonNull RegexNode regex) {
+            super(random);
             regexNodes.add(regex);
         }
 
         public void add(@NonNull RegexNode regex) {
             regexNodes.add(regex);
-        }
-
-        @Override
-        public int size() {
-            int size = 0;
-            for (final RegexNode regexNode : regexNodes) {
-                size += regexNode.size();
-            }
-            return size;
-        }
-
-        @Override
-        boolean randomize() {
-            for( RegexNode regexNode : regexNodes) {
-                regexNode.randomize();
-                System.out.println(regexNode);
-            }
-            return false;
-        }
-
-        @Override
-        String getRandomizedValue() {
-            StringBuilder stringBuilder = new StringBuilder();
-            return getRandomizedValue(stringBuilder).toString();
-        }
-
-        @Override
-        StringBuilder getRandomizedValue(final StringBuilder stringBuilder) {
-            for( RegexNode regexNode : regexNodes) {
-                regexNode.getRandomizedValue(stringBuilder);
-            }
-            return stringBuilder;
-        }
-
-        @Override
-        protected Iterable<? extends RegexNode> getRegexNodes() {
-            return regexNodes;
         }
 
         @Override
@@ -173,50 +113,49 @@ public class RegexTree {
             }
         }
 
-        public void randomize(Regex template, int min, int max) {
-            regexNodes.clear();
+        @Override
+        public Set<String> getSamples(int min, int max) {
+            final Set<String> samples = new HashSet<>();
 
-            int nrTokens = random.nextInt( 1+max-min) + min;
-
-            for( int i=0; i<nrTokens; i++) {
-                for( RegexNode regexNode : template.getRegexNodes()) {
-                    final RegexNode clonedRegexNode = regexNode.cloneRegexNode();
-                    regexNodes.add(clonedRegexNode);
-                    clonedRegexNode.randomize();
+            for( int i=0; i<10; i++) {
+                for( RegexNode regexNode : regexNodes) {
+                    samples.addAll(regexNode.getSamples( min, max));
                 }
             }
+
+            return samples;
         }
+
     }
 
     static class TokenNode extends RegexNode {
-        private final Random random;
         private final Token token;
 
         public TokenNode(@NonNull final Random random, Token token) {
-            this.random = random;
+            super(random);
             this.token = token;
-        }
-
-        @Override
-        public int size() {
-            switch( token.type) {
-                case Token.CHAR:
-                case Token.RANGE: {
-                    return 1;
-                }
-            }
-            return 0;
         }
 
         public String toString() {
             return "[" + token.toString() + "]";
         }
 
-        private final Map< Token, Integer> totalRangesSize = new HashMap<>();
-        private String randomizedValue = "?";
-
         @Override
-        boolean randomize() {
+        public Set<String> getSamples(int min, int max) {
+            Set<String> samples = new HashSet<>();
+
+            for(int i=0; i<10; i++) {
+                samples.add(getRandomSample());
+            }
+
+            return samples;
+        }
+
+        private final Map< Token, Integer> totalRangesSize = new HashMap<>();
+
+        private String getRandomSample() {
+            String randomizedValue = "?";
+
             switch( token.type) {
                 case Token.CHAR: {
                     randomizedValue = token.toString();
@@ -266,60 +205,34 @@ public class RegexTree {
                 case Token.NRANGE: {
                     final RangeToken rangeToken = (RangeToken) token;
 
-                    int count = 0;
+                    int chosenCharacter = ((int)'!') + random.nextInt(200);
+
                     {
                         for( int i = 0; i < rangeToken.ranges.length; i += 2) {
                             final int lower = rangeToken.ranges[i];
                             final int upper = rangeToken.ranges[i + 1];
-                            count += upper;
-                            count -= lower;
-                            count++;
-                        }
-                    }
 
-                    int choice = random.nextInt( count);
-                    int chosenCharacter = 0;
-                    count = 0;
-                    for( int i = 0; i < rangeToken.ranges.length; i += 2) {
-                        final int lower = rangeToken.ranges[i];
-                        final int upper = rangeToken.ranges[i + 1];
-                        for( int j = lower; j <= upper; j++ ) {
-                            if( count == choice) {
-                                chosenCharacter = j;
+                            if( chosenCharacter > lower) {
+                                chosenCharacter += upper - lower;
                             }
-                            count++;
                         }
                     }
 
-                    if( chosenCharacter == 0) {
-                        chosenCharacter = 'a';
-                    }
-
-                    randomizedValue = String.valueOf( (char)chosenCharacter);
+                    randomizedValue = String.valueOf(Character.toChars( chosenCharacter)[0]);
 
                     break;
                 }
+                case Token.STRING: {
+                    final Token.StringToken stringToken = (Token.StringToken) token;
+                    randomizedValue = stringToken.getString();
+                    break;
+                }
                 default: {
-                    log.atInfo().log("TokenNode, type " + token.type + " not supported yet.");
+                    log.atSevere().log("TokenNode, type " + token.type + " not supported yet.");
                 }
             }
 
-            return true;
-        }
-
-        @Override
-        String getRandomizedValue() {
             return randomizedValue;
-        }
-
-        @Override
-        StringBuilder getRandomizedValue(StringBuilder stringBuilder) {
-            return stringBuilder.append(randomizedValue);
-        }
-
-        @Override
-        protected Iterable<? extends RegexNode> getRegexNodes() {
-            return Collections.emptyList();
         }
 
         @Override
@@ -348,55 +261,65 @@ public class RegexTree {
         }
     }
 
+    static class ConcatNode extends RegexNode {
+        private final List<RegexNode> regexNodes = new ArrayList<>();
+
+        public ConcatNode(@NonNull final Random random) {
+            super(random);
+        }
+
+        @Override
+        protected RegexNode cloneRegexNode() {
+            return new ConcatNode(random);
+        }
+
+        @Override
+        protected void rewritableAsString(StringBuilder stringBuilder) {
+
+        }
+
+        @Override
+        public Set<String> getSamples(int min, int max) {
+            final Set<String> samples = new HashSet<>();
+
+            for( int i=0; i<10; i++) {
+                String sample = "";
+                String temp = "";
+
+                for(int j = 0; j< regexNodes.size() && sample.length() <= max; j++) {
+                    final Set<String> samples1 = regexNodes.get(j).getSamples(min, max);
+                    temp = sample;
+                    sample = sample + new ArrayList<>(samples1).get(random.nextInt(samples1.size()));
+                }
+
+                if( sample.length() <= max) {
+                    temp = sample;
+                }
+
+                samples.add(temp);
+            }
+
+            return samples;
+        }
+
+        public void add(@NonNull final RegexNode regexNode) {
+            regexNodes.add(regexNode);
+        }
+    }
+
     static class ClosureNode extends RegexNode {
-        private final Random random;
         private final Regex template;
         private final Regex rewritable;
         private final int min;
         private final int max;
 
         public ClosureNode(@NonNull Random random, @NonNull Regex regex, int min, int max) {
-            this.random = random;
+            super(random);
             this.template = regex;
             this.rewritable = new Regex(random);
 
             this.min = min;
             this.max = max;
-        }
-
-        @Override
-        public int size() {
-            return template.size();
-        }
-
-        @Override
-        boolean randomize() {
-            rewritable.randomize( template, min, max);
-            return false;
-        }
-
-        /**
-         * Apply closure node once more
-         * @param closureNodes
-         */
-        public void increase(Set<ClosureNode> closureNodes) {
-            final RegexNode regexNode = template.regexNodes.get(0);
-            rewritable.add(regexNode);
-        }
-
-        @Override
-        String getRandomizedValue() {
-            return rewritable.getRandomizedValue();
-        }
-
-        @Override
-        StringBuilder getRandomizedValue(StringBuilder stringBuilder) {
-            return rewritable.getRandomizedValue(stringBuilder);
-        }
-
-        @Override
-        protected Iterable<? extends RegexNode> getRegexNodes() {
-            return this.template.regexNodes;
         }
 
         @Override
@@ -408,68 +331,48 @@ public class RegexTree {
         protected void rewritableAsString(StringBuilder stringBuilder) {
             rewritable.rewritableAsString(stringBuilder);
         }
-    }
 
-    private final RegexNode root;
-    private final Set<ClosureNode> closureNodes = new HashSet<>();
+        @Override
+        public Set<String> getSamples( int min, int max) {
+            final Set<String> samples = new HashSet<>();
 
-    public RegexTree(final Token token, final Random random) {
-        this.random = random;
+            final List<String> templateSamples = new ArrayList<>(template.getSamples(min, max));
 
-        root = createRegex(token, closureNodes);
-    }
+            for( int i = 0; i<10; i++) {
+                String sample = templateSamples.get(random.nextInt( templateSamples.size()));
 
-    public String getRandomString(int min, int max) {
-        log.atInfo().log( "Michiel rewritableAsString: " + this.root.rewritableAsString());
+                if( sample.length() < min) {
+                    while( sample.length() < min) {
+                        sample = sample + templateSamples.get(random.nextInt( templateSamples.size()));
+                    }
 
-        if( root.size() < min) {
-            while( root.rewritableAsString().length() < min && enlarge(root.size(), min, max)) {
-                log.atInfo().log( "Michiel rewritableAsString: " + this.root.rewritableAsString());
-            }
+                    String temp = sample;
 
-        } else if (root.rewritableAsString().length() > max) {
-
-        } else {
-
-        }
-
-        return root.rewritableAsString();
-    }
-
-    private boolean enlarge(int size, int min, int max) {
-        boolean fEnlarged = false;
-        if( size < min) {
-            // find all closurenodes. Select one that increases the size of the string,
-            // but does not go over it.
-            List<ClosureNode> selectableClosureNodes = new ArrayList<>();
-
-            for(ClosureNode closureNode : closureNodes) {
-                log.atInfo().log( "Michiel closurenode " + closureNode.template + ":" + closureNode.size());
-                if( closureNode.size() + size <= max) {
-                    selectableClosureNodes.add(closureNode);
+                    while( sample.length() <= max) {
+                        temp = sample;
+                        sample = sample + templateSamples.get(random.nextInt( templateSamples.size()));
+                    }
+                    samples.add(temp);
+                } else if( sample.length() <= max) {
+                    samples.add(sample);
                 }
             }
 
-            if( !selectableClosureNodes.isEmpty()) {
-                final int nextInt = random.nextInt(selectableClosureNodes.size());
-
-                final ClosureNode closureNode = selectableClosureNodes.get(nextInt);
-
-                closureNode.randomize();
-
-                closureNode.increase(closureNodes);
-
-                fEnlarged = true;
-            }
+            return samples;
         }
-        return fEnlarged;
     }
 
-    public int size() {
-        return root.size();
+    private final RegexNode root;
+
+    public RegexTree(final Token token, final Random random) {
+        root = createRegex(random, token);
     }
 
-    private RegexNode createRegex(@NonNull Token token, Set<ClosureNode> closureNodes) {
+    public String getRandomString(int min, int max) {
+        return root.getRandomizedValue(min, max);
+    }
+
+    private RegexNode createRegex(@NonNull Random random, @NonNull Token token) {
         final RegexNode regexNode;
 
         switch( token.type) {
@@ -482,10 +385,10 @@ public class RegexTree {
                 break;
             }
             case Token.UNION: {
-                final UnionRegex regex = new UnionRegex();
+                final UnionRegex regex = new UnionRegex( random);
 
                 for( int i=0; i<token.size(); i++) {
-                    regex.add( createRegex( token.getChild(i), closureNodes));
+                    regex.add( createRegex( random, token.getChild(i)));
                 }
 
                 regexNode = regex;
@@ -493,14 +396,20 @@ public class RegexTree {
             case Token.PAREN:
             case Token.CONCAT: {
                 if( token instanceof Token.ConcatToken) {
-                    final Token.ConcatToken concatToken = (Token.ConcatToken) token;
-                    regexNode = new TokenNode(random, concatToken);
+
+                    final ConcatNode concatNode = new ConcatNode(random);
+
+                    for( int i=0; i<token.size(); i++) {
+                        concatNode.add( createRegex( random, token.getChild(i)));
+                    }
+
+                    regexNode = concatNode;
                 } else if( token instanceof Token.ParenToken) {
                     Regex regex = new Regex(random);
 
                     final Token.ParenToken parenToken = (Token.ParenToken) token;
 
-                    regex.add( createRegex(parenToken.child, closureNodes));
+                    regex.add( createRegex(random, parenToken.child));
 
                     regexNode = regex;
                 } else {
@@ -510,7 +419,7 @@ public class RegexTree {
                     final int size = unionToken.children.size();
                     for( int i = 0; i < size; i++) {
                         final Token childToken = unionToken.getChild( i);
-                        regex.add( createRegex(childToken, closureNodes));
+                        regex.add( createRegex(random, childToken));
                     }
 
                     regexNode = regex;
@@ -518,13 +427,9 @@ public class RegexTree {
                 break;
             }
             case Token.CLOSURE: {
-                final Token.ClosureToken closureToken = (Token.ClosureToken) token;
-
-                final RegexNode regexNode1 = createRegex(token.getChild(0), closureNodes);
+                final RegexNode regexNode1 = createRegex(random, token.getChild(0));
                 final ClosureNode closureNode = new ClosureNode(
                         random, new Regex(random, regexNode1), 1, 2);
-
-                closureNodes.add(closureNode);
 
                 regexNode = closureNode;
 
