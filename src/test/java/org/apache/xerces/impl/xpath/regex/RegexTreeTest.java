@@ -167,7 +167,8 @@ public class RegexTreeTest {
     public void testVersion() {
         final Random random = new SecureRandom();
 
-        RegularExpression regularExpression = new RegularExpression("(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)");
+        final String regex = "(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)";
+        RegularExpression regularExpression = new RegularExpression(regex);
 
         final Token token = regularExpression.tokentree;
 
@@ -176,7 +177,8 @@ public class RegexTreeTest {
         final String randomString = regexTree.getRandomString(1, 100);
         Assertions.assertTrue( randomString.length() >= 5,
                 String.format("Generated string %s is shorter than %d positions", randomString, 5));
-
+        Assertions.assertTrue( regularExpression.matches( randomString),
+                String.format( "Generated string %s does not match regex %s", randomString, regex));
         log.info("Generated %s", randomString);
     }
 

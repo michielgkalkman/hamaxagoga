@@ -78,7 +78,7 @@ public class XSElementDeclSupport extends XSSupport {
 			final XSSimpleTypeDefinition simpleTypeDefinition = (XSSimpleTypeDefinition) elementDecl
 					.getTypeDefinition();
 
-			log.debug("SERIALIZE: Start " + localName);
+			log.info("SERIALIZE: Start " + localName);
 			serializer.startElement(namespaceURI, localName, qName, null);
 
 			final String value;
@@ -100,6 +100,7 @@ public class XSElementDeclSupport extends XSSupport {
 
 			processEnd(serializer, instanceGenerator, localName);
 
+			log.info("SERIALIZE: End   " + localName);
 			break;
 		default: // case XSTypeDefinition.COMPLEX_TYPE:
 			log.debug("COMPLEX_TYPE");

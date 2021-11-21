@@ -3,6 +3,7 @@ package org.apache.xerces.impl.xpath.regex;
 import lombok.NonNull;
 import lombok.extern.flogger.Flogger;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 
 import java.util.*;
 
@@ -391,11 +392,12 @@ public class RegexTree {
     }
 
     public String getRandomString(int _min, int _max) {
-        return root.getRandomizedValue(_min > min ? _min : min, _max < max ? _max : max);
+        return StringEscapeUtils.escapeXml11(root.getRandomizedValue(_min > min ? _min : min, _max < max ? _max : max));
     }
 
     public String getRandomString() {
-        return root.getRandomizedValue( min, max);
+        return StringEscapeUtils.escapeXml11(
+                root.getRandomizedValue( min, max));
     }
 
     private RegexNode createRegex(@NonNull Random random, @NonNull Token token) {

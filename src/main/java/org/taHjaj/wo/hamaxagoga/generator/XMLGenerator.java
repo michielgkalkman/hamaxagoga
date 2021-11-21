@@ -410,6 +410,7 @@ public class XMLGenerator {
 		final String value;
 
 		final String name = typeDefinition.getName();
+		final String typeName = ((XSSimpleTypeDecl) typeDefinition).getTypeName();
 
 		if ( typeDefinition.getBaseType() == null) {
 			// appearently, some attributes don't require types.
@@ -569,13 +570,13 @@ public class XMLGenerator {
 					"Not implemented: dayTimeDuration (http://www.w3.org/TR/xmlschema11-2/#dayTimeDuration)");
 		} else {
 
-			value = getStringValue(simpleTypeDefinition, facet);
+//			value = getStringValue(simpleTypeDefinition, facet);
 
-//				log.debug("Not a primitive datatype: " + name);
-//				final XSTypeDefinition baseType = typeDefinition.getBaseType();
-//
-//				value = processPrimitiveDatatype(simpleTypeDefinition, baseType,
-//						facet);
+				log.debug("Not a primitive datatype: " + name);
+				final XSTypeDefinition baseType = typeDefinition.getBaseType();
+
+				value = processPrimitiveDatatype(simpleTypeDefinition, baseType,
+						facet);
 		}
 
 		return value;
@@ -1061,13 +1062,13 @@ public class XMLGenerator {
 		XSSimpleTypeDecl xsSimpleTypeDecl =	(XSSimpleTypeDecl) simpleTypeDefinition;
 
 		final ObjectList actualEnumeration = xsSimpleTypeDecl.getActualEnumeration();
-
+		final String name = xsSimpleTypeDecl.getTypeName();
 		if( actualEnumeration != null && actualEnumeration.size() > 0) {
 			value = actualEnumeration.get(random.nextInt(actualEnumeration.size())).toString();
 		} else {
 			final StringList stringList = simpleTypeDefinition.getLexicalPattern();
 			if (stringList != null && stringList.getLength() > 0) {
-				value = getRandomString(stringList, facet.getMinLength(), facet.getMaxLength());
+				value = getRandomString(stringList.item(0), facet.getMinLength(), facet.getMaxLength());
 			} else {
 				final StringList lexicalEnumerations = simpleTypeDefinition
 						.getLexicalEnumeration();
@@ -1107,6 +1108,10 @@ public class XMLGenerator {
 		final String lexicalPattern = stringList.item(random.nextInt(stringList
 				.getLength()));
 
+		return getRandomString(min, max, lexicalPattern);
+	}
+
+	private String getRandomString(int min, int max, String lexicalPattern) {
 		if ("[\\i-[:]][\\c-[:]]*".equals(lexicalPattern)) {
 			// Regex cannot handle the above regular expression.
 			// Use one that will succeed.
