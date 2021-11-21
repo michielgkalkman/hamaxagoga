@@ -2,6 +2,7 @@ package org.apache.xerces.impl.xpath.regex;
 
 import lombok.NonNull;
 import lombok.extern.flogger.Flogger;
+import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.*;
 
@@ -76,7 +77,7 @@ public class RegexTree {
                             ArrayList<>(regexNodes.get(j).getSamples(min,tmpMax));
                     final String sample1 = samples1.get(random.nextInt(samples1.size()));
                     tmpMax = tmpMax - sample1.length();
-                    if( tmpMax > 0) {
+                    if( tmpMax >= 0) {
                         sample = sample + sample1;
                     }
                 }
@@ -170,7 +171,14 @@ public class RegexTree {
             String randomizedValue = "?";
 
             switch( token.type) {
-                case Token.DOT:
+                case Token.EMPTY: {
+                    randomizedValue = "";
+                    break;
+                }
+                case Token.DOT: {
+                    randomizedValue = RandomStringUtils.randomAscii(1);
+                    break;
+                }
                 case Token.CHAR: {
                     randomizedValue = token.toString();
                     break;
@@ -386,6 +394,10 @@ public class RegexTree {
         return root.getRandomizedValue(_min > min ? _min : min, _max < max ? _max : max);
     }
 
+    public String getRandomString() {
+        return root.getRandomizedValue( min, max);
+    }
+
     private RegexNode createRegex(@NonNull Random random, @NonNull Token token) {
         final RegexNode regexNode;
 
@@ -395,6 +407,10 @@ public class RegexTree {
             case Token.CHAR:
             case Token.STRING:
             case Token.RANGE: {
+                regexNode = new TokenNode(random,token);
+                break;
+            }
+            case Token.NRANGE: {
                 regexNode = new TokenNode(random,token);
                 break;
             }

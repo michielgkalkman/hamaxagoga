@@ -89,7 +89,7 @@ public class IO31Test extends AbstractTestCase {
 	}
 	@Test
 	public void testIO31Plus() {
-		final int count = 20;
+		final int count = 1;
 
 		final String xsdFile = "/xsd/io31/IO31plus.xsd";
 		try {
@@ -99,7 +99,7 @@ public class IO31Test extends AbstractTestCase {
 			List<String> xsds = new ArrayList<>();
 			xsds.add(this.getClass().getResource(xsdFile).toExternalForm());
 			params.setXsds( xsds);
-			params.setMaxFileSize( 10000000);
+			params.setMaxFileSize( 1000000);
 			params.setSeed( 1L);
 			params.setMinOccurs(2);
 			params.setMaxOccurs(5);

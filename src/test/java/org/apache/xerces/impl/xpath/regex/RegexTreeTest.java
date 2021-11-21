@@ -162,4 +162,60 @@ public class RegexTreeTest {
         Assertions.assertTrue( randomString.length() <= max
                 , String.format("Generated string %s is longer than %d positions", randomString, max));
     }
+
+    @Test
+    public void testVersion() {
+        final Random random = new SecureRandom();
+
+        RegularExpression regularExpression = new RegularExpression("(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)");
+
+        final Token token = regularExpression.tokentree;
+
+        final RegexTree regexTree = new RegexTree(token, random);
+
+        final String randomString = regexTree.getRandomString(1, 100);
+        Assertions.assertTrue( randomString.length() >= 5,
+                String.format("Generated string %s is shorter than %d positions", randomString, 5));
+
+        log.info("Generated %s", randomString);
+    }
+
+    @Test
+    public void testNRange() {
+        final Random random = new SecureRandom();
+
+        RegularExpression regularExpression = new RegularExpression("[^abcde]*");
+
+        final Token token = regularExpression.tokentree;
+
+        final RegexTree regexTree = new RegexTree(token, random);
+
+        int min = 1;
+        int max = 3;
+
+        final String randomString = regexTree.getRandomString(1, 3);
+        Assertions.assertTrue( randomString.length() >= min, String.format("Generated string %s is shorter than %d positions", randomString, min));
+        Assertions.assertTrue( randomString.length() <= max
+                , String.format("Generated string %s is longer than %d positions", randomString, max));
+    }
+
+    @Test
+    public void testQuestionMark() {
+        final Random random = new SecureRandom();
+
+        RegularExpression regularExpression = new RegularExpression("[?x]*");
+
+        final Token token = regularExpression.tokentree;
+
+        final RegexTree regexTree = new RegexTree(token, random);
+
+        int min = 1;
+        int max = 3;
+
+        final String randomString = regexTree.getRandomString(1, 3);
+        Assertions.assertTrue( randomString.length() >= min, String.format("Generated string %s is shorter than %d positions", randomString, min));
+        Assertions.assertTrue( randomString.length() <= max
+                , String.format("Generated string %s is longer than %d positions", randomString, max));
+    }
+
 }

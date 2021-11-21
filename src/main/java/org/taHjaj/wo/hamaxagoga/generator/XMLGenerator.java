@@ -28,11 +28,13 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
 import org.apache.commons.math3.util.Precision;
+import org.apache.xerces.impl.dv.xs.XSSimpleTypeDecl;
 import org.apache.xerces.impl.xpath.regex.RegexGenerator;
 import org.apache.xerces.impl.xpath.regex.XMLChar;
 import org.apache.xerces.impl.xs.XSElementDecl;
 import org.apache.xerces.jaxp.datatype.DatatypeFactoryImpl;
 import org.apache.xerces.xs.*;
+import org.apache.xerces.xs.datatypes.ObjectList;
 import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
 import org.taHjaj.wo.hamaxagoga.HamaxagogaException;
@@ -567,11 +569,13 @@ public class XMLGenerator {
 					"Not implemented: dayTimeDuration (http://www.w3.org/TR/xmlschema11-2/#dayTimeDuration)");
 		} else {
 
-			log.debug("Not a primitive datatype: " + name);
-			final XSTypeDefinition baseType = typeDefinition.getBaseType();
+			value = getStringValue(simpleTypeDefinition, facet);
 
-			value = processPrimitiveDatatype(simpleTypeDefinition, baseType,
-					facet);
+//				log.debug("Not a primitive datatype: " + name);
+//				final XSTypeDefinition baseType = typeDefinition.getBaseType();
+//
+//				value = processPrimitiveDatatype(simpleTypeDefinition, baseType,
+//						facet);
 		}
 
 		return value;
@@ -1054,25 +1058,33 @@ public class XMLGenerator {
 		// http://www.w3.org/TR/xmlschema-2/#string
 		final String value;
 
-		final StringList stringList = simpleTypeDefinition.getLexicalPattern();
-		if (stringList != null && stringList.getLength() > 0) {
-			value = getRandomString(stringList, facet.getMinLength(), facet.getMaxLength());
+		XSSimpleTypeDecl xsSimpleTypeDecl =	(XSSimpleTypeDecl) simpleTypeDefinition;
+
+		final ObjectList actualEnumeration = xsSimpleTypeDecl.getActualEnumeration();
+
+		if( actualEnumeration != null && actualEnumeration.size() > 0) {
+			value = actualEnumeration.get(random.nextInt(actualEnumeration.size())).toString();
 		} else {
-			final StringList lexicalEnumerations = simpleTypeDefinition
-					.getLexicalEnumeration();
-			if (lexicalEnumerations != null
-					&& lexicalEnumerations.getLength() > 0) {
-				value = getRandomEnumeration(lexicalEnumerations);
+			final StringList stringList = simpleTypeDefinition.getLexicalPattern();
+			if (stringList != null && stringList.getLength() > 0) {
+				value = getRandomString(stringList, facet.getMinLength(), facet.getMaxLength());
 			} else {
-				final int size;
-				if (facet.getMaxLength() > 0) {
-					size = random.nextInt(facet.getMaxLength()
-							- facet.getMinLength()+1)
-							+ facet.getMinLength();
+				final StringList lexicalEnumerations = simpleTypeDefinition
+						.getLexicalEnumeration();
+				if (lexicalEnumerations != null
+						&& lexicalEnumerations.getLength() > 0) {
+					value = getRandomEnumeration(lexicalEnumerations);
 				} else {
-					size = getRandomLength(facet);
+					final int size;
+					if (facet.getMaxLength() > 0) {
+						size = random.nextInt(facet.getMaxLength()
+								- facet.getMinLength() + 1)
+								+ facet.getMinLength();
+					} else {
+						size = getRandomLength(facet);
+					}
+					value = getRandomString(params.getLexicalPattern() + "{" + size + "}");
 				}
-				value = getRandomString( params.getLexicalPattern() + "{" + size + "}");
 			}
 		}
 		return value;
@@ -1100,6 +1112,8 @@ public class XMLGenerator {
 			// Use one that will succeed.
 			return getRandomString("[#x0041-#x005A]");
 		}
+
+		log.atInfo().log(String.format("Processing lexical pattern %s (min=%d, max=%d)", lexicalPattern, min, max));
 
 		return getRandomString(lexicalPattern, min, max);
 	}
