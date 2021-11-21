@@ -109,16 +109,17 @@ public class RegexTreeTest {
     public void test() {
         final Random random = new SecureRandom();
 
-        RegularExpression regularExpression = new RegularExpression("q[abcde]*");
+        final String regex = "q[abcde]*";
+        RegularExpression regularExpression = new RegularExpression(regex);
 
-        final Token token = regularExpression.tokentree;
-
-        final RegexTree regexTree = new RegexTree(token, random);
+        final RegexTree regexTree = new RegexTree(regularExpression, random);
 
         int min = 1;
         int max = 3;
 
         final String randomString = regexTree.getRandomString(1, 3);
+        Assertions.assertTrue( regularExpression.matches( randomString),
+                String.format( "Generated string %s does not match regex %s", randomString, regex));
         Assertions.assertTrue( randomString.length() >= min, String.format("Generated string %s is shorter than %d positions", randomString, min));
         Assertions.assertTrue( randomString.length() <= max
                 , String.format("Generated string %s is longer than %d positions", randomString, max));
@@ -128,16 +129,18 @@ public class RegexTreeTest {
     public void test2() {
         final Random random = new SecureRandom();
 
-        RegularExpression regularExpression = new RegularExpression("(a*|b)*");
+        final String regex = "(a*|b)*";
+        RegularExpression regularExpression = new RegularExpression(regex);
 
-        final Token token = regularExpression.tokentree;
+        final RegexTree regexTree = new RegexTree(regularExpression, random);
 
-        final RegexTree regexTree = new RegexTree(token, random);
 
         int min = 1;
         int max = 3;
 
         final String randomString = regexTree.getRandomString(min, max);
+        Assertions.assertTrue( regularExpression.matches( randomString),
+                String.format( "Generated string %s does not match regex %s", randomString, regex));
         Assertions.assertTrue( randomString.length() >= min, String.format("Generated string %s is shorter than %d positions", randomString, min));
         Assertions.assertTrue( randomString.length() <= max
                 , String.format("Generated string %s is longer than %d positions", randomString, max));
@@ -147,16 +150,17 @@ public class RegexTreeTest {
     public void testBsn() {
         final Random random = new SecureRandom();
 
-        RegularExpression regularExpression = new RegularExpression("[0-9]{9}");
+        final String regex = "[0-9]{9}";
+        RegularExpression regularExpression = new RegularExpression(regex);
 
-        final Token token = regularExpression.tokentree;
-
-        final RegexTree regexTree = new RegexTree(token, random);
+        final RegexTree regexTree = new RegexTree(regularExpression, random);
 
         int min = 1;
         int max = 9;
 
         final String randomString = regexTree.getRandomString(min, max);
+        Assertions.assertTrue( regularExpression.matches( randomString),
+                String.format( "Generated string %s does not match regex %s", randomString, regex));
         Assertions.assertTrue( randomString.length() >= max,
                 String.format("Generated string %s is shorter than %d positions", randomString, max));
         Assertions.assertTrue( randomString.length() <= max
@@ -167,35 +171,34 @@ public class RegexTreeTest {
     public void testVersion() {
         final Random random = new SecureRandom();
 
-        final String regex = "(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)";
+        final String regex = "(0|[1-9][0-9]*).(0|[1-9][0-9]*).(0|[1-9][0-9]*)";
         RegularExpression regularExpression = new RegularExpression(regex);
 
-        final Token token = regularExpression.tokentree;
-
-        final RegexTree regexTree = new RegexTree(token, random);
+        final RegexTree regexTree = new RegexTree(regularExpression, random);
 
         final String randomString = regexTree.getRandomString(1, 100);
         Assertions.assertTrue( randomString.length() >= 5,
                 String.format("Generated string %s is shorter than %d positions", randomString, 5));
         Assertions.assertTrue( regularExpression.matches( randomString),
                 String.format( "Generated string %s does not match regex %s", randomString, regex));
-        log.info("Generated %s", randomString);
+        log.atInfo().log("Generated %s", randomString);
     }
 
     @Test
     public void testNRange() {
         final Random random = new SecureRandom();
 
-        RegularExpression regularExpression = new RegularExpression("[^abcde]*");
+        final String regex = "[^abcde]*";
+        RegularExpression regularExpression = new RegularExpression(regex);
 
-        final Token token = regularExpression.tokentree;
-
-        final RegexTree regexTree = new RegexTree(token, random);
+        final RegexTree regexTree = new RegexTree(regularExpression, random);
 
         int min = 1;
         int max = 3;
 
         final String randomString = regexTree.getRandomString(1, 3);
+        Assertions.assertTrue( regularExpression.matches( randomString),
+                String.format( "Generated string %s does not match regex %s", randomString, regex));
         Assertions.assertTrue( randomString.length() >= min, String.format("Generated string %s is shorter than %d positions", randomString, min));
         Assertions.assertTrue( randomString.length() <= max
                 , String.format("Generated string %s is longer than %d positions", randomString, max));
@@ -205,16 +208,18 @@ public class RegexTreeTest {
     public void testQuestionMark() {
         final Random random = new SecureRandom();
 
-        RegularExpression regularExpression = new RegularExpression("[?x]*");
+        final String regex = "[?x]*";
+        RegularExpression regularExpression = new RegularExpression(regex);
 
-        final Token token = regularExpression.tokentree;
+        final RegexTree regexTree = new RegexTree(regularExpression, random);
 
-        final RegexTree regexTree = new RegexTree(token, random);
 
         int min = 1;
         int max = 3;
 
         final String randomString = regexTree.getRandomString(1, 3);
+        Assertions.assertTrue( regularExpression.matches( randomString),
+                String.format( "Generated string %s does not match regex %s", randomString, regex));
         Assertions.assertTrue( randomString.length() >= min, String.format("Generated string %s is shorter than %d positions", randomString, min));
         Assertions.assertTrue( randomString.length() <= max
                 , String.format("Generated string %s is longer than %d positions", randomString, max));

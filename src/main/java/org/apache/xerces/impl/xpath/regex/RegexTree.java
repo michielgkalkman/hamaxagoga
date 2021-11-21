@@ -9,6 +9,7 @@ import java.util.*;
 
 @Flogger
 public class RegexTree {
+    private final RegularExpression regularExpression;
 
     abstract static class RegexNode {
         protected final Random random;
@@ -73,19 +74,23 @@ public class RegexTree {
             for( int i=0; i<10; i++) {
                 String sample = "";
                 int tmpMax = max;
-                for( int j=0; j<regexNodes.size() && tmpMax > 0; j++) {
-                    final List<String> samples1 = new
-                            ArrayList<>(regexNodes.get(j).getSamples(min,tmpMax));
-                    final String sample1 = samples1.get(random.nextInt(samples1.size()));
-                    tmpMax = tmpMax - sample1.length();
-                    if( tmpMax >= 0) {
-                        sample = sample + sample1;
-                    }
-                }
 
-                if( tmpMax >=0) {
-                    samples.add(sample);
-                }
+                final RegexNode regexNode = regexNodes.get(random.nextInt(regexNodes.size()));
+                samples.addAll(regexNode.getSamples(min, max));
+
+//                for( int j=0; j<regexNodes.size() && tmpMax > 0; j++) {
+//                    final List<String> samples1 = new
+//                            ArrayList<>(regexNodes.get(j).getSamples(min,tmpMax));
+//                    final String sample1 = samples1.get(random.nextInt(samples1.size()));
+//                    tmpMax = tmpMax - sample1.length();
+//                    if( tmpMax >= 0) {
+//                        sample = sample + sample1;
+//                    }
+//                }
+//
+//                if( tmpMax >=0) {
+//                    samples.add(sample);
+//                }
             }
 
             return samples;
@@ -385,14 +390,23 @@ public class RegexTree {
     private final int min;
     private final int max;
 
-    public RegexTree(final Token token, final Random random) {
+
+    public RegexTree(RegularExpression regularExpression, Random random) {
+        this.regularExpression = regularExpression;
+        final Token token = regularExpression.tokentree;
         root = createRegex(random, token);
         min = token.getMin();
         max = token.getMax() < 0 ? 10 : token.getMax();
     }
 
+//    public RegexTree(final Token token, final Random random) {
+//        root = createRegex(random, token);
+//        min = token.getMin();
+//        max = token.getMax() < 0 ? 10 : token.getMax();
+//    }
+
     public String getRandomString(int _min, int _max) {
-        return StringEscapeUtils.escapeXml11(root.getRandomizedValue(_min > min ? _min : min, _max < max ? _max : max));
+        return StringEscapeUtils.escapeXml11(root.getRandomizedValue(_min > min ? _min : min, _max));
     }
 
     public String getRandomString() {
@@ -425,9 +439,18 @@ public class RegexTree {
 
                 regexNode = regex;
                 break;            }
-            case Token.PAREN:
+            case Token.PAREN: {
+                Regex regex = new Regex(random);
+
+                final Token.ParenToken parenToken = (Token.ParenToken) token;
+
+                regex.add( createRegex(random, parenToken.child));
+
+                regexNode = regex;
+                break;
+            }
             case Token.CONCAT: {
-                if( token instanceof Token.ConcatToken) {
+//                if( token instanceof Token.ConcatToken) {
 
                     final ConcatNode concatNode = new ConcatNode(random);
 
@@ -436,26 +459,26 @@ public class RegexTree {
                     }
 
                     regexNode = concatNode;
-                } else if( token instanceof Token.ParenToken) {
-                    Regex regex = new Regex(random);
-
-                    final Token.ParenToken parenToken = (Token.ParenToken) token;
-
-                    regex.add( createRegex(random, parenToken.child));
-
-                    regexNode = regex;
-                } else {
-                    UnionRegex unionRegex = new UnionRegex(random);
-
-                    final Token.UnionToken unionToken = (Token.UnionToken) token;
-                    final int size = unionToken.children.size();
-                    for( int i = 0; i < size; i++) {
-                        final Token childToken = unionToken.getChild( i);
-                        unionRegex.add( createRegex(random, childToken));
-                    }
-
-                    regexNode = unionRegex;
-                }
+//                } else if( token instanceof Token.ParenToken) {
+//                    Regex regex = new Regex(random);
+//
+//                    final Token.ParenToken parenToken = (Token.ParenToken) token;
+//
+//                    regex.add( createRegex(random, parenToken.child));
+//
+//                    regexNode = regex;
+//                } else {
+//                    UnionRegex unionRegex = new UnionRegex(random);
+//
+//                    final Token.UnionToken unionToken = (Token.UnionToken) token;
+//                    final int size = unionToken.children.size();
+//                    for( int i = 0; i < size; i++) {
+//                        final Token childToken = unionToken.getChild( i);
+//                        unionRegex.add( createRegex(random, childToken));
+//                    }
+//
+//                    regexNode = unionRegex;
+//                }
                 break;
             }
             case Token.CLOSURE: {

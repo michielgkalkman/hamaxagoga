@@ -96,9 +96,7 @@ public class RegexGenerator {
 	}
 
 	public String generateString( int min, int max) {
-		final Token token = regularExpression.tokentree;
-
-		final RegexTree regexTree = new RegexTree(token, random);
+		final RegexTree regexTree = new RegexTree(regularExpression, random);
 
 		return regexTree.getRandomString( min, max);
 	}
