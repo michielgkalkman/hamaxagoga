@@ -1,7 +1,9 @@
 package org.apache.xerces.impl.xpath.regex;
 
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.text.StringEscapeUtils;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -105,7 +107,7 @@ public class RegexTreeTest {
         Assertions.assertNotNull(randomizedValue);
     }
 
-    @Test
+    @RepeatedTest(10)
     public void test() {
         final Random random = new SecureRandom();
 
@@ -122,6 +124,26 @@ public class RegexTreeTest {
                 String.format( "Generated string %s does not match regex %s", randomString, regex));
         Assertions.assertTrue( randomString.length() >= min, String.format("Generated string %s is shorter than %d positions", randomString, min));
         Assertions.assertTrue( randomString.length() <= max
+                , String.format("Generated string %s is longer than %d positions", randomString, max));
+    }
+
+    @RepeatedTest(10)
+    public void testHuisletter() {
+        final Random random = new SecureRandom();
+
+        final String regex = ".*[^\\s].*";
+        RegularExpression regularExpression = new RegularExpression(regex);
+
+        final RegexTree regexTree = new RegexTree(regularExpression, random);
+
+        int min = 1;
+        int max = 1;
+
+        final String randomString = regexTree.getRandomString(min, max);
+        Assertions.assertTrue( regularExpression.matches( randomString),
+                String.format( "Generated string %s does not match regex %s", randomString, regex));
+        Assertions.assertTrue( StringEscapeUtils.unescapeXml(randomString).length() >= min, String.format("Generated string %s is shorter than %d positions", randomString, min));
+        Assertions.assertTrue( StringEscapeUtils.unescapeXml(randomString).length() <= max
                 , String.format("Generated string %s is longer than %d positions", randomString, max));
     }
 
@@ -223,6 +245,60 @@ public class RegexTreeTest {
         Assertions.assertTrue( randomString.length() >= min, String.format("Generated string %s is shorter than %d positions", randomString, min));
         Assertions.assertTrue( randomString.length() <= max
                 , String.format("Generated string %s is longer than %d positions", randomString, max));
+    }
+
+    @RepeatedTest(10)
+    public void testComplex() {
+        final Random random = new SecureRandom();
+
+        final String regex = "([\\t-\\n\\f-\\r .]*[\\x00-\\x08\\x0b\\x0e-\\x1f!-\\v10ffff][\\x00-\\x08\\x0b\\x0e-\\x1f!-\\v10ffff]*[\\t-\\n\\f-\\r .]*)+";
+        RegularExpression regularExpression = new RegularExpression(regex);
+
+        final RegexTree regexTree = new RegexTree(regularExpression, random);
+
+        int min = 0;
+        int max = 3;
+
+        final String randomString = regexTree.getRandomString(min, max);
+        Assertions.assertTrue( regularExpression.matches( randomString),
+                String.format( "Generated string %s does not match regex %s", randomString, regex));
+        Assertions.assertTrue( randomString.length() >= min, String.format("Generated string %s is shorter than %d positions", randomString, min));
+        Assertions.assertTrue( randomString.length() <= max
+                , String.format("Generated string %s is longer than %d positions", randomString, max));
+    }
+
+    @ParameterizedTest(name = "#{index} - [{0}]")
+    @MethodSource("dataForRandomRegularExpressions")
+    public void testRandomRegularExpressions( final String regex, final int min, final int max) {
+        final Random random = new SecureRandom();
+
+        RegularExpression regularExpression = new RegularExpression(regex);
+
+        final RegexTree regexTree = new RegexTree(regularExpression, random);
+
+        regexTree.setRegularExpression(regularExpression);
+
+        final String randomString = regexTree.getRandomString(min, max);
+        log.atInfo().log( String.format( "Generated string '%s' for regex %s", randomString, regex));
+        final String unescapedRandomString = StringEscapeUtils.unescapeXml(randomString);
+        Assertions.assertTrue( regularExpression.matches( unescapedRandomString),
+                String.format( "Generated string '%s' does not match regex %s", unescapedRandomString, regex));
+        Assertions.assertTrue( unescapedRandomString.length() >= min, String.format("Generated string %s is shorter than %d positions", randomString, min));
+        Assertions.assertTrue( unescapedRandomString.length() <= max
+                , String.format("Generated string %s is longer than %d positions", randomString, max));
+    }
+
+    private static Stream<Arguments> dataForRandomRegularExpressions() {
+        return Stream.of(//
+                Arguments.of("&\u0093", 1, 3), //
+                Arguments.of("\u0093", 1, 1), //
+                Arguments.of("([\\t-\\n\\f-\\r .]*[\\x00-\\x08\\x0b\\x0e-\\x1f!-\\v10ffff][\\x00-\\x08\\x0b\\x0e-\\x1f!-\\v10ffff]*[\\t-\\n\\f-\\r .]*)+", 0, 3),
+                Arguments.of("([.\\s]*\\S+[.\\s]*)+", 0, 3), // Huisnummer from IO31
+                Arguments.of("\u0140", 1, 1), //
+                Arguments.of("a", 1, 1), //
+                Arguments.of("[a-f]", 1, 4), //
+                Arguments.of("[^a-f]+", 3, 4) //
+        );
     }
 
 }

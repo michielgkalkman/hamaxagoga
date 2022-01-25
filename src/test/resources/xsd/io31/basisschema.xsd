@@ -1304,7 +1304,7 @@
         <xs:restriction base="xs:string">
             <xs:minLength value="1"/>
             <xs:maxLength value="1"/>
-            <xs:pattern value="q[abcde]*"/>
+            <xs:pattern value=".*[^\s].*"/>
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="LDT_Huisnummer">

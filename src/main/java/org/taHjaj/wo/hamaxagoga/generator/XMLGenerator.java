@@ -1156,7 +1156,7 @@ public class XMLGenerator {
 
 		if( max == 0) {
 			// Make it huge.
-			max = 10;
+			max = 100;
 		}
 
 		value = regexGenerator.generateXMLString(min, max);

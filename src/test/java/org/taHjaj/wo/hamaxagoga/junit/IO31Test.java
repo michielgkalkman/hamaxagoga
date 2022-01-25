@@ -99,7 +99,7 @@ public class IO31Test extends AbstractTestCase {
 			List<String> xsds = new ArrayList<>();
 			xsds.add(this.getClass().getResource(xsdFile).toExternalForm());
 			params.setXsds( xsds);
-			params.setMaxFileSize( 1000000);
+			params.setMaxFileSize( 100000);
 			params.setSeed( 1L);
 			params.setMinOccurs(2);
 			params.setMaxOccurs(5);

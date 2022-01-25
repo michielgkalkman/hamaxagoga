@@ -32,11 +32,31 @@ public class RegexTree {
             return stringBuilder.toString();
         }
 
+        private RegularExpression regularExpression;
+
+        public void setRegularExpression(RegularExpression regularExpression) {
+            this.regularExpression = regularExpression;
+        }
+
         public String getRandomizedValue(int min, int max) {
             final Set<String> samples = getSamples(min, max);
-            final List<String> options = new ArrayList<>(samples);
+            final List<String> options = new ArrayList<>();
+            samples.forEach(sample -> {
+                final String unescapedXml = StringEscapeUtils.unescapeXml(sample);
+                if(unescapedXml.length() >= min && unescapedXml.length() <= max) {
+                    options.add(sample);
+                }
+            });
 
-            return options.get(random.nextInt(samples.size()));
+            final String selectedOption = options.get(random.nextInt(options.size()));
+
+            for (String option : options) {
+                if(  regularExpression != null && !regularExpression.matches( selectedOption)) {
+                    log.atSevere().log("Found one.");
+                }
+            }
+
+            return selectedOption;
         }
 
         public abstract Set<String> getSamples(int min, int max);
@@ -71,26 +91,12 @@ public class RegexTree {
         public Set<String> getSamples(int min, int max) {
             final Set<String> samples = new HashSet<>();
 
-            for( int i=0; i<10; i++) {
+            for( int i=0; i<10 && samples.size() < 10; i++) {
                 String sample = "";
                 int tmpMax = max;
 
                 final RegexNode regexNode = regexNodes.get(random.nextInt(regexNodes.size()));
                 samples.addAll(regexNode.getSamples(min, max));
-
-//                for( int j=0; j<regexNodes.size() && tmpMax > 0; j++) {
-//                    final List<String> samples1 = new
-//                            ArrayList<>(regexNodes.get(j).getSamples(min,tmpMax));
-//                    final String sample1 = samples1.get(random.nextInt(samples1.size()));
-//                    tmpMax = tmpMax - sample1.length();
-//                    if( tmpMax >= 0) {
-//                        sample = sample + sample1;
-//                    }
-//                }
-//
-//                if( tmpMax >=0) {
-//                    samples.add(sample);
-//                }
             }
 
             return samples;
@@ -137,7 +143,7 @@ public class RegexTree {
         public Set<String> getSamples(int min, int max) {
             final Set<String> samples = new HashSet<>();
 
-            for( int i=0; i<10; i++) {
+            for( int i=0; i<10 && samples.size() < 10; i++) {
                 for( RegexNode regexNode : regexNodes) {
                     samples.addAll(regexNode.getSamples( min, max));
                 }
@@ -165,10 +171,26 @@ public class RegexTree {
             Set<String> samples = new HashSet<>();
 
             for(int i=0; i<10; i++) {
-                samples.add(getRandomSample());
+                String randomSample;
+                do {
+                    randomSample = getRandomSample();
+                } while ( containsUnpairedSurrogates( randomSample));
+                samples.add(randomSample);
             }
 
             return samples;
+        }
+
+        // See UnicodeUnpairedSurrogateRemover from commons-text
+        private boolean containsUnpairedSurrogates(String randomSample) {
+            for( int i=0; i<randomSample.length(); i++) {
+                final int codePoint = randomSample.codePointAt(i);
+                if (codePoint >= Character.MIN_SURROGATE && codePoint <= Character.MAX_SURROGATE) {
+                    // It's a surrogate.
+                    return true;
+                }
+            }
+            return false;
         }
 
         private final Map< Token, Integer> totalRangesSize = new HashMap<>();
@@ -186,7 +208,7 @@ public class RegexTree {
                     break;
                 }
                 case Token.CHAR: {
-                    randomizedValue = token.toString();
+                    randomizedValue = StringEscapeUtils.unescapeJava(token.toString());
                     break;
                 }
                 case Token.RANGE: {
@@ -310,21 +332,35 @@ public class RegexTree {
         public Set<String> getSamples(int min, int max) {
             final Set<String> samples = new HashSet<>();
 
-            for( int i=0; i<10; i++) {
+            int i=0;
+            while( samples.size() <= 3 && i<20) {
                 String sample = "";
-                String temp = "";
+                String smallest = ""; // Always add the smallest possible version
 
-                for(int j = 0; j< regexNodes.size() && sample.length() <= max; j++) {
+                for(int j = 0; j< regexNodes.size(); j++) {
                     final Set<String> samples1 = regexNodes.get(j).getSamples(min, max);
-                    temp = sample;
                     sample = sample + new ArrayList<>(samples1).get(random.nextInt(samples1.size()));
+
+                    final String[] smallestSample = {null};
+
+                    samples1.forEach( sample2 -> {
+                        if( smallestSample[0] == null) {
+                            smallestSample[0] = sample2;
+                        } else if( sample2.length() < smallestSample[0].length()) {
+                            smallestSample[0] = sample2;
+                        }
+                    });
+
+                    smallest += smallestSample[0];
                 }
 
                 if( sample.length() <= max) {
-                    temp = sample;
+                    samples.add(sample);
                 }
 
-                samples.add(temp);
+                samples.add(smallest);
+
+                i++;
             }
 
             return samples;
@@ -382,6 +418,9 @@ public class RegexTree {
                 samples.add(temp);
             }
 
+            // Always add empty string in case of closure (X*)
+            samples.add("");
+
             return samples;
         }
     }
@@ -396,7 +435,7 @@ public class RegexTree {
         final Token token = regularExpression.tokentree;
         root = createRegex(random, token);
         min = token.getMin();
-        max = token.getMax() < 0 ? 10 : token.getMax();
+        max = token.getMax() < 0 ? 100 : token.getMax();
     }
 
 //    public RegexTree(final Token token, final Random random) {
@@ -406,12 +445,39 @@ public class RegexTree {
 //    }
 
     public String getRandomString(int _min, int _max) {
-        return StringEscapeUtils.escapeXml11(root.getRandomizedValue(_min > min ? _min : min, _max));
+        String randomizedValue;
+        do {
+            randomizedValue = root.getRandomizedValue(_min > min ? _min : min, _max);
+        } while( containsUnpairedSurrogates( randomizedValue));
+//        final String escapedRandomizedValue = StringEscapeUtils.escapeXml11(randomizedValue);
+        final String escapedRandomizedValue = randomizedValue;
+        return escapedRandomizedValue;
     }
 
     public String getRandomString() {
-        return StringEscapeUtils.escapeXml11(
-                root.getRandomizedValue( min, max));
+        String randomizedValue;
+        do {
+            randomizedValue = root.getRandomizedValue( min, max);
+        } while( containsUnpairedSurrogates( randomizedValue));
+//        final String escapedRandomizedValue = StringEscapeUtils.escapeXml11(randomizedValue);
+        final String escapedRandomizedValue = randomizedValue;
+        return randomizedValue;
+    }
+
+    // See UnicodeUnpairedSurrogateRemover from commons-text
+    private boolean containsUnpairedSurrogates(String randomSample) {
+        for( int i=0; i<randomSample.length(); i++) {
+            final int codePoint = randomSample.codePointAt(i);
+            if (codePoint >= Character.MIN_SURROGATE && codePoint <= Character.MAX_SURROGATE) {
+                // It's a surrogate.
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void setRegularExpression(RegularExpression regularExpression) {
+        root.setRegularExpression(regularExpression);
     }
 
     private RegexNode createRegex(@NonNull Random random, @NonNull Token token) {
@@ -454,7 +520,7 @@ public class RegexTree {
 
                     final ConcatNode concatNode = new ConcatNode(random);
 
-                    for( int i=0; i<token.size(); i++) {
+                for( int i=0; i<token.size(); i++) {
                         concatNode.add( createRegex( random, token.getChild(i)));
                     }
 

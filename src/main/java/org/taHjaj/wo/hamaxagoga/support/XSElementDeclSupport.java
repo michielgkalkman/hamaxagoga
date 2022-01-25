@@ -18,6 +18,7 @@ package org.taHjaj.wo.hamaxagoga.support;
 
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.xerces.impl.xs.XSElementDecl;
 import org.apache.xerces.xs.XSComplexTypeDefinition;
 import org.apache.xerces.xs.XSSimpleTypeDefinition;
@@ -97,6 +98,7 @@ public class XSElementDeclSupport extends XSSupport {
 			}
 
 			toSerializer(serializer, value);
+//			toSerializer(serializer, StringEscapeUtils.unescapeXml(value));
 
 			processEnd(serializer, instanceGenerator, localName);
 

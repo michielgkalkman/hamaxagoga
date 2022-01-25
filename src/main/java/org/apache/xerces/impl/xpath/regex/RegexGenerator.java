@@ -19,7 +19,9 @@ package org.apache.xerces.impl.xpath.regex;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.xerces.impl.xpath.regex.Token.*;
+import org.taHjaj.wo.hamaxagoga.HamaxagogaException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -60,11 +62,11 @@ public class RegexGenerator {
 
 		final String xmlResult;
 
-		if( isISOControl( result)) {
-			xmlResult = toXML( result);
-		} else {
-			xmlResult = result;
-		}
+//		if( isISOControl( result)) {
+//			xmlResult = toXML( result);
+//		} else {
+		xmlResult = StringEscapeUtils.escapeXml11(StringEscapeUtils.unescapeXml(result));
+//		}
 
 		return xmlResult;
     }
@@ -86,11 +88,11 @@ public class RegexGenerator {
 
 		final String xmlResult;
 
-		if( isISOControl( result)) {
-			xmlResult = toXML( result);
-		} else {
-			xmlResult = result;
-		}
+//		if( isISOControl( result)) {
+//			xmlResult = toXML( result);
+//		} else {
+			xmlResult = StringEscapeUtils.escapeXml11(StringEscapeUtils.unescapeXml(result));
+//		}
 
 		return xmlResult;
 	}
@@ -98,7 +100,32 @@ public class RegexGenerator {
 	public String generateString( int min, int max) {
 		final RegexTree regexTree = new RegexTree(regularExpression, random);
 
-		return regexTree.getRandomString( min, max);
+		final String randomString = regexTree.getRandomString(min, max);
+
+		final String unescapedRandomString = StringEscapeUtils.unescapeXml(randomString);
+
+		if( !regularExpression.matches( unescapedRandomString)) {
+			final String errorMessage = String.format("Value '%s' was genereated for regexp %s, but this does not match"
+					, randomString, regularExpression.toString());
+			log.atFatal().log(errorMessage);
+			throw new HamaxagogaException( errorMessage);
+		}
+
+		if( unescapedRandomString.length() < min) {
+			final String errorMessage = String.format("Value %s was genereated for regexp %s, but this is smaller than required minimum size"
+					,unescapedRandomString, regularExpression.toString(), min);
+			log.atFatal().log(errorMessage);
+			throw new HamaxagogaException( errorMessage);
+		}
+
+		if( unescapedRandomString.length() > max) {
+			final String errorMessage = String.format("Value %s was genereated for regexp %s, but this is larger than required maximum size"
+					,unescapedRandomString, regularExpression.toString(), max);
+			log.atFatal().log(errorMessage);
+			throw new HamaxagogaException( errorMessage);
+		}
+
+		return randomString;
 	}
 
 	private boolean isISOControl( final String string) {
